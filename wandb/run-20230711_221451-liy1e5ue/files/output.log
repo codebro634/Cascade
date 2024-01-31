@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\mainExperiment.py", line 37, in <module>
+    experiment.run(track_cfg=track_cfg,runs=args.num_runs, show_progress=args.show_progress, wandb_logging=args.wandb_logging, save_latest=args.save_latest, save_best=args.save_best)
+  File "C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Analysis\Experiment.py", line 127, in run
+    Experiment.log_wandb_data(self.final_eval_func(initial_agent,agent,eval_env))
+  File "C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Analysis\ExperimentSetup.py", line 202, in experiment_final_eval_func
+    evals.update(measure_base_nets(agent,eval_env,num_runs=num_runs))
+  File "C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Analysis\Evaluation.py", line 204, in measure_base_nets
+    agent.top.net.regress_to_one_action_net(i)
+  File "C:\Users\Robin\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\module.py", line 1185, in __getattr__
+    raise AttributeError("'{}' object has no attribute '{}'".format(
+AttributeError: 'ActorCriticCascade' object has no attribute 'regress_to_one_action_net'

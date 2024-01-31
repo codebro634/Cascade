@@ -1,0 +1,125 @@
+#--------------------
+#Alternating action-nets/chooser experiments:
+#--------------------
+
+Alternating_Ant-v4_only_action
+2000000
+Ant-v4
+CombN
+chooser_epochs:1;action_epochs:99999999
+
+Alternating_Ant-v4_1000_4000
+2000000
+Ant-v4
+CombN
+chooser_epochs: 1000; action_epochs: 4000
+
+Alternating_Ant-v4_100_400
+2000000
+Ant-v4
+CombN
+chooser_epochs: 100; action_epochs: 400
+
+Alternating_Ant-v4_10_40
+2000000
+Ant-v4
+CombN
+chooser_epochs: 10; action_epochs: 40
+
+Alternating_Walker2d-v4_2_1
+2000000
+Walker2d-v4
+CombN
+chooser_epochs: 2; action_epochs: 1
+
+Alternating_Walker2d-v4_1_2
+2000000
+Walker2d-v4
+CombN
+chooser_epochs: 1; action_epochs: 2
+
+Alternating_Ant-v4_2_1
+2000000
+Ant-v4
+CombN
+chooser_epochs: 2; action_epochs: 1
+
+Alternating_Ant-v4_1_2
+2000000
+Ant-v4
+CombN
+chooser_epochs: 1; action_epochs: 2
+
+Alternating_Walker2d-v4_20_10
+2000000
+Walker2d-v4
+CombN
+chooser_epochs: 20; action_epochs: 10
+
+Alternating_Walker2d-v4_10_20
+2000000
+Walker2d-v4
+CombN
+chooser_epochs: 10; action_epochs: 20
+
+Alternating_Ant-v4_20_10
+2000000
+Ant-v4
+CombN
+chooser_epochs: 20; action_epochs: 10
+
+Alternating_Ant-v4_10_20
+2000000
+Ant-v4
+CombN
+chooser_epochs: 10; action_epochs: 20
+
+Alternating_Walker2d-v4_200_100
+2000000
+Walker2d-v4
+CombN
+chooser_epochs: 200; action_epochs: 100
+
+Alternating_Walker2d-v4_100_200
+2000000
+Walker2d-v4
+CombN
+chooser_epochs: 100; action_epochs: 200
+
+Alternating_Ant-v4_200_100
+2000000
+Ant-v4
+CombN
+chooser_epochs: 200; action_epochs: 100
+
+Alternating_Ant-v4_100_200
+2000000
+Ant-v4
+CombN
+chooser_epochs: 100; action_epochs: 200
+
+Alternating_Walker2d-v4_2000_1000
+2000000
+Walker2d-v4
+CombN
+chooser_epochs: 2000; action_epochs: 1000
+
+Alternating_Walker2d-v4_1000_2000
+2000000
+Walker2d-v4
+CombN
+chooser_epochs: 1000; action_epochs: 2000
+
+Alternating_Ant-v4_2000_1000
+2000000
+Ant-v4
+CombN
+chooser_epochs: 2000; action_epochs: 1000
+
+Alternating_Ant-v4_1000_2000
+2000000
+Ant-v4
+CombN
+chooser_epochs: 1000; action_epochs: 2000
+
+

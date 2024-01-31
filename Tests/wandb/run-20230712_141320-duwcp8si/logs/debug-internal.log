@@ -1,0 +1,181 @@
+2023-07-12 14:13:20,978 INFO    StreamThr :7648 [internal.py:wandb_internal():86] W&B internal server running at pid: 7648, started at: 2023-07-12 14:13:20.972788
+2023-07-12 14:13:20,999 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: status
+2023-07-12 14:13:21,015 INFO    WriterThread:7648 [datastore.py:open_for_write():85] open: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\run-duwcp8si.wandb
+2023-07-12 14:13:21,016 DEBUG   SenderThread:7648 [sender.py:send():375] send: header
+2023-07-12 14:13:21,081 DEBUG   SenderThread:7648 [sender.py:send():375] send: run
+2023-07-12 14:13:21,656 INFO    SenderThread:7648 [dir_watcher.py:__init__():219] watching files in: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files
+2023-07-12 14:13:21,656 INFO    SenderThread:7648 [sender.py:_start_run_threads():1124] run started: duwcp8si with start time 1689164000.972787
+2023-07-12 14:13:21,656 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: summary_record
+2023-07-12 14:13:21,657 INFO    SenderThread:7648 [sender.py:_save_file():1378] saving file wandb-summary.json with policy end
+2023-07-12 14:13:21,664 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: check_version
+2023-07-12 14:13:21,666 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: check_version
+2023-07-12 14:13:21,814 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: run_start
+2023-07-12 14:13:21,825 DEBUG   HandlerThread:7648 [system_info.py:__init__():31] System info init
+2023-07-12 14:13:21,825 DEBUG   HandlerThread:7648 [system_info.py:__init__():46] System info init done
+2023-07-12 14:13:21,825 INFO    HandlerThread:7648 [system_monitor.py:start():181] Starting system monitor
+2023-07-12 14:13:21,826 INFO    SystemMonitor:7648 [system_monitor.py:_start():145] Starting system asset monitoring threads
+2023-07-12 14:13:21,826 INFO    HandlerThread:7648 [system_monitor.py:probe():201] Collecting system info
+2023-07-12 14:13:21,833 DEBUG   HandlerThread:7648 [system_info.py:probe():195] Probing system
+2023-07-12 14:13:21,833 INFO    SystemMonitor:7648 [interfaces.py:start():190] Started cpu monitoring
+2023-07-12 14:13:21,834 INFO    SystemMonitor:7648 [interfaces.py:start():190] Started disk monitoring
+2023-07-12 14:13:21,835 DEBUG   HandlerThread:7648 [system_info.py:_probe_git():180] Probing git
+2023-07-12 14:13:21,879 INFO    SystemMonitor:7648 [interfaces.py:start():190] Started memory monitoring
+2023-07-12 14:13:21,894 INFO    SystemMonitor:7648 [interfaces.py:start():190] Started network monitoring
+2023-07-12 14:13:21,966 DEBUG   HandlerThread:7648 [system_info.py:_probe_git():188] Probing git done
+2023-07-12 14:13:21,966 DEBUG   HandlerThread:7648 [system_info.py:probe():240] Probing system done
+2023-07-12 14:13:21,966 DEBUG   HandlerThread:7648 [system_monitor.py:probe():210] {'os': 'Windows-10-10.0.19045-SP0', 'python': '3.10.4', 'heartbeatAt': '2023-07-12T12:13:21.833548', 'startedAt': '2023-07-12T12:13:20.932895', 'docker': None, 'cuda': None, 'args': ('--wandb_logging', '--exp_group', 'Test', '--exp_name', 'TestCascadeNaive', '--exp_identifier', 'test', '--steps', '1000', '--eval_interval', '1000', '--agent_config', 'CascadeNaive', '--env_descr', 'Ant-v4', '--agent_params', 'base_steps:300;propagate_value:True;propagate_action:True', '--save_latest'), 'state': 'running', 'program': 'C:\\Users\\Robin\\Desktop\\Uni\\Semester 10\\Masterarbeit\\Implementierung\\EnsembleAgents\\mainExperiment.py', 'codePath': 'mainExperiment.py', 'git': {'remote': 'https://github.com/codebro634/EnsembleAgents.git', 'commit': '5f57fcadec3859c6607a74d10c554f5d73d87541'}, 'email': 'Robinyyy@t-online.de', 'root': 'C:/Users/Robin/Desktop/Uni/Semester 10/Masterarbeit/Implementierung/EnsembleAgents', 'host': 'DESKTOP-5IS4C9N', 'username': 'Robin', 'executable': 'C:\\Users\\Robin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe', 'cpu_count': 6, 'cpu_count_logical': 6, 'cpu_freq': {'current': 3696.0, 'min': 0.0, 'max': 3696.0}, 'cpu_freq_per_core': [{'current': 3696.0, 'min': 0.0, 'max': 3696.0}], 'disk': {'total': 930.9479293823242, 'used': 284.0800437927246}, 'memory': {'total': 31.86672592163086}}
+2023-07-12 14:13:21,966 INFO    HandlerThread:7648 [system_monitor.py:probe():211] Finished collecting system info
+2023-07-12 14:13:21,966 INFO    HandlerThread:7648 [system_monitor.py:probe():214] Publishing system info
+2023-07-12 14:13:21,966 DEBUG   HandlerThread:7648 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2023-07-12 14:13:21,966 DEBUG   HandlerThread:7648 [system_info.py:_save_pip():67] Saving pip packages done
+2023-07-12 14:13:21,969 INFO    HandlerThread:7648 [system_monitor.py:probe():216] Finished publishing system info
+2023-07-12 14:13:21,974 DEBUG   SenderThread:7648 [sender.py:send():375] send: files
+2023-07-12 14:13:21,974 INFO    SenderThread:7648 [sender.py:_save_file():1378] saving file wandb-metadata.json with policy now
+2023-07-12 14:13:22,020 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: stop_status
+2023-07-12 14:13:22,020 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: stop_status
+2023-07-12 14:13:22,260 DEBUG   SenderThread:7648 [sender.py:send():375] send: telemetry
+2023-07-12 14:13:22,605 INFO    wandb-upload_0:7648 [upload_job.py:push():137] Uploaded file C:\Users\Robin\AppData\Local\Temp\tmp6fx3p13_wandb\li383wkz-wandb-metadata.json
+2023-07-12 14:13:22,671 INFO    Thread-16 :7648 [dir_watcher.py:_on_file_created():278] file/dir created: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\wandb-summary.json
+2023-07-12 14:13:22,671 INFO    Thread-16 :7648 [dir_watcher.py:_on_file_created():278] file/dir created: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\requirements.txt
+2023-07-12 14:13:22,671 INFO    Thread-16 :7648 [dir_watcher.py:_on_file_created():278] file/dir created: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\wandb-metadata.json
+2023-07-12 14:13:26,299 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: status_report
+2023-07-12 14:13:31,325 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: status_report
+2023-07-12 14:13:33,562 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: partial_history
+2023-07-12 14:13:33,563 DEBUG   SenderThread:7648 [sender.py:send():375] send: history
+2023-07-12 14:13:33,563 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: summary_record
+2023-07-12 14:13:33,565 INFO    SenderThread:7648 [sender.py:_save_file():1378] saving file wandb-summary.json with policy end
+2023-07-12 14:13:33,765 INFO    Thread-16 :7648 [dir_watcher.py:_on_file_modified():295] file/dir modified: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\wandb-summary.json
+2023-07-12 14:13:36,597 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: status_report
+2023-07-12 14:13:37,018 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: stop_status
+2023-07-12 14:13:37,018 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: stop_status
+2023-07-12 14:13:38,056 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: partial_history
+2023-07-12 14:13:38,057 DEBUG   SenderThread:7648 [sender.py:send():375] send: history
+2023-07-12 14:13:38,057 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: summary_record
+2023-07-12 14:13:38,058 INFO    SenderThread:7648 [sender.py:_save_file():1378] saving file wandb-summary.json with policy end
+2023-07-12 14:13:38,058 DEBUG   SenderThread:7648 [sender.py:send():375] send: telemetry
+2023-07-12 14:13:38,059 DEBUG   SenderThread:7648 [sender.py:send():375] send: exit
+2023-07-12 14:13:38,059 INFO    SenderThread:7648 [sender.py:send_exit():598] handling exit code: 0
+2023-07-12 14:13:38,059 INFO    SenderThread:7648 [sender.py:send_exit():600] handling runtime: 16
+2023-07-12 14:13:38,059 INFO    SenderThread:7648 [sender.py:_save_file():1378] saving file wandb-summary.json with policy end
+2023-07-12 14:13:38,059 INFO    SenderThread:7648 [sender.py:send_exit():606] send defer
+2023-07-12 14:13:38,059 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:38,060 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 0
+2023-07-12 14:13:38,060 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:38,060 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 0
+2023-07-12 14:13:38,060 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 1
+2023-07-12 14:13:38,060 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:38,060 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 1
+2023-07-12 14:13:38,060 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:38,060 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 1
+2023-07-12 14:13:38,060 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 2
+2023-07-12 14:13:38,060 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:38,060 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 2
+2023-07-12 14:13:38,060 INFO    HandlerThread:7648 [system_monitor.py:finish():190] Stopping system monitor
+2023-07-12 14:13:38,060 DEBUG   SystemMonitor:7648 [system_monitor.py:_start():159] Starting system metrics aggregation loop
+2023-07-12 14:13:38,061 INFO    HandlerThread:7648 [interfaces.py:finish():202] Joined cpu monitor
+2023-07-12 14:13:38,061 DEBUG   SystemMonitor:7648 [system_monitor.py:_start():166] Finished system metrics aggregation loop
+2023-07-12 14:13:38,061 INFO    HandlerThread:7648 [interfaces.py:finish():202] Joined disk monitor
+2023-07-12 14:13:38,061 DEBUG   SystemMonitor:7648 [system_monitor.py:_start():170] Publishing last batch of metrics
+2023-07-12 14:13:38,061 INFO    HandlerThread:7648 [interfaces.py:finish():202] Joined memory monitor
+2023-07-12 14:13:38,061 INFO    HandlerThread:7648 [interfaces.py:finish():202] Joined network monitor
+2023-07-12 14:13:38,062 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:38,062 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 2
+2023-07-12 14:13:38,062 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 3
+2023-07-12 14:13:38,062 DEBUG   SenderThread:7648 [sender.py:send():375] send: stats
+2023-07-12 14:13:38,062 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:38,062 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 3
+2023-07-12 14:13:38,062 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:38,062 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 3
+2023-07-12 14:13:38,062 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 4
+2023-07-12 14:13:38,062 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:38,062 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 4
+2023-07-12 14:13:38,063 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:38,063 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 4
+2023-07-12 14:13:38,063 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 5
+2023-07-12 14:13:38,063 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:38,063 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 5
+2023-07-12 14:13:38,063 DEBUG   SenderThread:7648 [sender.py:send():375] send: summary
+2023-07-12 14:13:38,063 INFO    SenderThread:7648 [sender.py:_save_file():1378] saving file wandb-summary.json with policy end
+2023-07-12 14:13:38,064 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:38,064 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 5
+2023-07-12 14:13:38,064 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 6
+2023-07-12 14:13:38,064 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:38,064 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 6
+2023-07-12 14:13:38,064 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:38,064 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 6
+2023-07-12 14:13:38,066 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: status_report
+2023-07-12 14:13:38,822 INFO    Thread-16 :7648 [dir_watcher.py:_on_file_modified():295] file/dir modified: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\wandb-summary.json
+2023-07-12 14:13:39,066 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: poll_exit
+2023-07-12 14:13:40,307 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 7
+2023-07-12 14:13:40,308 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: poll_exit
+2023-07-12 14:13:40,308 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:40,308 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 7
+2023-07-12 14:13:40,308 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:40,308 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 7
+2023-07-12 14:13:40,308 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 8
+2023-07-12 14:13:40,308 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:40,309 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 8
+2023-07-12 14:13:40,309 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:40,309 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 8
+2023-07-12 14:13:40,326 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 9
+2023-07-12 14:13:40,327 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:40,327 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 9
+2023-07-12 14:13:40,327 DEBUG   SenderThread:7648 [sender.py:send():375] send: artifact
+2023-07-12 14:13:40,841 INFO    Thread-16 :7648 [dir_watcher.py:_on_file_modified():295] file/dir modified: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\config.yaml
+2023-07-12 14:13:41,693 INFO    wandb-upload_0:7648 [upload_job.py:push():92] Skipped uploading C:\Users\Robin\AppData\Local\wandb\wandb\artifacts\staging\tmpubat3d91
+2023-07-12 14:13:42,062 INFO    wandb-upload_1:7648 [upload_job.py:push():95] Uploaded file C:\Users\Robin\AppData\Local\wandb\wandb\artifacts\staging\tmpy79zed0u
+2023-07-12 14:13:43,623 INFO    SenderThread:7648 [sender.py:send_artifact():1474] sent artifact job-https___github.com_codebro634_EnsembleAgents.git_mainExperiment.py - {'id': 'QXJ0aWZhY3Q6NTEwNjgyNzI2', 'digest': 'a8c8f5b8ae2cc105d6e6e0066439f72d', 'state': 'PENDING', 'aliases': [], 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjczMDk4OTk1', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NTEwNjgyMTI2', 'versionIndex': 34}}, 'version': 'latest'}
+2023-07-12 14:13:43,624 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:43,625 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 9
+2023-07-12 14:13:43,625 INFO    SenderThread:7648 [dir_watcher.py:finish():365] shutting down directory watcher
+2023-07-12 14:13:43,624 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: status_report
+2023-07-12 14:13:43,872 INFO    SenderThread:7648 [dir_watcher.py:finish():395] scan: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files
+2023-07-12 14:13:43,873 INFO    SenderThread:7648 [dir_watcher.py:finish():409] scan save: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\config.yaml config.yaml
+2023-07-12 14:13:43,873 INFO    SenderThread:7648 [dir_watcher.py:finish():409] scan save: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\requirements.txt requirements.txt
+2023-07-12 14:13:43,875 INFO    SenderThread:7648 [dir_watcher.py:finish():409] scan save: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\wandb-metadata.json wandb-metadata.json
+2023-07-12 14:13:43,875 INFO    SenderThread:7648 [dir_watcher.py:finish():409] scan save: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\wandb-summary.json wandb-summary.json
+2023-07-12 14:13:43,878 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 10
+2023-07-12 14:13:43,878 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:43,878 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 10
+2023-07-12 14:13:43,878 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:43,878 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 10
+2023-07-12 14:13:43,878 INFO    SenderThread:7648 [file_pusher.py:finish():168] shutting down file pusher
+2023-07-12 14:13:44,089 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: keepalive
+2023-07-12 14:13:44,403 INFO    wandb-upload_0:7648 [upload_job.py:push():137] Uploaded file C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\config.yaml
+2023-07-12 14:13:44,444 INFO    wandb-upload_1:7648 [upload_job.py:push():137] Uploaded file C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\requirements.txt
+2023-07-12 14:13:44,563 INFO    wandb-upload_2:7648 [upload_job.py:push():137] Uploaded file C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\files\wandb-summary.json
+2023-07-12 14:13:44,770 INFO    Thread-15 (_thread_body):7648 [sender.py:transition_state():626] send defer: 11
+2023-07-12 14:13:44,770 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:44,770 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 11
+2023-07-12 14:13:44,770 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:44,771 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 11
+2023-07-12 14:13:44,771 INFO    SenderThread:7648 [file_pusher.py:join():173] waiting for file pusher
+2023-07-12 14:13:44,771 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 12
+2023-07-12 14:13:44,771 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:44,771 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 12
+2023-07-12 14:13:44,771 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:44,771 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 12
+2023-07-12 14:13:45,099 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 13
+2023-07-12 14:13:45,099 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:45,099 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 13
+2023-07-12 14:13:45,100 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:45,100 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 13
+2023-07-12 14:13:45,100 INFO    SenderThread:7648 [sender.py:transition_state():626] send defer: 14
+2023-07-12 14:13:45,100 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: defer
+2023-07-12 14:13:45,100 INFO    HandlerThread:7648 [handler.py:handle_request_defer():170] handle defer: 14
+2023-07-12 14:13:45,100 DEBUG   SenderThread:7648 [sender.py:send():375] send: final
+2023-07-12 14:13:45,100 DEBUG   SenderThread:7648 [sender.py:send():375] send: footer
+2023-07-12 14:13:45,100 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: defer
+2023-07-12 14:13:45,100 INFO    SenderThread:7648 [sender.py:send_request_defer():622] handle sender defer: 14
+2023-07-12 14:13:45,101 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: poll_exit
+2023-07-12 14:13:45,101 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: poll_exit
+2023-07-12 14:13:45,101 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: server_info
+2023-07-12 14:13:45,101 DEBUG   SenderThread:7648 [sender.py:send_request():402] send_request: server_info
+2023-07-12 14:13:45,102 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: get_summary
+2023-07-12 14:13:45,103 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: sampled_history
+2023-07-12 14:13:45,313 DEBUG   HandlerThread:7648 [handler.py:handle_request():144] handle_request: shutdown
+2023-07-12 14:13:45,313 INFO    HandlerThread:7648 [handler.py:finish():845] shutting down handler
+2023-07-12 14:13:46,114 INFO    WriterThread:7648 [datastore.py:close():298] close: C:\Users\Robin\Desktop\Uni\Semester 10\Masterarbeit\Implementierung\EnsembleAgents\Tests\wandb\run-20230712_141320-duwcp8si\run-duwcp8si.wandb
+2023-07-12 14:13:46,318 INFO    SenderThread:7648 [sender.py:finish():1550] shutting down sender
+2023-07-12 14:13:46,318 INFO    SenderThread:7648 [file_pusher.py:finish():168] shutting down file pusher
+2023-07-12 14:13:46,318 INFO    SenderThread:7648 [file_pusher.py:join():173] waiting for file pusher

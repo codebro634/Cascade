@@ -1,0 +1,227 @@
+#--------------------
+#Entropy experiments:
+#--------------------
+
+#Uniform attention
+
+Comb4_Walker2d_uniform
+2000000
+Walker2d-v4
+CombN
+temperature:inf
+
+Comb4_Ant_uniform
+2000000
+Walker2d-v4
+CombN
+temperature:inf
+
+Comb6_Ant_uniform
+2000000
+Ant-v4
+CombN
+temperature:inf;n:6
+
+Comb8_Ant_uniform
+2000000
+Ant-v4
+CombN
+temperature:inf;n:8
+
+#Horizontal Entropy
+
+Comb4_Walker2d-v4_0.0_-0.1
+2000000
+Walker2d-v4
+CombN
+hent_coef: -0.1
+
+Comb4_Walker2d-v4_0.0_-0.05
+2000000
+Walker2d-v4
+CombN
+hent_coef: -0.05
+
+Comb4_Walker2d-v4_0.0_-0.01
+2000000
+Walker2d-v4
+CombN
+hent_coef: -0.01
+
+Comb4_Ant-v4_0.0_-0.1
+2000000
+Ant-v4
+CombN
+hent_coef: -0.1
+
+Comb4_Ant-v4_0.0_-0.05
+2000000
+Ant-v4
+CombN
+hent_coef: -0.05
+
+Comb4_Ant-v4_0.0_-0.01
+2000000
+Ant-v4
+CombN
+hent_coef: -0.01
+
+#Vertical entropy
+
+Comb4_Walker2d-v4_0.1_0.0
+2000000
+Walker2d-v4
+CombN
+vent_coef: 0.1
+
+Comb4_Walker2d-v4_0.05_0.0
+2000000
+Walker2d-v4
+CombN
+vent_coef: 0.05
+
+Comb4_Walker2d-v4_0.01_0.0
+2000000
+Walker2d-v4
+CombN
+vent_coef: 0.01
+
+Comb4_Ant-v4_0.1_0.0
+2000000
+Ant-v4
+CombN
+vent_coef: 0.1
+
+Comb4_Ant-v4_0.05_0.0
+2000000
+Ant-v4
+CombN
+vent_coef: 0.05
+
+Comb4_Ant-v4_0.01_0.0
+2000000
+Ant-v4
+CombN
+vent_coef: 0.01
+
+#Dropout probabilities
+
+Comb4_Walker2d-v4_0.05
+2000000
+Walker2d-v4
+CombN
+dropout_prob: 0.05
+
+Comb4_Walker2d-v4_0.1
+2000000
+Walker2d-v4
+CombN
+dropout_prob: 0.1
+
+Comb4_Walker2d-v4_0.2
+2000000
+Walker2d-v4
+CombN
+dropout_prob: 0.2
+
+Comb4_Walker2d-v4_0.5
+2000000
+Walker2d-v4
+CombN
+dropout_prob: 0.5
+
+Comb4_Ant-v4_0.05
+2000000
+Ant-v4
+CombN
+dropout_prob: 0.05
+
+Comb4_Ant-v4_0.1
+2000000
+Ant-v4
+CombN
+dropout_prob: 0.1
+
+Comb4_Ant-v4_0.2
+2000000
+Ant-v4
+CombN
+dropout_prob: 0.2
+
+Comb4_Ant-v4_0.5
+2000000
+Ant-v4
+CombN
+dropout_prob: 0.5
+
+Comb4_HalfCheetah-v4_0.05
+2000000
+HalfCheetah-v4
+CombN
+dropout_prob: 0.05
+
+Comb4_HalfCheetah-v4_0.1
+2000000
+HalfCheetah-v4
+CombN
+dropout_prob: 0.1
+
+Comb4_HalfCheetah-v4_0.2
+2000000
+HalfCheetah-v4
+CombN
+dropout_prob: 0.2
+
+Comb4_HalfCheetah-v4_0.5
+2000000
+HalfCheetah-v4
+CombN
+dropout_prob: 0.5
+
+Comb4_Hopper-v4_0.05
+2000000
+Hopper-v4
+CombN
+dropout_prob: 0.05
+
+Comb4_Hopper-v4_0.1
+2000000
+Hopper-v4
+CombN
+dropout_prob: 0.1
+
+Comb4_Hopper-v4_0.2
+2000000
+Hopper-v4
+CombN
+dropout_prob: 0.2
+
+Comb4_Hopper-v4_0.5
+2000000
+Hopper-v4
+CombN
+dropout_prob: 0.5
+
+Comb4_Humanoid-v4_0.05
+2000000
+Humanoid-v4
+CombN
+dropout_prob: 0.05
+
+Comb4_Humanoid-v4_0.1
+2000000
+Humanoid-v4
+CombN
+dropout_prob: 0.1
+
+Comb4_Humanoid-v4_0.2
+2000000
+Humanoid-v4
+CombN
+dropout_prob: 0.2
+
+Comb4_Humanoid-v4_0.5
+2000000
+Humanoid-v4
+CombN
+dropout_prob: 0.5

@@ -1,0 +1,61 @@
+{
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.10.4",
+    "heartbeatAt": "2023-07-12T12:10:25.244120",
+    "startedAt": "2023-07-12T12:10:22.509254",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--wandb_logging",
+        "--exp_group",
+        "Test",
+        "--exp_name",
+        "TestCombNHierarchical",
+        "--exp_identifier",
+        "test",
+        "--steps",
+        "700",
+        "--eval_interval",
+        "700",
+        "--agent_config",
+        "CombNHierarchical",
+        "--env_descr",
+        "Ant-v4",
+        "--agent_params",
+        "n:2;cycles:2;cycle_steps:100;vent:0.1",
+        "--save_latest"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Robin\\Desktop\\Uni\\Semester 10\\Masterarbeit\\Implementierung\\EnsembleAgents\\mainExperiment.py",
+    "codePath": "mainExperiment.py",
+    "git": {
+        "remote": "https://github.com/codebro634/EnsembleAgents.git",
+        "commit": "5f57fcadec3859c6607a74d10c554f5d73d87541"
+    },
+    "email": "Robinyyy@t-online.de",
+    "root": "C:/Users/Robin/Desktop/Uni/Semester 10/Masterarbeit/Implementierung/EnsembleAgents",
+    "host": "DESKTOP-5IS4C9N",
+    "username": "Robin",
+    "executable": "C:\\Users\\Robin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+    "cpu_count": 6,
+    "cpu_count_logical": 6,
+    "cpu_freq": {
+        "current": 3696.0,
+        "min": 0.0,
+        "max": 3696.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3696.0,
+            "min": 0.0,
+            "max": 3696.0
+        }
+    ],
+    "disk": {
+        "total": 930.9479293823242,
+        "used": 284.0648651123047
+    },
+    "memory": {
+        "total": 31.86672592163086
+    }
+}

@@ -1,0 +1,250 @@
+#--------------------
+#Hierarchical CombN experiments:
+#--------------------
+
+#--------------
+#CombNHierarchical + Pretraining
+#--------------
+
+CombNHier_Walker2d-v4_1mil_2cycle_2
+7000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:1000000; cycles:2;n:2
+
+CombNHier_Walker2d-v4_2mil_2cycle_2
+14000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:2000000; cycles:2;n:2
+
+CombNHier_Walker2d-v4_1mil_3cycle_2
+15000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:1000000; cycles:3;n:2
+
+CombNHier_Walker2d-v4_1mil_2cycle_3
+13000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:1000000; cycles:2;n:3
+
+CombNHier_Ant-v4_1mil_2cycle_2
+7000000
+Ant-v4
+CombNHierarchical
+cycle_steps:1000000; cycles:2;n:2
+
+CombNHier_Ant-v4_2mil_2cycle_2
+14000000
+Ant-v4
+CombNHierarchical
+cycle_steps:2000000; cycles:2;n:2
+
+CombNHier_Ant-v4_1mil_3cycle_2
+15000000
+Ant-v4
+CombNHierarchical
+cycle_steps:1000000; cycles:3;n:2
+
+CombNHier_Ant-v4_1mil_2cycle_3
+13000000
+Ant-v4
+CombNHierarchical
+cycle_steps:1000000; cycles:2;n:3
+
+CombNHier_Ant-v4_1mil_4cycle_2
+31000000
+Ant-v4
+CombNHierarchical
+cycle_steps:1000000; cycles:4;n:2
+
+CombNHier_Ant-v4_0.5mil_4cycle_2
+16000000
+Ant-v4
+CombNHierarchical
+cycle_steps:500000; cycles:4;n:2
+
+CombNHier_Ant-v4_1mil_2cycle_4
+21000000
+Ant-v4
+CombNHierarchical
+cycle_steps:1000000; cycles:2;n:4
+
+CombNHier_Ant-v4_0.5mil_2cycle_4
+11000000
+Ant-v4
+CombNHierarchical
+cycle_steps:500000; cycles:2;n:4
+
+CombNHier_Walker2d-v4_1mil_4cycle_2
+31000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:1000000; cycles:4;n:2
+
+CombNHier_Walker2d-v4_0.5mil_4cycle_2
+16000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:500000; cycles:4;n:2
+
+CombNHier_Walker2d-v4_1mil_2cycle_4
+21000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:1000000; cycles:2;n:4
+
+CombNHier_Walker2d-v4_0.5mil_2cycle_4
+11000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:500000; cycles:2;n:4
+
+#-----------------------
+#Pretraining only experiments
+#-----------------------
+
+CombNHier_Walker2d-v4_0.5mil_1cycle_16n
+10000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:(500000,2000000); cycles:1; n:16
+
+CombNHier_Walker2d-v4_1mil_1cycle_16n
+18000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:(1000000,2000000); cycles:1; n:16
+
+CombNHier_Ant-v4_0.5mil_1cycle_16n
+10000000
+Ant-v4
+CombNHierarchical
+cycle_steps:(500000,2000000); cycles:1; n:16
+
+CombNHier_Ant-v4_1mil_1cycle_16n
+18000000
+Ant-v4
+CombNHierarchical
+cycle_steps:(1000000,2000000); cycles:1; n:16
+
+CombNHier_Ant-v4_1mil_1cycle_8n
+10000000
+Ant-v4
+CombNHierarchical
+cycle_steps:(1000000,2000000); cycles:1; n:8
+
+CombNHier_Ant-v4_1mil_1cycle_4n
+6000000
+Ant-v4
+CombNHierarchical
+cycle_steps: (1000000,2000000); cycles:1; n:4
+
+CombNHier_Ant-v4_1mil_1cycle_2n
+4000000
+Ant-v4
+CombNHierarchical
+cycle_steps: (1000000,2000000); cycles:1; n:2
+
+
+CombNHier_Ant-v4_2mil_1cycle_4n
+10000000
+Ant-v4
+CombNHierarchical
+cycle_steps: 2000000; cycles:1; n:4
+
+CombNHier_Ant-v4_2mil_1cycle_2n
+6000000
+Ant-v4
+CombNHierarchical
+cycle_steps: 2000000; cycles:1; n:2
+
+CombNHier_Walker2d-v4_1mil_1cycle_8n
+10000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps:(1000000,2000000); cycles:1; n:8
+
+CombNHier_Walker2d-v4_1mil_1cycle_4n
+6000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps: (1000000,2000000); cycles:1; n:4
+
+CombNHier_Walker2d-v4_1mil_1cycle_2n
+4000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps: (1000000,2000000); cycles:1; n:2
+
+
+CombNHier_Walker2d-v4_2mil_1cycle_4n
+10000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps: 2000000; cycles:1; n:4
+
+CombNHier_Walker2d-v4_2mil_1cycle_2n
+6000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps: 2000000; cycles:1; n:2
+
+#--------------
+#No pretraining
+#--------------
+
+CombNHier_Ant-v4_2cycle_2n_no_pretrain
+2000000
+Ant-v4
+CombNHierarchical
+cycles: 2; pretrain: False
+
+CombNHier_Ant-v4_2cycle_3n_no_pretrain
+2000000
+Ant-v4
+CombNHierarchical
+cycles: 2; pretrain: False; n:3
+
+CombNHier_Ant-v4_3cycle_2n_no_pretrain
+2000000
+Ant-v4
+CombNHierarchical
+cycles: 3; pretrain: False; n:2
+
+CombNHier_Walker2d-v4_2cycle_2n_no_pretrain
+2000000
+Walker2d-v4
+CombNHierarchical
+cycles: 2; pretrain: False
+
+CombNHier_Walker2d-v4_2cycle_3n_no_pretrain
+2000000
+Walker2d-v4
+CombNHierarchical
+cycles: 2; pretrain: False; n:3
+
+CombNHier_Walker2d-v4_3cycle_2n_no_pretrain
+2000000
+Walker2d-v4
+CombNHierarchical
+cycles: 3; pretrain: False; n:2
+
+
+#--------------
+# Keeping action nets frozen
+#--------------
+
+CombNHier_Ant-v4_frozen
+10000000
+Ant-v4
+CombNHierarchical
+cycle_steps: 2000000; cycles:1; n:4; freeze_bottom:True
+
+CombNHier_Walker2d-v4_frozen
+10000000
+Walker2d-v4
+CombNHierarchical
+cycle_steps: 2000000; cycles:1; n:4; freeze_bottom:True

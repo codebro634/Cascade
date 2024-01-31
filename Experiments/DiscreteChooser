@@ -1,0 +1,125 @@
+#--------------------
+#Continuation experiments:
+#--------------------
+
+DC_Walker2d-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Walker2d-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Walker2d/1, ActionNets/Walker2d/2, ActionNets/Walker2d/3, ActionNets/Walker2d/4]
+DiscreteChooser
+
+DC_Ant-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Ant-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Ant/1, ActionNets/Ant/2, ActionNets/Ant/3, ActionNets/Ant/4]
+DiscreteChooser
+
+##### 2 #####
+
+DC_Walker2d-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Walker2d-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Walker2d/5, ActionNets/Walker2d/6, ActionNets/Walker2d/7, ActionNets/Walker2d/8]
+DiscreteChooser
+
+DC_Ant-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Ant-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Ant/5, ActionNets/Ant/6, ActionNets/Ant/7, ActionNets/Ant/8]
+DiscreteChooser
+
+##### 3 #####
+
+DC_Walker2d-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Walker2d-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Walker2d/9, ActionNets/Walker2d/10, ActionNets/Walker2d/11, ActionNets/Walker2d/12]
+DiscreteChooser
+
+DC_Ant-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Ant-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Ant/9, ActionNets/Ant/10, ActionNets/Ant/11, ActionNets/Ant/12]
+DiscreteChooser
+
+##### 4 #####
+
+DC_Walker2d-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Walker2d-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Walker2d/13, ActionNets/Walker2d/14, ActionNets/Walker2d/15, ActionNets/Walker2d/16]
+DiscreteChooser
+
+DC_Ant-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Ant-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Ant/13, ActionNets/Ant/14, ActionNets/Ant/15, ActionNets/Ant/16]
+DiscreteChooser
+
+##### 5 #####
+
+DC_Walker2d-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Walker2d-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Walker2d/17, ActionNets/Walker2d/18, ActionNets/Walker2d/19, ActionNets/Walker2d/20]
+DiscreteChooser
+
+DC_Ant-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Ant-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Ant/17, ActionNets/Ant/18, ActionNets/Ant/19, ActionNets/Ant/20]
+DiscreteChooser
+
+##### 6 #####
+
+DC_Walker2d-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Walker2d-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Walker2d/21, ActionNets/Walker2d/22, ActionNets/Walker2d/23, ActionNets/Walker2d/24]
+DiscreteChooser
+
+DC_Ant-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Ant-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Ant/21, ActionNets/Ant/22, ActionNets/Ant/23, ActionNets/Ant/24]
+DiscreteChooser
+
+##### 7 #####
+
+DC_Walker2d-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Walker2d-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Walker2d/25, ActionNets/Walker2d/26, ActionNets/Walker2d/27, ActionNets/Walker2d/28]
+DiscreteChooser
+
+DC_Ant-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Ant-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Ant/25, ActionNets/Ant/26, ActionNets/Ant/27, ActionNets/Ant/28]
+DiscreteChooser
+
+
+##### 8 #####
+
+DC_Walker2d-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Walker2d-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Walker2d/29, ActionNets/Walker2d/30, ActionNets/Walker2d/31, ActionNets/Walker2d/32]
+DiscreteChooser
+
+DC_Ant-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Ant-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Ant/29, ActionNets/Ant/30, ActionNets/Ant/31, ActionNets/Ant/32]
+DiscreteChooser
+
+##### 9 #####
+
+DC_Walker2d-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Walker2d-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Walker2d/33, ActionNets/Walker2d/34, ActionNets/Walker2d/35, ActionNets/Walker2d/36]
+DiscreteChooser
+
+DC_Ant-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Ant-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Ant/33, ActionNets/Ant/34, ActionNets/Ant/35, ActionNets/Ant/36]
+DiscreteChooser
+
+##### 10 #####
+
+DC_Walker2d-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Walker2d-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Walker2d/37, ActionNets/Walker2d/38, ActionNets/Walker2d/39, ActionNets/Walker2d/40]
+DiscreteChooser
+
+DC_Ant-v4
+2000000
+ChooserEnv; agent_config:DiscreteChooser; env:Ant-v4,norm=False,agent_config=VanillaPPO; agents:[ActionNets/Ant/37, ActionNets/Ant/38, ActionNets/Ant/39, ActionNets/Ant/40]
+DiscreteChooser
+
+
+

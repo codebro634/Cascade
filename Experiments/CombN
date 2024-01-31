@@ -1,0 +1,120 @@
+#--------------------
+#CombN experiments:
+#--------------------
+
+#Additional Baseline
+Comb4_(16,16)_(64,)_Humanoid-v4
+2000000
+Humanoid-v4
+CombN
+
+Comb4_(16,16)_(64,)_Hopper-v4
+2000000
+Hopper-v4
+CombN
+
+Comb4_(16,16)_(64,)_HalfCheetah-v4
+2000000
+HalfCheetah-v4
+CombN
+
+
+#Varying hidden sizes
+
+Comb4_(32,32)_(64,64)_Walker2d-v4
+2000000
+Walker2d-v4
+CombN
+action_hidden: (32,32); chooser_hidden: (64,64)
+
+Comb4_(16,16)_(64,64)_Walker2d-v4
+2000000
+Walker2d-v4
+CombN
+action_hidden: (16,16); chooser_hidden: (64,64)
+
+Comb4_(32,32)_(64,)_Walker2d-v4
+2000000
+Walker2d-v4
+CombN
+action_hidden: (32,32); chooser_hidden: (64,)
+
+Comb4_(16,16)_(64,)_Walker2d-v4
+2000000
+Walker2d-v4
+CombN
+action_hidden: (16,16); chooser_hidden: (64,)
+
+Comb4_(32,32)_(64,64)_Ant-v4
+2000000
+Ant-v4
+CombN
+action_hidden: (32,32); chooser_hidden: (64,64)
+
+Comb4_(16,16)_(64,64)_Ant-v4
+2000000
+Ant-v4
+CombN
+action_hidden: (16,16); chooser_hidden: (64,64)
+
+Comb4_(32,32)_(64,)_Ant-v4
+2000000
+Ant-v4
+CombN
+action_hidden: (32,32); chooser_hidden: (64,)
+
+Comb4_(16,16)_(64,)_Ant-v4
+2000000
+Ant-v4
+CombN
+action_hidden: (16,16); chooser_hidden: (64,)
+
+#Varying number of action nets
+
+Comb2_(16,16)_(64,)_Walker2d-v4
+2000000
+Walker2d-v4
+CombN
+n:2
+
+Comb6_(16,16)_(64,)_Walker2d-v4
+2000000
+Walker2d-v4
+CombN
+n:6
+
+Comb8_(16,16)_(64,)_Walker2d-v4
+2000000
+Walker2d-v4
+CombN
+n:8
+
+Comb9_(16,16)_(64,)_Walker2d-v4
+2000000
+Walker2d-v4
+CombN
+n:9
+
+Comb2_(16,16)_(64,)_Ant-v4
+2000000
+Ant-v4
+CombN
+n:2
+
+Comb6_(16,16)_(64,)_Ant-v4
+2000000
+Ant-v4
+CombN
+n:6
+
+Comb8_(16,16)_(64,)_Ant-v4
+2000000
+Ant-v4
+CombN
+n:8
+
+Comb9_(16,16)_(64,)_Ant-v4
+2000000
+Ant-v4
+CombN
+n:9
