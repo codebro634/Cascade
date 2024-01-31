@@ -1,1 +1,0 @@
-{"actor weights diff": 0.0, "obs mean": 0.06212480188835067, "obs var": 8.337924724228559, "rew mean": -30.137594151935073, "rew var": 452.85444516529014, "average return": -45.80092239379883, "_timestamp": 1689163674.5576978, "_runtime": 4.019068717956543, "_step": 1, "_wandb": {"runtime": 3}}
