@@ -16,7 +16,6 @@ from pathlib import Path
 from Agents.Agent import Agent, AgentConfig
 from typing import Callable
 
-from Architectures.ActorHead import CombActorHead
 from Architectures.Elementary import abs_difference
 from Architectures.NetworkConfig import NetworkConfig
 from Environments.Utils import sync_normalization_state
@@ -40,18 +39,11 @@ class PPOConfig(AgentConfig):
     cuda: bool = False #if toggled, cuda will be enabled by default
     net_conf: NetworkConfig =None #Configuration for the used network
 
-    #These parameters  are only used when a Comb-N-net has been chosen
-    attention_vent_coef: float = 0  # coefficient for vertical entropy. 0 if no Minimization
-    attention_hent_coef: float = 0  # coefficient for horizontal entropy. 0 if no Minimiation
-    chooser_epochs: int = 0 # Number of gradient descent steps the chooser gets in a row. 0 if no alternation between chooser and action nets
-    action_epochs: int = 0 # Number of gradient descent steps the action-nets get in a row. 0 if no alternation between chooser and action nets
-
     #These parameters are only used when using the Cascade-Architecture
     fallback_coef: float = 0 #coefficient for fallback-weights. 0 if no Minimization
 
     def validate(self):
         assert self.net_conf is not None
-        assert (self.chooser_epochs == 0 and self.action_epochs == 0) or (self.chooser_epochs > 0 and self.action_epochs > 0)
 
 class PPO(Agent):
 
@@ -184,13 +176,6 @@ class PPO(Agent):
         dones = torch.zeros((self.cfg.num_steps, self.cfg.num_envs)).to(self.device)
         values = torch.zeros((self.cfg.num_steps, self.cfg.num_envs)).to(self.device)
 
-        #Track updates: Only needed when alternating between chooser and action net updates
-        if self.cfg.chooser_epochs > 0:
-            update_chooser = False
-            for param in self.net.actor.chooser.parameters():
-                param.requires_grad = False
-            epochs_since_swap = 0
-
         # Start the game
         next_obs, _ = envs.reset()
         next_obs = torch.Tensor(next_obs).to(self.device)
@@ -267,8 +252,6 @@ class PPO(Agent):
                     newlogprob = x["action_logprob"]
                     action_entropy = x["action_entropy"] if self.cfg.action_ent_coef != 0 else None
                     newvalue = x["value"]
-                    attention_ventropy = x["vent"] if "vent" in x else None
-                    attention_hentropy = x["hent"] if "hent" in x else None
                     fallback_weights = x["weights"] if "weights" in x else None
 
                     logratio = newlogprob - b_logprobs[mb_inds]
@@ -300,13 +283,11 @@ class PPO(Agent):
 
                     #Entropy losses
                     action_entropy_loss = action_entropy.mean() if self.cfg.action_ent_coef != 0 else 0
-                    attention_ventropy_loss = attention_ventropy.mean() if attention_ventropy is not None else 0
-                    attention_hentropy_loss = attention_hentropy.mean() if attention_hentropy is not None else 0
-                    attention_loss = self.cfg.attention_vent_coef * attention_ventropy_loss + self.cfg.attention_hent_coef * attention_hentropy_loss
+
                     #Fallback loss
                     fallback_loss = fallback_weights.mean() * self.cfg.fallback_coef if fallback_weights is not None else 0
 
-                    loss = pg_loss - self.cfg.action_ent_coef * action_entropy_loss + v_loss * self.cfg.vf_coef + attention_loss + fallback_loss
+                    loss = pg_loss - self.cfg.action_ent_coef * action_entropy_loss + v_loss * self.cfg.vf_coef + fallback_loss
 
 
                     #Perform gradient descent
@@ -314,21 +295,6 @@ class PPO(Agent):
                     loss.backward()
                     nn.utils.clip_grad_norm_(self.net.parameters(), self.cfg.max_grad_norm)
                     self.optimizer.step()
-
-                #Update optimizer's turn
-                if self.cfg.chooser_epochs > 0:
-                    epochs_since_swap += 1
-                    if (update_chooser and epochs_since_swap >= self.cfg.chooser_epochs) or (not update_chooser and epochs_since_swap >= self.cfg.action_epochs):
-                        update_chooser = not update_chooser
-                        epochs_since_swap = 0
-                        #Freeze parameters not to be updated this cycle
-                        for action_net in self.net.actor.heads:
-                            for param in action_net.parameters():
-                                param.requires_grad = not update_chooser
-                        for param in self.net.actor.chooser.parameters():
-                            param.requires_grad = update_chooser
-                        self.optimizer = optim.Adam(self.net.parameters(), lr=self.optimizer.param_groups[0]["lr"], eps=1e-5) #Reinit optimizer to get rid of its internal state
-
 
 
                 #Register used samples

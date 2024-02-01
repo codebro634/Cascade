@@ -7,17 +7,14 @@ from gymnasium.wrappers import RecordEpisodeStatistics
 
 import Agents.Cascade
 import Agents.CascadeNaive
-import Agents.CombNHierarchical
 from Agents.Agent import Agent
 from Agents.PPO import PPO
 from Analysis.AgentConfigs.General import gamma, obs_clip, rew_clip
 from Analysis.Experiment import Experiment
-from Analysis.AgentConfigs import VanillaPPO, DiscreteChooser,CombN,CombNHierarchical,CascadeNaive,Cascade
+from Analysis.AgentConfigs import VanillaPPO, CascadeNaive,Cascade
 from Architectures.ActorCritic import ActorCritic
-from Architectures.ActorHead import CombActorHead
 from Architectures.Elementary import abs_difference
 from Environments import EnvSpaceDescription
-from Environments.ChooserEnv import ChooserEnv
 from Environments.DiscreteWrapper import DiscretizeWrapper, DiscretizeMultiWrapper
 from Environments.Utils import wrap_env, get_normalization_state, \
     load_normalization_state_from_file, apply_observation_normalization, get_wrapper
@@ -59,12 +56,6 @@ def setup_env(env_param: str, recursive_call = False) -> Callable:
         env_maker = lambda: DiscretizeMultiWrapper(gym.make(env_name[len("multidiscrete"):]))
     elif env_name.startswith("discrete"):
         env_maker = lambda: DiscretizeWrapper(gym.make(env_name[len("discrete"):]))
-    elif env_name == "ChooserEnv":
-        agents = [(PPO, Path(path)) for path in parse_list(params_dict["agents"], lambda x: x)]
-        env_norm_states = [load_normalization_state_from_file(Agent.to_absolute_path(Path(path).joinpath("norm_state.pkl"))) for path in parse_list(params_dict["agents"], lambda x: x)]
-        obs_transforms = [lambda x: apply_observation_normalization(x, norm_state["obs"]) for norm_state in env_norm_states] if env_norm_states[0] is not None else None
-        assert "norm=False" in params_dict["env"], "Hidden env in Chooser Env must not be normalized."
-        env_maker = lambda: ChooserEnv(hidden_env=setup_env(params_dict["env"], recursive_call=True)(), agents=agents, obs_transforms=obs_transforms)
     else:
         env_maker = lambda: gym.make(env_name)
 
@@ -92,7 +83,7 @@ def get_experiment_params_from_file(exp_group: str, exp_name: str) -> dict:
         Experiments are separated by blank lines.
     """
 
-    with open(Path('Experiments').joinpath(exp_group) if exists(Path('Experiments')) else Path('EnsembleAgents/Experiments').joinpath(exp_group), 'r') as file:
+    with open(Path('Experiments').joinpath(exp_group) if exists(Path('Experiments')) else Path('../Experiments').joinpath(exp_group), 'r') as file:
         lines = file.readlines()
         lines = [line.strip() for line in lines if not line.strip().startswith("#")]
 
@@ -148,12 +139,7 @@ def experiment_eval_func(initial_agent: Agent, agent: Agent, env: gym.core.Env) 
 
     #Track weight differences to initial agent in L1 norm
     if isinstance(agent,PPO) and isinstance(agent.net,ActorCritic):
-        if  isinstance(agent.net.actor, CombActorHead):
-            chooser_diff = abs_difference(agent.net.actor.chooser,initial_agent.net.actor.chooser)
-            action_diff = sum([abs_difference(w1,w2) for w1,w2 in zip(agent.net.actor.heads,initial_agent.net.actor.heads)]) / agent.net.actor.n
-            eval_results.update({"chooser weights diff":chooser_diff, "action nets weights diff":action_diff})
-        else:
-            eval_results.update({"actor weights diff":abs_difference(agent.net.actor,initial_agent.net.actor)})
+        eval_results.update({"actor weights diff":abs_difference(agent.net.actor,initial_agent.net.actor)})
 
     #If normalizing, always add normalization stats
     if get_normalization_state(env):
@@ -171,17 +157,9 @@ def experiment_eval_func(initial_agent: Agent, agent: Agent, env: gym.core.Env) 
     ignore = [] #Evaluation metrics which to discard
 
     if isinstance(agent,PPO):
-        if isinstance(agent.net,ActorCritic) and isinstance(agent.net.actor,CombActorHead):
-            eval_args.update({"measure_entropies":True, "comb_net": agent.net.actor})
-            ignore.append("attentions_sum")
         if isinstance(env.action_space,gym.spaces.Discrete):
             eval_args.update({"track_action_freqs": True})
             ignore.append("distribution")
-
-    if isinstance(agent,Agents.CombNHierarchical.HierComb):
-        if isinstance(agent.current_cycle_agents[0].net.actor,CombActorHead):
-            eval_args.update({"measure_entropies": True, "comb_net": agent.current_cycle_agents[0].net.actor})
-            ignore.append("attentions_sum")
 
     if isinstance(agent,Agents.Cascade.Cascade):
         if not agent.top.net.prop_action and not agent.top.net.prop_val:
@@ -203,8 +181,7 @@ def experiment_final_eval_func(initial_agent: Agent, agent: Agent, eval_env: gym
     evals = {}
 
     #Measure individual base nets' performances
-    if  (isinstance(agent, PPO) and isinstance(agent.net,ActorCritic) and isinstance(agent.net.actor, CombActorHead)) or \
-            (isinstance(agent,Agents.Cascade.Cascade) and (not agent.top.net.prop_action) and (not agent.top.net.prop_val)) or (isinstance(agent,Agents.CombNHierarchical.HierComb) and isinstance(agent.current_cycle_agents[0].net.actor,CombActorHead)):
+    if  (isinstance(agent,Agents.Cascade.Cascade) and (not agent.top.net.prop_action) and (not agent.top.net.prop_val)):
         from Analysis.Evaluation import measure_base_nets
         evals.update(measure_base_nets(agent,eval_env,num_runs=num_runs))
 

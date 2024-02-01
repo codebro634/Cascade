@@ -31,7 +31,7 @@ Cascade
 
 #Discrete Baseline
 
-#Discrecte with entropy + bigger hidden layer
+#Discrecte + bigger hidden layer
 Cascade_discrete_hopper_bigger_hidden
 6000000
 discreteHopper-v4

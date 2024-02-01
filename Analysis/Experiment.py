@@ -42,8 +42,8 @@ class Experiment:
 
         wandb.log(final_log)
 
-
-    def run(self, track_cfg: TrackConfig, runs=1, wandb_logging: bool = False, show_progress: bool = True, save_latest: bool = True, save_best: bool = False):
+    #Uses wandb_logging if wandb_logging is not None. If set, it must contain the project name.
+    def run(self, track_cfg: TrackConfig, runs=1, wandb_logging: str = None, show_progress: bool = True, save_latest: bool = True, save_best: bool = False):
 
         for run in range(1,runs+1):
             if show_progress:
@@ -59,14 +59,17 @@ class Experiment:
             env_descr = self.env_descr
             eval_func = self.eval_func
 
-
             #Setup wandb
             if wandb_logging:
+                cfg = agent.get_setup_descr()
+                for key, value in cfg.items():
+                    cfg[key] = str(value)
+
                 wandb.init(
-                    project='Master Thesis',
+                    project=wandb_logging,
                     name = self.name,
                     group = self.group,
-                    config={**agent.get_setup_descr(), "env_description": self.env_descr, "identifier": identifier}
+                    config= {**cfg, "env_description": self.env_descr, "identifier": identifier}
                 )
 
             #Run and log experiment

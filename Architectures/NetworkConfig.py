@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 from torch import nn
 from Architectures.Elementary import FFNet
-from Architectures.ActorHead import ActorHead, CombActorHead
 from Architectures.ActorCritic import ActorCritic
-from Architectures.AttentionOverN import AttentionOverNNet
 from Architectures.CascadeAC import ActorCriticCascade
+from Architectures.ActorHead import ActorHead
 
 @dataclass
 class NetworkConfig:

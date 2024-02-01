@@ -9,6 +9,9 @@ from scipy.stats import sem
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+wandb_path = None # '<team>/<project>'
+if wandb_path is None:
+    raise ValueError("Please specify the path to wandb project.")
 
 def wandb_runs_to_dict(group: str, name: str | set[str], metrics: list[str] = ["average return"], merge_metrics: dict[str,str] = {"average return0": "average return"}, verbose: bool = True) -> tuple[dict,dict]:
     """
@@ -22,7 +25,7 @@ def wandb_runs_to_dict(group: str, name: str | set[str], metrics: list[str] = ["
     api = wandb.Api()
     runs_data = {metric: [] for metric in metrics} # Key: metric name, Value: list of lists. Each list contains the values of the metric at a certain timestep for all runs.
     num_runs = 0
-    for run in api.runs(path="besteteam/Master Thesis", filters={"group": group}):
+    for run in api.runs(path=wandb_path, filters={"group": group}):
         if (isinstance(name,str) and run.name == name) or (isinstance(name,set) and run.name in name):
             num_runs += 1
             if verbose:
@@ -164,8 +167,6 @@ def redo_entire_plot_directory(plot_dir: Path):
     for plot_path in plot_dir.iterdir():
         redo_plot(plot_path)
 
-#redo_entire_plot_directory(Path("../nobackup/Plots"))
-
 
 ant_2mil_baseline = ["Baseline","PPO_Ant-v4","2m",'red']
 walker_2mil_baseline = ["Baseline","PPO_Walker2d-v4","2m",'red']
@@ -207,16 +208,3 @@ cheetah_6mil_baseline = ["Baseline","PPO_HalfCheetah-v4_6mil","6m",'pink']
 # make_plot(experiments=[humanoid_2mil_baseline,humanoid_3mil_baseline,humanoid_4mil_baseline,humanoid_5mil_baseline,humanoid_6mil_baseline], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/humanoid_baseline"), show=True)
 # make_plot(experiments=[hopper_2mil_baseline,hopper_3mil_baseline,hopper_4mil_baseline,hopper_5mil_baseline,hopper_6mil_baseline], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/hopper_baseline"), show=True)
 # make_plot(experiments=[cheetah_2mil_baseline,cheetah_3mil_baseline,cheetah_4mil_baseline,cheetah_5mil_baseline,cheetah_6mil_baseline], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/cheetah_baseline"), show=True)
-
-cheetah_disc = ["Baseline","PPO_HalfCheetah-v4_discrete_discrete_10mio","PPO",'red']
-hopper_disc = ["Baseline","PPO_Hopper-v4_discrete_discrete_10mio","PPO",'red']
-walker_disc = ["Baseline","PPO_Walker2d-v4_discrete_discrete_10mio","PPO",'red']
-
-cascade_disc_cheetah = ["Cascade","Cascade_discrete_cheetah_bigger_hidden_10m","Cascade",'blue']
-cascade_disc_hopper = ["Cascade","Cascade_discrete_hopper_bigger_hidden_10m","Cascade",'blue']
-cascade_disc_walker = ["Cascade","Cascade_discrete_walker_bigger_hidden_10m","Cascade",'blue']
-
-make_plot(experiments=[cheetah_disc,cascade_disc_cheetah], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/cheetah_disc"), show=True)
-make_plot(experiments=[hopper_disc,cascade_disc_hopper], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/hopper_disc"), show=True)
-make_plot(experiments=[walker_disc,cascade_disc_walker], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/walker_disc"), show=True)
-

@@ -3,6 +3,7 @@ import numpy as np
 
 
 #Proudly written by ChatGPT in its entirety. Well done, little AI!
+#This action space is fully discretized.
 class DiscretizeWrapper(gym.Wrapper):
     def __init__(self, env, n_bins=2):
         super().__init__(env)
@@ -30,7 +31,7 @@ class DiscretizeWrapper(gym.Wrapper):
             discrete_action.append(discrete_val)
         return np.ravel_multi_index(discrete_action, (self.n_bins,) * self.env.action_space.shape[0])
 
-
+#Discretize each dimension of the continuous action space.
 class DiscretizeMultiWrapper(gym.ActionWrapper):
     def __init__(self, env, n_bins_per_dim=2):
         super().__init__(env)
