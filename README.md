@@ -145,12 +145,12 @@ Used in Fig. 13
 
 Discrete PPO:
 ``` 
-python mainExperiment.py --wandb_logging --exp_group Baseline --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr discrete<env_name> --agent_params continous:False
+python mainExperiment.py --wandb_logging --exp_group Baseline --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr discrete<env_name> --agent_params continuous:False
 ```
 
 Discrete Cascade:
 ```
-python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config Cascade --env_descr discrete<env_name> --agent_params continous:False
+python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config Cascade --env_descr discrete<env_name> --agent_params continuous:False
 ```
 
 ## Comparison to naive approach
