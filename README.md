@@ -1,3 +1,5 @@
+# Disclaimer
+Next to the code for all experiments, this repo also contains code that is not directly related to the Cascade paper. However, after review this will be shortened to contain only the paper related parts.
 
 # Purpose
 Code for Master's thesis: Combining Weak Reinforcement Learners for Enhanced Performance.
