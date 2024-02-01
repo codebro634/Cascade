@@ -63,7 +63,7 @@ An agent saved in `MODEL_SAVE_DIR/path` can be loaded and evaluated on the envir
   env = load_env(Path(path))
   evaluate_agent(agent,env, measure_return=True, verbose=True)
 ```
-# Run experiments from the thesis
+# Run experiments from the paper
 
 The experiments used for the thesis are located in the folder `Experiments` and can be loaded from there. Alternatively, they can be manually configured. The following lists the necessary commands.
 
