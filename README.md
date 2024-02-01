@@ -65,7 +65,7 @@ An agent saved in `MODEL_SAVE_DIR/path` can be loaded and evaluated on the envir
 ```
 # Run experiments from the paper
 
-The experiments used for the thesis are located in the folder `Experiments` and can be loaded from there. Alternatively, they can be manually configured. The following lists the necessary commands.
+The experiments used for the paper are located in the folder `Experiments` and can be loaded from there. Alternatively, they can be manually configured. The following lists the necessary commands.
 
 `<env_name>` is left blank. Possible values are `Ant-v4`, `Walker2d-v4`, `Hopper-v4`, etc. Also, every parameter that denotes a training duration is left blank. Just insert the training durations used for the experiment
 you are trying to replicate. For all other parameters, a concrete value used for the respective experiment suite was inserted to exemplify the usage.
