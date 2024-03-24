@@ -13,7 +13,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from stable_baselines3.common.buffers import ReplayBuffer
 from Architectures.NetworkConfig import NetworkConfig
-from Cascade.Agents.Agent import AgentConfig, Agent
+from Agents.Agent import AgentConfig, Agent
 from pathlib import Path
 from Analysis.RunTracker import TrackMetric as tm, RunTracker
 import stable_baselines3 as sb3
