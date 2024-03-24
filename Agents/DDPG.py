@@ -17,7 +17,7 @@ from Cascade.Agents.Agent import AgentConfig, Agent
 from pathlib import Path
 from Analysis.RunTracker import TrackMetric as tm, RunTracker
 import stable_baselines3 as sb3
-from Cascade.Analysis import RunTracker
+from Analysis import RunTracker
 from copy import deepcopy
 
 
