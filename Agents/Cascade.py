@@ -13,7 +13,7 @@ from Architectures.CascadeAC import ActorCriticCascade
 
 from Environments.Utils import sync_normalization_state
 
-from Cascade.Agents.DDPG import DDPG
+from Agents.DDPG import DDPG
 
 
 @dataclass
