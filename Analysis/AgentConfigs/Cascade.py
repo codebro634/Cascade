@@ -12,7 +12,7 @@ from Architectures.NetworkConfig import NetworkConfig
 from Environments import EnvSpaceDescription
 from Analysis.Parser import parse_bool, parse_tuple
 
-from Cascade.Analysis.AgentConfigs import VanillaDDPG
+from Analysis.AgentConfigs import VanillaDDPG
 
 """
     Cascade-Agent configuration used for the Cascade experiments.
