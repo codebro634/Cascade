@@ -50,7 +50,7 @@ class Experiment:
                 print(f"Starting run {run} of experiment {self.name}.")
 
             #Setup Agent and env. This is needed so they can be accessed from the inner class RunLogger
-            agent  = self.agent()
+            agent = self.agent()
             initial_agent = deepcopy(agent)
             eval_env = self.env()
             name = self.name
@@ -58,6 +58,8 @@ class Experiment:
             identifier = self.identifier
             env_descr = self.env_descr
             eval_func = self.eval_func
+
+            #print(f"Agent has {agent.model_size()} parameters")
 
             #Setup wandb
             if wandb_logging:

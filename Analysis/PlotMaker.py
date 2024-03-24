@@ -1,5 +1,6 @@
 import os
 import pickle
+from copy import deepcopy
 from pathlib import Path
 
 import numpy as np
@@ -9,9 +10,9 @@ from scipy.stats import sem
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-wandb_path = None # '<team>/<project>'
-if wandb_path is None:
-    raise ValueError("Please specify the path to wandb project.")
+#wandb_path = None # '<team>/<project>'
+#if wandb_path is None:
+#    raise ValueError("Please specify the path to wandb project.")
 
 def wandb_runs_to_dict(group: str, name: str | set[str], metrics: list[str] = ["average return"], merge_metrics: dict[str,str] = {"average return0": "average return"}, verbose: bool = True) -> tuple[dict,dict]:
     """
@@ -84,6 +85,7 @@ def make_plot(experiments: list[tuple[str,str,str,str] | tuple[tuple[list,list],
 
         experiments: list of tuples. Each tuple contains the group name, the run name, the label for the legend and the color for the plot of one experiment.
                     Alternatively, the group name and run name and be replaced by the run data directly given as a list of values and standard errors.
+                    Alternatively, the group and name and a list of values can be given.
         step_range_to_plot: tuple of ints. The first int is the first timestep to plot, the second int is the last timestep to plot. Can be a list for different values for different experiments.
         title: str. Title of the plot.
         metric: str. Name of the logged metric to plot.
@@ -99,8 +101,11 @@ def make_plot(experiments: list[tuple[str,str,str,str] | tuple[tuple[list,list],
     #Add plot of each experiment to figure
     for i,experiment in enumerate(experiments):
         #Get run data
-        if isinstance(experiment[0], str):
-            data  = wandb_runs_to_dict(experiment[0],experiment[1], metrics=[metric])
+        if isinstance(experiment[0], list):
+            y = experiment[0]
+            y_stderr = np.zeros(len(y))
+        elif isinstance(experiment[0], str):
+            data = wandb_runs_to_dict(experiment[0],experiment[1], metrics=[metric])
             y = data[0][metric]
             y_stderr = data[1][metric]
         else:
@@ -197,6 +202,9 @@ walker_6mil_baseline = ["Baseline","PPO_Walker2d-v4_6mil","6m",'pink']
 humanoid_6mil_baseline = ["Baseline","PPO_Humanoid-v4_6mil","6m",'pink']
 hopper_6mil_baseline = ["Baseline","PPO_Hopper-v4_6mil","6m",'pink']
 cheetah_6mil_baseline = ["Baseline","PPO_HalfCheetah-v4_6mil","6m",'pink']
+
+
+#make_plot(experiments=[([0.1,0.2,0.3,0.3],"test", "blue")],title="Baseline", ylabel="Fallback", show=True)
 
 
 """

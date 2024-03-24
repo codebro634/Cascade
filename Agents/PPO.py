@@ -62,6 +62,9 @@ class PPO(Agent):
         #Check constraints
         self.cfg.validate()
 
+    def model_size(self):
+        return sum(p.numel() for p in self.net.parameters())
+
     """
         Replaces the current network. This updates the optimizer's parameters as well.
     """

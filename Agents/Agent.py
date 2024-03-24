@@ -90,6 +90,10 @@ class Agent:
 
         raise NotImplementedError()
 
+    def model_size(self) -> str:
+        """ Returns number of parameters"""
+        raise NotImplementedError()
+
     def get_action(self, obs, eval_mode: bool = False, deterministic: bool = False):
         """ obs: An observation returned from any gym-environment
             eval_mode: Whether this method is called for evaluation purposes """

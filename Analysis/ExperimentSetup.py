@@ -163,7 +163,7 @@ def experiment_eval_func(initial_agent: Agent, agent: Agent, env: gym.core.Env) 
 
     if isinstance(agent,Agents.Cascade.Cascade):
         if not agent.top.net.prop_action and not agent.top.net.prop_val:
-            eval_args.update({"measure_fallback_stats":True, "cascade_net" : agent.top.net})
+            eval_args.update({"measure_fallback_stats":True, "cascade_net":agent.top.net})
 
     if isinstance(agent,Agents.CascadeNaive.CascadeNaive):
         pass

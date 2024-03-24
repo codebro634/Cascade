@@ -2,7 +2,7 @@
 #Cascade experiments:
 #--------------------
 
-#Baseline
+#Baseline PPO
 
 Cascade_Ant-v4
 6000000
@@ -28,6 +28,7 @@ Cascade_HalfCheetah-v4
 6000000
 HalfCheetah-v4
 Cascade
+
 
 #Discrete Baseline
 

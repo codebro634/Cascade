@@ -22,7 +22,7 @@ from Environments.Utils import get_wrapper, load_env, get_normalization_state, \
 
 
 def evaluate_agent(agent: Agent,env: gym.core.Env, num_runs:int = 10, horizon_length:int = None, measure_return: bool = False, track_action_freqs: bool = False,
-                   measure_fallback_stats: bool = False, cascade_net:ActorCriticCascade = None, measure_expected_state: bool = False,
+                   measure_fallback_stats: bool = False, cascade_net:ActorCriticCascade = None, measure_expected_state: bool = False, get_fallback_distr: bool = False,
                    verbose: bool = False):
     """
     :param agent:  Agent to be evaluted
@@ -47,12 +47,16 @@ def evaluate_agent(agent: Agent,env: gym.core.Env, num_runs:int = 10, horizon_le
         freqs = np.zeros(shape=(EnvSpaceDescription.get_descr(env).flattened_act_size()))
 
     if measure_fallback_stats:
+        probs_sum_list = []
         probs_sum = np.zeros(shape=(len(cascade_net.cascade)-1,))
         product_probs_sum = 0
 
+    if get_fallback_distr:
+        fb_first_run = []
+
     original_norm_state = get_normalization_state(env)
 
-    for _ in range(num_runs):
+    for run in range(num_runs):
         obs,_ = env.reset()
         if original_norm_state:
             load_normalization_state(env, deepcopy(original_norm_state))
@@ -69,8 +73,14 @@ def evaluate_agent(agent: Agent,env: gym.core.Env, num_runs:int = 10, horizon_le
             #Measure fallback stats
             if measure_fallback_stats:
                 probs = cascade_net.get_fallbacks(obs)
+                probs_sum_list.append(probs)
                 probs_sum += probs
                 product_probs_sum += prod(probs)
+
+            #Measure fallback distribution
+            if get_fallback_distr and run == 0:
+                fb_first_run.append(cascade_net.get_fallbacks(obs))
+
 
             #Get action
             action = agent.get_action(obs, eval_mode = True)
@@ -101,7 +111,9 @@ def evaluate_agent(agent: Agent,env: gym.core.Env, num_runs:int = 10, horizon_le
         measurements.update({"distribution": freqs / sum(freqs)})
         measurements.update({"max prob": max((freqs / sum(freqs)))})
     if measure_fallback_stats:
-        measurements.update({f"fallbacks" : probs_sum / total_obs })
+        print(np.std(np.array(probs_sum_list), axis=0))
+        measurements.update({f"fallback std": np.std(np.array(probs_sum_list), axis=0)})
+        measurements.update({f"fallbacks": probs_sum / total_obs })
         measurements.update({f"fallbacks prod": product_probs_sum / total_obs})
 
     if verbose:
@@ -140,7 +152,7 @@ def evaluate_run_group(run_group: Path, eval_func_args: Callable[[Agent], dict],
     """
 
     results_sum = dict()
-    for i,run in enumerate(iterate_runs(run_group)):
+    for i, run in enumerate(iterate_runs(run_group)):
         if range is not None and (i < range[0] or i > range[1]):
             continue
         agent = Agent.load(run)

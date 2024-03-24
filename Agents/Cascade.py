@@ -13,11 +13,14 @@ from Architectures.CascadeAC import ActorCriticCascade
 
 from Environments.Utils import sync_normalization_state
 
+from Cascade.Agents.DDPG import DDPG
+
 
 @dataclass
 class CascadeConfig(AgentConfig):
 
-    training_alg_cfg: PPOConfig = None #The PPO config used for training the Cascade-net
+    training_alg: str = None  #The training algorithm used for training the Cascade-net
+    training_alg_cfg: AgentConfig = None #The Agent config used for training the Cascade-net
     init_net_cfg: "NetworkConfig" = None #Network config for the first base-net
     stacked_net_cfg: "NetworkConfig" = None #Network config for all nets besides the first one. These must include the fallback-action
 
@@ -44,6 +47,10 @@ class Cascade(Agent):
         self.acs = [] #List of Actor Critics that make up the Cascade
         self.cfg.validate()
 
+    def model_size(self):
+        actors = sum( sum([p.numel() for p in ac.actor.parameters()]) for ac in self.acs)
+        critic = sum(p.numel() for p in self.acs[-1].critic.parameters())
+        return actors+critic
 
     def save_additionals(self, model_path: Path, absolute_path: Path):
         for i,ac in enumerate(self.acs):
@@ -72,8 +79,11 @@ class Cascade(Agent):
             acs.append(net)
         wrapped_net = ActorCriticCascade(acs, propagate_action=agent.cfg.propagate_action,propagate_value=agent.cfg.propagate_value)
 
-        #Create PPO agent with the loaded Cascade-net
-        top = PPO(cfg=agent.cfg.training_alg_cfg)
+        #Create agent with the loaded Cascade-net
+        if agent.cfg.training_alg == "PPO":
+            top = PPO(cfg=agent.cfg.training_alg_cfg)
+        elif agent.cfg.training_alg == "DDPG":
+            top = DDPG(cfg=agent.cfg.training_alg_cfg)
         top.replace_net(wrapped_net)
 
         agent.top = top
@@ -86,7 +96,10 @@ class Cascade(Agent):
     #Trains the current Cascade-net represented by 'self.acs' for 'self.cfg.base_steps' steps.
     def train_current_cascade(self, tracker: RunTracker, env_maker: Callable, norm_sync_env: gym.Env = None):
         wrapped_net = ActorCriticCascade(self.acs, propagate_action=self.cfg.propagate_action,propagate_value=self.cfg.propagate_value)
-        self.top = PPO(cfg=self.cfg.training_alg_cfg)
+        if self.cfg.training_alg == "DDPG":
+            self.top = DDPG(cfg=self.cfg.training_alg_cfg)
+        elif self.cfg.training_alg == "PPO":
+            self.top = PPO(cfg=self.cfg.training_alg_cfg)
         self.top.replace_net(wrapped_net)
         rt = RunTracker(cfg=TrackConfig(metric=TrackMetric.STEPS, total=self.cfg.base_steps, eval_interval=0),eval_func=None, show_progress=False, nested=tracker, nested_progress=not self.cfg.cyclical_lr)
         self.top.train(env_maker, rt, norm_sync_env=norm_sync_env)
@@ -101,6 +114,7 @@ class Cascade(Agent):
 
         if not self.cfg.sequential:
             self.acs = [(self.cfg.stacked_net_cfg if stack > 0 else self.cfg.init_net_cfg).init_obj() for stack in range(self.cfg.stacks)]
+            #print(self.model_size())
             while not tracker.is_done():
                 self.train_current_cascade(tracker, synced_env_maker, norm_sync_env=norm_sync_env)
         else:

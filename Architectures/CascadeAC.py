@@ -26,6 +26,23 @@ class ActorCriticCascade(nn.Module):
 
         self.base_idx = None #If not None, only the Actor Critic at the base_idx-th position is used for action selection
 
+    def critic_params(self):
+        if self.prop_val or self.prop_action:
+            raise NotImplementedError()
+        return self.cascade[-1].critic_params()
+
+    def actor_params(self):
+        if self.prop_val or self.prop_action:
+            raise NotImplementedError()
+        params = []
+        for ac in self.cascade:
+            params += list(ac.actor_params())
+        return params
+
+    def q_value(self, obs, action):
+        if self.prop_val or self.prop_action:
+            raise NotImplementedError()
+        return self.cascade[-1].q_value(obs,action)
 
     def get_value(self, obs):
         if len(self.cascade) == 1 or ((not self.prop_val) and (not self.prop_action)):
@@ -89,8 +106,8 @@ class ActorCriticCascade(nn.Module):
 
 
     def weighted_sum(self, actor_output, fb_mean, fb_std):
-
-        if fb_mean is not None and fb_std is not None:
+        if fb_mean is not None:
+            assert fb_std is not None
             mean = actor_output["mean"][:, 0:-1]
             weights = self.sigm(actor_output["mean"][:, -1]).unsqueeze(dim=-1)
             weighted_mean = weights * fb_mean + (1 - weights) * mean

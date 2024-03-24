@@ -6,13 +6,13 @@ from Analysis.RunTracker import TrackConfig, TrackMetric
 parser = argparse.ArgumentParser()
 
 #Experiment params
-parser.add_argument('--exp_group', help='The group of the experiment.')
-parser.add_argument('--exp_name', help='The experiment to be conducted.')
+parser.add_argument('--exp_group', default='Baseline', help='The group of the experiment.')
+parser.add_argument('--exp_name', type=str, default='5', help='The experiment to be conducted.')
 parser.add_argument('--exp_identifier', help='Identifier of the experiment. Needed when multiple instances of the same experiment have to be saved.')
 parser.add_argument('--load', action='store_true', help='If set loads the experiment setup from the file exp_group/exp_name')
-parser.add_argument('--steps', type=int,help='Training duration in environment steps. Overwrites the steps loaded from exp_group/exp_name is load is set.')
-parser.add_argument('--agent_config', help='Which config is used to build the agent.')
-parser.add_argument('--env_descr', help='Environment description.')
+parser.add_argument('--steps', type=int, default=1000000, help='Training duration in environment steps. Overwrites the steps loaded from exp_group/exp_name is load is set.')
+parser.add_argument('--agent_config', default='VanillaPPO', help='Which config is used to build the agent.')
+parser.add_argument('--env_descr', default='Hopper-v4', help='Environment description.')
 parser.add_argument('--agent_params', help='Overwrites the agent params of the experiment with these values.')
 parser.add_argument('--num_runs', type=int, default=1, help='Number of times the experiment is repeated.')
 
@@ -30,7 +30,7 @@ if args.exp_group is None:
 if args.exp_name is None:
     raise ValueError("--exp_name is not set. Please specify the experiment name.")
 if args.agent_config is None and not args.load:
-    raise ValueError("--agent_config is not set. Please specify the agent config. Example Values: Cascade,VanillaPPO.")
+    raise ValueError("--agent_config is not set. Please specify the agent config. Example Values: Cascade,VanillaPPO,VanillaDDPG.")
 if args.env_descr is None and not args.load:
     raise ValueError("--env_descr is not set. Please specify the environment description. Example: Ant-v4")
 if args.steps is None and not args.load:

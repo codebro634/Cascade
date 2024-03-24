@@ -1,5 +1,5 @@
 from typing import Union
-from torch import nn
+from torch import nn,cat
 
 
 class ActorCritic(nn.Module):
@@ -12,6 +12,19 @@ class ActorCritic(nn.Module):
         self.actor = actor if isinstance(actor, nn.Module) else actor.init_obj()
         self.shared = None if shared is None else (shared if isinstance(shared, nn.Module) else shared.init_obj())
 
+    def critic_params(self):
+        return self.critic.parameters()
+
+    def actor_params(self):
+        return self.actor.parameters()
+
+    def q_value(self, x, action, x_after_shared=False):
+        if x_after_shared:
+            x = self.shared(x)["y"]
+            return self.critic(x)["y"]
+        else:
+            concat = cat((x, action), dim=1)
+            return self.critic(concat)["y"]
 
     def get_value(self, x, x_after_shared=False):
         x = self.shared(x)["y"] if (self.shared and not x_after_shared) else x
