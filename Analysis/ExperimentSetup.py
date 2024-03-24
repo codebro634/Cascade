@@ -84,8 +84,8 @@ def get_experiment_params_from_file(exp_group: str, exp_name: str) -> dict:
         Experiments are separated by blank lines.
     """
 
-    print(getcwd())
-    with open(Path('Experiments').joinpath(exp_group) if exists(Path('Experiments')) else Path('../Experiments').joinpath(exp_group), 'r') as file:
+    with open(Path('Experiments').joinpath(exp_group) if exists(Path('Experiments')) else (Path('../Experiments').joinpath(exp_group) if
+                                        exists(Path('../Experiments')) else Path('Cascade/Experiments').joinpath(exp_group)), 'r') as file:
         lines = file.readlines()
         lines = [line.strip() for line in lines if not line.strip().startswith("#")]
 
