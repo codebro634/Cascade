@@ -21,7 +21,7 @@ parser.add_argument('--save_latest', action='store_true', help='Saves the latest
 parser.add_argument('--save_best', action='store_true', help='Saves the best agent.')
 parser.add_argument('--show_progress', action='store_true', help='Show progress bar.')
 parser.add_argument('--eval_interval', default=10000, type=int, help='Evaluates after every eval_interval steps.')
-parser.add_argument('--wandb_logging', action='store_true', help='Tracks experiment with wandb. The argument expects the wandb project name.')
+parser.add_argument('--wandb_logging', help='Tracks experiment with wandb. The argument expects the wandb project name.')
 
 args = parser.parse_args()
 
