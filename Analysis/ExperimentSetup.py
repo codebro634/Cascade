@@ -12,7 +12,7 @@ from Agents.Agent import Agent
 from Agents.PPO import PPO
 from Analysis.AgentConfigs.General import gamma, obs_clip, rew_clip
 from Analysis.Experiment import Experiment
-from Analysis.AgentConfigs import VanillaPPO, CascadeNaive,Cascade
+from Analysis.AgentConfigs import VanillaPPO, CascadeNaive,Cascade, VanillaDDPG
 from Architectures.ActorCritic import ActorCritic
 from Architectures.Elementary import abs_difference
 from Environments import EnvSpaceDescription

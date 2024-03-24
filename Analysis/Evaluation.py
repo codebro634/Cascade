@@ -111,7 +111,6 @@ def evaluate_agent(agent: Agent,env: gym.core.Env, num_runs:int = 10, horizon_le
         measurements.update({"distribution": freqs / sum(freqs)})
         measurements.update({"max prob": max((freqs / sum(freqs)))})
     if measure_fallback_stats:
-        print(np.std(np.array(probs_sum_list), axis=0))
         measurements.update({f"fallback std": np.std(np.array(probs_sum_list), axis=0)})
         measurements.update({f"fallbacks": probs_sum / total_obs })
         measurements.update({f"fallbacks prod": product_probs_sum / total_obs})

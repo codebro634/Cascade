@@ -20,6 +20,8 @@ import stable_baselines3 as sb3
 from Analysis import RunTracker
 from copy import deepcopy
 
+from Environments.Utils import sync_normalization_state
+
 
 @dataclass
 class DDPGConfig(AgentConfig):
@@ -92,7 +94,7 @@ class DDPG(Agent):
 
 
     def train(self, env_maker: Callable[[],gym.core.Env], tracker: RunTracker, norm_sync_env:gym.core.Env = None):
-        envs = gym.vector.SyncVectorEnv( [lambda: env_maker()])
+        envs = gym.vector.SyncVectorEnv([lambda: env_maker()])
         assert isinstance(envs.single_action_space, gym.spaces.Box), "only continuous action space is supported"
 
         if self.target is None:
@@ -132,6 +134,9 @@ class DDPG(Agent):
             real_next_obs = next_obs.copy()
             rb.add(obs, real_next_obs, actions, rewards, terminations, [])
             obs = next_obs
+
+            if norm_sync_env:
+                sync_normalization_state(envs.envs[0], norm_sync_env)
 
             if global_step > self.cfg.learning_starts:
                 data = rb.sample(self.cfg.batch_size)
