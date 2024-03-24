@@ -12,7 +12,7 @@ parser.add_argument('--exp_identifier', help='Identifier of the experiment. Need
 parser.add_argument('--load', action='store_true', help='If set loads the experiment setup from the file exp_group/exp_name')
 parser.add_argument('--steps', type=int, default=1000000, help='Training duration in environment steps. Overwrites the steps loaded from exp_group/exp_name is load is set.')
 parser.add_argument('--agent_config', default='VanillaPPO', help='Which config is used to build the agent.')
-parser.add_argument('--env_descr', default='Hopper-v4', help='Environment description.')
+parser.add_argument('--env_descr', default='Pusher-v4', help='Environment description.')
 parser.add_argument('--agent_params', help='Overwrites the agent params of the experiment with these values.')
 parser.add_argument('--num_runs', type=int, default=1, help='Number of times the experiment is repeated.')
 
