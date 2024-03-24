@@ -6,13 +6,13 @@ from Analysis.RunTracker import TrackConfig, TrackMetric
 parser = argparse.ArgumentParser()
 
 #Experiment params
-parser.add_argument('--exp_group', default='Additional', help='The group of the experiment.')
-parser.add_argument('--exp_name', type=str, default='9', help='The experiment to be conducted.')
+parser.add_argument('--exp_group',help='The group of the experiment.')
+parser.add_argument('--exp_name', type=str,  help='The experiment to be conducted.')
 parser.add_argument('--exp_identifier', help='Identifier of the experiment. Needed when multiple instances of the same experiment have to be saved.')
 parser.add_argument('--load', action='store_true', help='If set loads the experiment setup from the file exp_group/exp_name')
-parser.add_argument('--steps', type=int, default=1000000, help='Training duration in environment steps. Overwrites the steps loaded from exp_group/exp_name is load is set.')
+parser.add_argument('--steps', type=int, help='Training duration in environment steps. Overwrites the steps loaded from exp_group/exp_name is load is set.')
 parser.add_argument('--agent_config', default='Cascade', help='Which config is used to build the agent.')
-parser.add_argument('--env_descr', default='Ant-v4', help='Environment description.')
+parser.add_argument('--env_descr', help='Environment description.')
 parser.add_argument('--agent_params', help='Overwrites the agent params of the experiment with these values.')
 parser.add_argument('--num_runs', type=int, default=1, help='Number of times the experiment is repeated.')
 
@@ -41,7 +41,7 @@ if args.load:
 else:
     experiment = setup_experiment(args.exp_group, args.exp_name, args.env_descr, args.agent_config, args.agent_params, exp_identifier=args.exp_identifier)
 
-if args.steps:
+if args.steps and not args.load:
     steps = args.steps
 
 track_cfg = TrackConfig(TrackMetric.STEPS, steps, args.eval_interval)
