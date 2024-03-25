@@ -50,6 +50,7 @@ class DDPG(Agent):
         self.net, self.target = None, None
         self.q_optim, self.actor_optim = None, None
         self.replace_net(self.cfg.net_conf.init_obj().to(self.device))
+        self.rb = None
 
         self.action_scale = torch.tensor((self.cfg.space_description.action_space.high - self.cfg.space_description.action_space.low) / 2, dtype=torch.float32)
         self.action_bias = torch.tensor((self.cfg.space_description.action_space.high + self.cfg.space_description.action_space.low) / 2, dtype=torch.float32)
@@ -82,6 +83,8 @@ class DDPG(Agent):
             obs = torch.Tensor(obs, device=self.device).unsqueeze(0)
         net = self.target if target else self.net
         actions = net.get_action(torch.Tensor(obs).to(self.device))["mean"]
+        actions = torch.tanh(actions) * self.action_scale + self.action_bias
+
         if not deterministic:
             actions += torch.normal(0, self.action_scale * self.cfg.exploration_noise)
         if eval_mode:
@@ -102,13 +105,15 @@ class DDPG(Agent):
             self.target.load_state_dict(self.net.state_dict())
 
         envs.single_observation_space.dtype = np.float32
-        rb = ReplayBuffer(
-            self.cfg.buffer_size,
-            envs.single_observation_space,
-            envs.single_action_space,
-            self.device,
-            handle_timeout_termination=False,
-        )
+
+        if self.rb is None:
+            self.rb = ReplayBuffer(
+                self.cfg.buffer_size,
+                envs.single_observation_space,
+                envs.single_action_space,
+                self.device,
+                handle_timeout_termination=False,
+            )
 
         obs, _ = envs.reset()
 
@@ -135,20 +140,22 @@ class DDPG(Agent):
             for idx, trunc in enumerate(truncations):
                 if trunc:
                     real_next_obs[idx] = infos["final_observation"][idx]
-            rb.add(obs, real_next_obs, actions, rewards, terminations, [])
+            self.rb.add(obs, real_next_obs, actions, rewards, terminations, [])
             obs = next_obs
 
             if norm_sync_env:
                 sync_normalization_state(envs.envs[0], norm_sync_env)
 
             if global_step > self.cfg.learning_starts:
-                data = rb.sample(self.cfg.batch_size)
+                data = self.rb.sample(self.cfg.batch_size)
                 with torch.no_grad():
                     next_state_actions = self.get_action(data.next_observations, target=True, deterministic=True)
                     qf1_next_target = self.target.q_value(data.next_observations, next_state_actions)
                     next_q_value = data.rewards.flatten() + (1 - data.dones.flatten()) * self.cfg.gamma * (qf1_next_target).view(-1)
 
+
                 qf1_a_values = self.net.q_value(data.observations, data.actions).view(-1)
+                #qf1_a_values = qf1(data.observations, data.actions).view(-1)
                 qf1_loss = F.mse_loss(qf1_a_values, next_q_value)
 
                 # optimize the model

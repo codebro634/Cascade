@@ -83,7 +83,10 @@ class Cascade(Agent):
         if agent.cfg.training_alg == "PPO":
             top = PPO(cfg=agent.cfg.training_alg_cfg)
         elif agent.cfg.training_alg == "DDPG":
-            top = DDPG(cfg=agent.cfg.training_alg_cfg)
+            raise NotImplementedError("DDPG Cascade load not implemented.")
+            #top = DDPG(cfg=agent.cfg.training_alg_cfg)
+
+        #top = top = PPO(cfg=agent.cfg.training_alg_cfg)
         top.replace_net(wrapped_net)
 
         agent.top = top
@@ -97,9 +100,13 @@ class Cascade(Agent):
     def train_current_cascade(self, tracker: RunTracker, env_maker: Callable, norm_sync_env: gym.Env = None):
         wrapped_net = ActorCriticCascade(self.acs, propagate_action=self.cfg.propagate_action,propagate_value=self.cfg.propagate_value)
         if self.cfg.training_alg == "DDPG":
+            rb = self.top.rb if self.top is not None else None
             self.top = DDPG(cfg=self.cfg.training_alg_cfg)
+            self.top.rb = rb
         elif self.cfg.training_alg == "PPO":
             self.top = PPO(cfg=self.cfg.training_alg_cfg)
+        else:
+            raise NotImplementedError()
         self.top.replace_net(wrapped_net)
         rt = RunTracker(cfg=TrackConfig(metric=TrackMetric.STEPS, total=self.cfg.base_steps, eval_interval=0),eval_func=None, show_progress=False, nested=tracker, nested_progress=not self.cfg.cyclical_lr)
         self.top.train(env_maker, rt, norm_sync_env=norm_sync_env)
@@ -114,7 +121,6 @@ class Cascade(Agent):
 
         if not self.cfg.sequential:
             self.acs = [(self.cfg.stacked_net_cfg if stack > 0 else self.cfg.init_net_cfg).init_obj() for stack in range(self.cfg.stacks)]
-            #print(self.model_size())
             while not tracker.is_done():
                 self.train_current_cascade(tracker, synced_env_maker, norm_sync_env=norm_sync_env)
         else:

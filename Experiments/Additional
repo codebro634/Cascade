@@ -1,11 +1,11 @@
 PPO_Pusher-v4_6mil
 6000000
-Pusher-v4;norm:False
+Pusher-v4
 VanillaPPO
 
 Cascade_Pusher-v4
 6000000
-Pusher-v4;norm:False
+Pusher-v4
 Cascade
 
 DDPG_Pusher-v4_6mil
