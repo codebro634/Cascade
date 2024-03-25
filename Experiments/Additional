@@ -73,9 +73,3 @@ Cascade_Pusher-v4_DDPG
 Pusher-v4;norm:False
 Cascade
 alg_name:DDPG
-
-clean_ddpg_test
-6000000
-Walker2d-v4;norm:False
-VanillaDDPG
-anneal_lr:False
