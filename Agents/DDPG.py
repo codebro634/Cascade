@@ -132,6 +132,9 @@ class DDPG(Agent):
             abort_training = abort_training or tracker.add_unit(tm.STEPS, 1)
 
             real_next_obs = next_obs.copy()
+            for idx, trunc in enumerate(truncations):
+                if trunc:
+                    real_next_obs[idx] = infos["final_observation"][idx]
             rb.add(obs, real_next_obs, actions, rewards, terminations, [])
             obs = next_obs
 
@@ -141,7 +144,7 @@ class DDPG(Agent):
             if global_step > self.cfg.learning_starts:
                 data = rb.sample(self.cfg.batch_size)
                 with torch.no_grad():
-                    next_state_actions = self.get_action(data.next_observations, target=True)
+                    next_state_actions = self.get_action(data.next_observations, target=True, deterministic=True)
                     qf1_next_target = self.target.q_value(data.next_observations, next_state_actions)
                     next_q_value = data.rewards.flatten() + (1 - data.dones.flatten()) * self.cfg.gamma * (qf1_next_target).view(-1)
 
@@ -154,7 +157,7 @@ class DDPG(Agent):
                 self.q_optim.step()
 
                 if global_step % self.cfg.policy_frequency == 0:
-                    actor_loss = -self.net.q_value(data.observations, self.get_action(data.observations,target=False)).mean()
+                    actor_loss = -self.net.q_value(data.observations, self.get_action(data.observations,target=False, deterministic=True)).mean()
                     self.actor_optim.zero_grad()
                     actor_loss.backward()
                     self.actor_optim.step()
