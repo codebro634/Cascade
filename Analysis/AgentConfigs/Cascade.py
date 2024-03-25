@@ -62,7 +62,7 @@ def agent_cfg(space_descr: EnvSpaceDescription, base_steps: int, propagate_value
     if alg_name == "PPO":
         training_alg_config = VanillaPPO.agent_cfg(space_descr, continuous=continuous)
     elif alg_name == "DDPG":
-        assert not continuous, "DDPG does not yet support continuous action spaces."
+        assert continuous, "DDPG does not yet support discrete action spaces."
         training_alg_config = VanillaDDPG.agent_cfg(space_descr)
     else:
         raise ValueError(f"Unknown algorithm {alg_name}")
