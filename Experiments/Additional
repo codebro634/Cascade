@@ -1,76 +1,76 @@
 PPO_Pusher-v4_6mil
 6000000
-Pusher-v4
+Pusher-v4;norm:False
 VanillaPPO
 
 Cascade_Pusher-v4
 6000000
-Pusher-v4
+Pusher-v4;norm:False
 Cascade
 
 DDPG_Pusher-v4_6mil
 6000000
-Pusher-v4
+Pusher-v4;norm:False
 VanillaDDPG
 
 DDPG_Ant-v4_6mil
 6000000
-Ant-v4
+Ant-v4;norm:False
 VanillaDDPG
 
 DDPG_Walker2d-v4_6mil
 6000000
-Walker2d-v4
+Walker2d-v4;norm:False
 VanillaDDPG
 
 DDPG_Hopper-v4_6mil
 6000000
-Hopper-v4
+Hopper-v4;norm:False
 VanillaDDPG
 
 DDPG_Humanoid-v4_6mil
 6000000
-Humanoid-v4
+Humanoid-v4;norm:False
 VanillaDDPG
 
 DDPG_HalfCheetah-v4_6mil
 6000000
-HalfCheetah-v4
+HalfCheetah-v4;norm:False
 VanillaDDPG
 
 Cascade_Ant-v4_DDPG
 6000000
-Ant-v4
+Ant-v4;norm:False
 Cascade
 alg_name:DDPG
 
 Cascade_Walker2d-v4_DDPG
 6000000
-Walker2d-v4
+Walker2d-v4;norm:False
 Cascade
 alg_name:DDPG
 
 Cascade_Humanoid-v4_DDPG
 6000000
-Humanoid-v4
+Humanoid-v4;norm:False
 Cascade
 alg_name:DDPG
 
 Cascade_Hopper-v4_DDPG
 6000000
-Hopper-v4
+Hopper-v4;norm:False
 Cascade
 alg_name:DDPG
 
 Cascade_HalfCheetah-v4_DDPG
 6000000
-HalfCheetah-v4
+HalfCheetah-v4;norm:False
 Cascade
 alg_name:DDPG
 
 Cascade_Pusher-v4_DDPG
 6000000
-Pusher-v4
+Pusher-v4;norm:False
 Cascade
 alg_name:DDPG
 
