@@ -20,6 +20,8 @@ from Environments import EnvSpaceDescription
 from Environments.Utils import get_wrapper, load_env, get_normalization_state, \
     load_normalization_state
 
+from Analysis.PlotMaker import make_plot
+
 
 def evaluate_agent(agent: Agent,env: gym.core.Env, num_runs:int = 10, horizon_length:int = None, measure_return: bool = False, track_action_freqs: bool = False,
                    measure_fallback_stats: bool = False, cascade_net:ActorCriticCascade = None, measure_expected_state: bool = False, get_fallback_distr: bool = False,
@@ -120,6 +122,7 @@ def evaluate_agent(agent: Agent,env: gym.core.Env, num_runs:int = 10, horizon_le
         for key, value in measurements.items():
             print(f"{key}: {value}")
 
+    #return fb_first_run
     return measurements
 
 
@@ -199,7 +202,6 @@ def load_and_evaluate_agent_from_file(path: Path, num_runs=10):
     env = load_env(path)
     avg_return = evaluate_agent(agent, env, measure_return=True, num_runs=num_runs)["average return"]
     print(f"Average return of run {path.name}: {avg_return} of {num_runs} runs.")
-
 
 """
     Methods for examining and measuring metrics of final models. Should only be needed when wandb didn't log to required data.

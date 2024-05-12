@@ -1,7 +1,40 @@
+from pathlib import Path
+
 from Analysis.ExperimentSetup import setup_experiment, setup_experiment_from_file
 import argparse
-
 from Analysis.RunTracker import TrackConfig, TrackMetric
+
+
+
+from Analysis.Evaluation import evaluate_agent
+from Analysis.PlotMaker import make_plot
+from Agents.Agent import Agent
+from Environments.Utils import load_env
+
+# paths = ["Cascade/Cascade_Ant-v4/run1_latest_D46f8",
+# "Cascade/Cascade_Ant-v4/run1_latest_P7HCX",
+# "Cascade/Cascade_Ant-v4/run1_latest_tCAsp",
+# "Cascade/Cascade_Ant-v4/run1_latest_w779Z",
+# "Cascade/Cascade_Walker2d-v4/run1_latest_bu7F3",
+# "Cascade/Cascade_Walker2d-v4/run1_latest_hAQJl",
+# "Cascade/Cascade_Walker2d-v4/run1_latest_OowaZ",
+# "Cascade/Cascade_Walker2d-v4/run1_latest_SjGOi"]
+#
+# for i,path in enumerate(paths):
+#     agent = Agent.load(path)
+#     env = load_env(path)
+#     y = evaluate_agent(agent, env, get_fallback_distr=True, cascade_net=agent.top.net, num_runs=1)
+#
+#     make_plot(experiments=[([x[0] for x in y], "Base net 2", "blue"), ([x[4] for x in y], "Base net 6", "red")],
+#               save_dir=Path("../nobackup/Plots/fb_distr"+str(i)), legend_position='lower right', x_step_size=1,
+#               title="Fallbacks for one Episode", ylabel="Fallback Value", show=True)
+#     # for j in range(5):
+#     #     make_plot(experiments=[([x[i] for x in y], "Ant", "blue")], title="Fallbacks for one Episode",
+#     #               ylabel="Fallback value", show=True)
+
+
+
+
 
 parser = argparse.ArgumentParser()
 

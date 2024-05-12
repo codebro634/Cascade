@@ -57,7 +57,7 @@ def net_cfg(space_description, init: bool, prop_val: bool, prop_action: bool, fa
     return net_conf
 
 def agent_cfg(space_descr: EnvSpaceDescription, base_steps: int, propagate_value: bool, propagate_action: bool, fallback_coef: float, train_only_top: bool,
-              fb_init: float, sequential: bool, stacks: int, actor_hidden: tuple[int], cyclical_lr: bool, continuous: bool = True, alg_name: str = "PPO") -> CascadeConfig:
+              fb_init: float, sequential: bool, stacks: int, actor_hidden: tuple[int], cyclical_lr: bool, reset_rb:bool = True, continuous: bool = True, alg_name: str = "PPO") -> CascadeConfig:
 
     if alg_name == "PPO":
         training_alg_config = VanillaPPO.agent_cfg(space_descr, continuous=continuous)
@@ -75,17 +75,19 @@ def agent_cfg(space_descr: EnvSpaceDescription, base_steps: int, propagate_value
                         propagate_value=propagate_value, propagate_action=propagate_action, train_only_top_net=train_only_top,
                         training_alg_cfg=training_alg_config,
                         stacked_net_cfg=stacked_net_conf, init_net_cfg=init_net_conf, sequential = sequential, stacks=stacks, cyclical_lr=cyclical_lr,
-                        training_alg=alg_name)
+                        training_alg=alg_name, reset_rb=reset_rb)
     cfg.name = f"Cascade"
     return cfg
 
 #continuation: Loads the Agent saved at continuation
 def agent(space_descr: EnvSpaceDescription,base_steps: Union[int,str] =1000000, propagate_value: Union[bool,str] = False, propagate_action: Union[bool,str] = False, fallback_coef: Union[float,str] = 0.0,
           train_only_top: Union[bool,str] = False, fb_init: Union[float,str] = 0.5, sequential: Union[bool,str] = True, stacks: Union[int,str] = -1,
-          actor_hidden: Union[tuple[int],str] = (16,16), cyclical_lr: Union[bool,str] = True, continuous: bool = True, continuation: str = None, alg_name: str = "PPO"):
+          actor_hidden: Union[tuple[int],str] = (16,16), cyclical_lr: Union[bool,str] = True, reset_rb: Union[bool,str] = True, continuous: bool = True, continuation: str = None, alg_name: str = "PPO"):
     return (lambda: Cascade(cfg = agent_cfg(space_descr, base_steps=int(base_steps), propagate_value=parse_bool(propagate_value), propagate_action=parse_bool(propagate_action),
                                             fallback_coef=float(fallback_coef), train_only_top=parse_bool(train_only_top), fb_init=float(fb_init),
-                                            sequential=parse_bool(sequential), stacks=int(stacks), actor_hidden=parse_tuple(actor_hidden, lambda x: int(x)),cyclical_lr=parse_bool(cyclical_lr), continuous=parse_bool(continuous),alg_name=alg_name))) if continuation is None else lambda: Agent.load(Path(continuation))
+                                            sequential=parse_bool(sequential), stacks=int(stacks), actor_hidden=parse_tuple(actor_hidden, lambda x: int(x)),cyclical_lr=parse_bool(cyclical_lr),
+                                            reset_rb=parse_bool(reset_rb),
+                                            continuous=parse_bool(continuous),alg_name=alg_name))) if continuation is None else lambda: Agent.load(Path(continuation))
 
 
 def env_wrapper(env: Callable[[],gym.core.Env]):

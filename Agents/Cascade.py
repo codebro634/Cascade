@@ -33,6 +33,11 @@ class CascadeConfig(AgentConfig):
     stacks: int = 0 #Only used when not training sequentially
     cyclical_lr: bool = True #if set, the learning rate linearly decreases from its max value to 0 every iteration
 
+    """
+        Alg specific params
+    """
+    reset_rb: bool = True #If set, the replay buffer is reset after each training cycle if the base algorithm uses a replay buffer.
+
     def validate(self):
         assert self.training_alg_cfg.gamma == self.gamma
         assert not (not self.sequential and self.stacks <= 0)
@@ -84,9 +89,7 @@ class Cascade(Agent):
             top = PPO(cfg=agent.cfg.training_alg_cfg)
         elif agent.cfg.training_alg == "DDPG":
             raise NotImplementedError("DDPG Cascade load not implemented.")
-            #top = DDPG(cfg=agent.cfg.training_alg_cfg)
 
-        #top = top = PPO(cfg=agent.cfg.training_alg_cfg)
         top.replace_net(wrapped_net)
 
         agent.top = top
@@ -102,7 +105,8 @@ class Cascade(Agent):
         if self.cfg.training_alg == "DDPG":
             rb = self.top.rb if self.top is not None else None
             self.top = DDPG(cfg=self.cfg.training_alg_cfg)
-            self.top.rb = rb
+            if not self.cfg.reset_rb:
+                self.top.rb = rb
         elif self.cfg.training_alg == "PPO":
             self.top = PPO(cfg=self.cfg.training_alg_cfg)
         else:
@@ -131,7 +135,7 @@ class Cascade(Agent):
                 self.acs.append(conf.init_obj())
 
                 #Train current Cascade-net
-                self.train_current_cascade(tracker,synced_env_maker,norm_sync_env=norm_sync_env)
+                self.train_current_cascade(tracker, synced_env_maker, norm_sync_env=norm_sync_env)
 
                 #Freeze parameters of old-nets
                 if self.cfg.train_only_top_net:

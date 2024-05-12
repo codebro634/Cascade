@@ -20,7 +20,8 @@ import stable_baselines3 as sb3
 from Analysis import RunTracker
 from copy import deepcopy
 
-from Environments.Utils import sync_normalization_state
+from Environments.Utils import sync_normalization_state, get_normalization_state, apply_observation_normalization, apply_reward_normalization, reverse_observation_normalization, reverse_reward_normalization
+
 
 
 @dataclass
@@ -134,13 +135,25 @@ class DDPG(Agent):
                     actions = self.get_action(obs, eval_mode=True, deterministic=False, target=False)
 
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
+
+            if "final_info" in infos:
+                for info in infos["final_info"]:
+                    print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
+
             abort_training = abort_training or tracker.add_unit(tm.STEPS, 1)
 
             real_next_obs = next_obs.copy()
             for idx, trunc in enumerate(truncations):
                 if trunc:
                     real_next_obs[idx] = infos["final_observation"][idx]
-            self.rb.add(obs, real_next_obs, actions, rewards, terminations, [])
+
+            norm_state = get_normalization_state(envs.envs[0])
+            if len(norm_state) > 0:
+                self.rb.add(reverse_observation_normalization(obs, norm_state["obs mean"], norm_state["obs var"]),
+                            reverse_observation_normalization(real_next_obs, norm_state["obs mean"], norm_state["obs var"]),
+                            actions, reverse_reward_normalization(rewards, norm_state["rew var"]), terminations, [])
+            else:
+                self.rb.add(obs, real_next_obs, actions, rewards, terminations, [])
             obs = next_obs
 
             if norm_sync_env:
@@ -148,14 +161,23 @@ class DDPG(Agent):
 
             if global_step > self.cfg.learning_starts:
                 data = self.rb.sample(self.cfg.batch_size)
+
+                if len(norm_state) > 0:
+                    data_observations = apply_observation_normalization(data.observations, norm_state["obs mean"], norm_state["obs var"]).float()
+                    data_next_observations = apply_observation_normalization(data.next_observations, norm_state["obs mean"], norm_state["obs var"]).float()
+                    data_rewards = apply_reward_normalization(data.rewards, norm_state["rew var"]).float()
+                else:
+                    data_observations = data.observations
+                    data_next_observations = data.next_observations
+                    data_rewards = data.rewards
+
                 with torch.no_grad():
-                    next_state_actions = self.get_action(data.next_observations, target=True, deterministic=True)
-                    qf1_next_target = self.target.q_value(data.next_observations, next_state_actions)
-                    next_q_value = data.rewards.flatten() + (1 - data.dones.flatten()) * self.cfg.gamma * (qf1_next_target).view(-1)
+                    next_state_actions = self.get_action(data_next_observations, target=True, deterministic=True)
+                    qf1_next_target = self.target.q_value(data_next_observations, next_state_actions)
+                    next_q_value = data_rewards.flatten() + (1 - data.dones.flatten()) * self.cfg.gamma * (qf1_next_target).view(-1)
 
 
-                qf1_a_values = self.net.q_value(data.observations, data.actions).view(-1)
-                #qf1_a_values = qf1(data.observations, data.actions).view(-1)
+                qf1_a_values = self.net.q_value(data_observations, data.actions).view(-1)
                 qf1_loss = F.mse_loss(qf1_a_values, next_q_value)
 
                 # optimize the model
@@ -164,7 +186,7 @@ class DDPG(Agent):
                 self.q_optim.step()
 
                 if global_step % self.cfg.policy_frequency == 0:
-                    actor_loss = -self.net.q_value(data.observations, self.get_action(data.observations,target=False, deterministic=True)).mean()
+                    actor_loss = -self.net.q_value(data_observations, self.get_action(data_observations,target=False, deterministic=True)).mean()
                     self.actor_optim.zero_grad()
                     actor_loss.backward()
                     self.actor_optim.step()

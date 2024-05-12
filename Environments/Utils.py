@@ -73,8 +73,17 @@ def load_normalization_state_from_file(path: Path):
         return pickle.load(f)
 
 # Apply the given observation-normalization to a given observation
-def apply_observation_normalization(obs: np.ndarray, obs_rms):
-    return (obs - obs_rms.mean) / np.sqrt(obs_rms.var + 1e-8)
+def apply_observation_normalization(obs: np.ndarray, obs_mean, obs_var):
+    return (obs - obs_mean) / np.sqrt(obs_var + 1e-8)
+
+def reverse_observation_normalization(obs: np.ndarray, obs_mean, obs_var):
+    return obs * np.sqrt(obs_var + 1e-8) + obs_mean
+
+def apply_reward_normalization(reward: float, return_var):
+    return reward / np.sqrt(return_var + 1e-8)
+
+def reverse_reward_normalization(reward: float, return_var):
+    return reward * np.sqrt(return_var + 1e-8)
 
 #Returns mean and variance of the observation/reward-normalization wrapper if present
 def get_normalization_state(env: gym.Wrapper):
