@@ -79,7 +79,7 @@ def wandb_runs_to_dict(group: str, name: str | set[str], metrics: list[str] = ["
 
 
 def make_plot(experiments: list[tuple[str,str,str,str] | tuple[tuple[list,list],str,str]], step_range_to_plot: tuple[int,int] | list[tuple[int,int]] = None, title: str = None,
-              metric: str = "average return", ylabel: str = None, legend_position:str = 'upper left', save_dir: Path = None, show: bool = True):
+              metric: str = "average return", ylabel: str = None, x_step_size = 10**6, legend_position:str = 'upper left', save_dir: Path = None, show: bool = True):
     """
         Plots experiment results in a single figure.
 
@@ -91,6 +91,7 @@ def make_plot(experiments: list[tuple[str,str,str,str] | tuple[tuple[list,list],
         metric: str. Name of the logged metric to plot.
         save_dir: Path. Directory to save the plot to.
         ylabel: str. Label of the y-axis. If None, the metric name is used.
+        x_step_size: str. The step size for the x-axis. Default is 10^6. I.e. two subsequent entries in the data were collected x_step_size env steps apart.
         show: bool. Whether to display the plot
     """
 
@@ -121,7 +122,26 @@ def make_plot(experiments: list[tuple[str,str,str,str] | tuple[tuple[list,list],
         plt.fill_between(x, np.array(y) - np.array(y_stderr), np.array(y) + np.array(y_stderr), color = experiment[-1], alpha=0.3)
 
     #Beautify plot
-    plt.xlabel("Million Steps",fontweight='bold', fontsize=20)
+
+    if x_step_size == 10**6:
+        label = "Million Steps"
+        step_size = 50
+        num_ticks = max_x / step_size
+        plt.tick_params(axis='both', which='major', labelsize=20)
+        plt.xticks([i for i in range(0, max_x + step_size, step_size if num_ticks <= 6 else 2 * step_size)],[i / 100 for i in range(0, max_x + step_size,step_size if num_ticks <= 6 else 2 * step_size)])  # i/100 because data has been logged in 1e^4 steps
+        plt.gcf().set_size_inches(10 if max_x <= 800 else 20, 5)
+    elif x_step_size == 1:
+        label = "Thousand Steps"
+        step_size = 50
+        num_ticks = max_x / step_size
+        plt.tick_params(axis='both', which='major', labelsize=20)
+        plt.xticks([i for i in range(0, max_x + step_size, step_size if num_ticks <= 6 else 2 * step_size)],
+                   [i / 1000 for i in range(0, max_x + step_size,
+                                           step_size if num_ticks <= 6 else 2 * step_size)])
+        plt.gcf().set_size_inches(10 if max_x <= 800 else 20, 5)
+
+    plt.xlabel(label,fontweight='bold', fontsize=20)
+
     plt.ylabel(metric.title() if ylabel is None else ylabel, fontweight='bold', fontsize=20)
     if title is not None:
         plt.title(title)
@@ -129,11 +149,6 @@ def make_plot(experiments: list[tuple[str,str,str,str] | tuple[tuple[list,list],
     legend.get_frame().set_edgecolor('black')
     legend.get_frame().set_linewidth(1.5)
 
-    step_size = 50
-    num_ticks = max_x/step_size
-    plt.tick_params(axis='both', which='major', labelsize=20)
-    plt.xticks([i for i in range(0, max_x+step_size, step_size if num_ticks <= 6 else 2 * step_size)], [i/100 for i in range(0, max_x+step_size, step_size if num_ticks <= 6 else 2 * step_size)]) #i/100 because data has been logged in 1e^4 steps
-    plt.gcf().set_size_inches(10 if max_x <= 800 else 20, 5)
 
     #Save plot
     if save_dir is not None:
@@ -173,6 +188,15 @@ def redo_entire_plot_directory(plot_dir: Path):
         redo_plot(plot_path)
 
 
+# path = Path("Cascade/Cascade_Ant-v4/run1_latest_P7HCX")
+# agent = Agent.load(path)
+# env = load_env(path)
+# y = evaluate_agent(agent, env, get_fallback_distr=True, cascade_net=agent.top.net,num_runs=1)
+#
+# make_plot(experiments=[([x[0] for x in y],"Base net 2", "blue"),([x[4] for x in y],"Base net 6", "red")],save_dir=Path("../nobackup/Plots/ant_fb_distr"), legend_position='lower right', x_step_size=1, title="Fallbacks for one Episode", ylabel="Fallback Value", show=True)
+#for i in range(5):
+#    make_plot(experiments=[([x[i] for x in y],"Ant", "blue")],title="Fallbacks for one Episode", ylabel="Fallback value", show=True)
+
 ant_2mil_baseline = ["Baseline","PPO_Ant-v4","2m",'red']
 walker_2mil_baseline = ["Baseline","PPO_Walker2d-v4","2m",'red']
 humanoid_2mil_baseline = ["Baseline","PPO_Humanoid-v4","2m",'red']
@@ -202,9 +226,6 @@ walker_6mil_baseline = ["Baseline","PPO_Walker2d-v4_6mil","6m",'pink']
 humanoid_6mil_baseline = ["Baseline","PPO_Humanoid-v4_6mil","6m",'pink']
 hopper_6mil_baseline = ["Baseline","PPO_Hopper-v4_6mil","6m",'pink']
 cheetah_6mil_baseline = ["Baseline","PPO_HalfCheetah-v4_6mil","6m",'pink']
-
-
-#make_plot(experiments=[([0.1,0.2,0.3,0.3],"test", "blue")],title="Baseline", ylabel="Fallback", show=True)
 
 
 """

@@ -136,9 +136,9 @@ class DDPG(Agent):
 
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
 
-            if "final_info" in infos:
-                for info in infos["final_info"]:
-                    print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
+            #if "final_info" in infos:
+            #    for info in infos["final_info"]:
+            #        print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
 
             abort_training = abort_training or tracker.add_unit(tm.STEPS, 1)
 

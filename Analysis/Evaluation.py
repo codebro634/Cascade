@@ -122,7 +122,6 @@ def evaluate_agent(agent: Agent,env: gym.core.Env, num_runs:int = 10, horizon_le
         for key, value in measurements.items():
             print(f"{key}: {value}")
 
-    #return fb_first_run
     return measurements
 
 

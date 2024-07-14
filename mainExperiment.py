@@ -4,6 +4,12 @@ from Analysis.ExperimentSetup import setup_experiment, setup_experiment_from_fil
 import argparse
 from Analysis.RunTracker import TrackConfig, TrackMetric
 
+#TODO:
+# 1. Tests with removed lr decay
+# 2. Test if 0.95 is improvements
+# 3. Test smaller val function + test whats happens when valfunction is not newly initialized
+# 3. Implement A2C and SAC
+# 3. Test network plasticity
 
 
 from Analysis.Evaluation import evaluate_agent
