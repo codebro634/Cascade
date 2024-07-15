@@ -38,6 +38,7 @@ class DDPGConfig(AgentConfig):
     noise_clip: float = 0.5 #noise clip parameter of the Target Policy Smoothing Regularization
     actor_net_conf: NetworkConfig = None #Configuration for Actor Critic network
     critic_net_conf: NetworkConfig = None
+    tanh_in_net: bool = False
 
     def validate(self):
         assert self.actor_net_conf is not None and self.critic_net_conf is not None, "actor_net_conf and critic_net_conf must be set"
@@ -82,8 +83,9 @@ class DDPG(Agent):
         if squeeze:
             obs = torch.Tensor(obs, device=self.device).unsqueeze(0)
         net = self.target_actor if target else self.actor_net
+
         actions = net(torch.Tensor(obs).to(self.device))["mean"]
-        actions = torch.tanh(actions) * self.action_scale + self.action_bias
+        actions = (actions if self.cfg.tanh_in_net else torch.tanh(actions)) * self.action_scale + self.action_bias
 
         if not deterministic:
             actions += torch.normal(0, self.action_scale * self.cfg.exploration_noise)

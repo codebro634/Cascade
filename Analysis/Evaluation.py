@@ -85,7 +85,7 @@ def evaluate_agent(agent: Agent, env: gym.core.Env, num_runs:int = 10, horizon_l
 
 
             #Get action
-            action = agent.get_action(obs, eval_mode = True)
+            action = agent.get_action(obs, eval_mode=True)
 
             #Track action frequency
             if track_action_freqs:

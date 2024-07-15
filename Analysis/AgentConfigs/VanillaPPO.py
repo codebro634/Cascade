@@ -18,11 +18,10 @@ def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64),
     input_size, output_size =  space_descr.flattened_input_size(), space_descr.flattened_act_size()
 
     mean_conf = NetworkConfig(class_name="FFNet", args_dict={"input_size": input_size, "output_size": output_size, "hidden_sizes": layer_sizes,
-                                                             "activation_last_layer": False, "init_std": [np.sqrt(2) for _ in range(len(layer_sizes))] + [0.01], "init_bias_const": [0.0 for _ in range(len(layer_sizes) + 1)]})
+                                                             "init_std": [np.sqrt(2) for _ in range(len(layer_sizes))] + [0.01], "init_bias_const": [0.0 for _ in range(len(layer_sizes) + 1)]})
 
     critic_conf = NetworkConfig(class_name="FFNet",
                                 args_dict={"input_size": input_size, "output_size": 1, "hidden_sizes": (64, 64),
-                                           "activation_last_layer": False,
                                            "init_std": (np.sqrt(2), np.sqrt(2), 1.0),
                                            "init_bias_const": (0.0, 0.0, 0.0)})
 

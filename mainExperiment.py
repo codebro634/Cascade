@@ -5,10 +5,9 @@ import argparse
 from Analysis.RunTracker import TrackConfig, TrackMetric
 
 #TODO:
-# 1. Tests with removed lr decay
-# 2. Test if 0.95 is improvements
-# 3. Test smaller val function + test whats happens when valfunction is not newly initialized
+# 2. Agent mixing after tanh!!! Set 0.9 2m base steps for DDPG
 # 3. Implement A2C and SAC
+# 3. Test smaller val function + test whats happens when valfunction is not newly initialized
 # 3. Test network plasticity
 
 

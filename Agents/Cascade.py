@@ -9,6 +9,7 @@ from Agents.PPO import PPO, PPOConfig
 from dataclasses import dataclass
 import gymnasium as gym
 
+from Agents.SAC import SAC
 from Analysis.RunTracker import RunTracker, TrackMetric, TrackConfig
 from Architectures.CascadeNet import CascadeNet
 
@@ -40,7 +41,7 @@ class CascadeConfig(AgentConfig):
     """
         Alg specific params
     """
-    reset_rb: bool = True #If set, the replay buffer is reset after each training cycle if the base algorithm uses a replay buffer.
+    reset_rb: bool = False #If set, the replay buffer is reset after each training cycle if the base algorithm uses a replay buffer.
 
     def validate(self):
         assert self.training_alg_cfg.gamma == self.gamma
@@ -57,12 +58,12 @@ class Cascade(Agent):
         self.cfg.validate()
 
     def model_size(self):
-        actors = sum( sum([p.numel() for p in ac.actor.parameters()]) for ac in self.actors)
-        critics = sum (sum( sum([p.numel() for p in ac.actor.parameters()]) for ac in self.critics[i]) for i in range(len(self.critics)))
+        actors = sum(sum([p.numel() for p in ac.actor_net.parameters()]) for ac in self.actors)
+        critics = sum (sum(sum([p.numel() for p in ac.actor_net.parameters()]) for ac in self.critics[i]) for i in range(len(self.critics)))
         return actors+critics
 
     def save_additionals(self, model_path: Path, absolute_path: Path):
-        raise NotImplementedError()
+        pass
 
     @staticmethod
     def load_with_no_checks(relative_path: Path, absolute_path: Path, cfg: AgentConfig) -> "Agent":
@@ -80,13 +81,15 @@ class Cascade(Agent):
             if not self.cfg.reset_rb:
                 self.top.rb = rb
             casc_actors, casc_q = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][-1]
-            self.top.replace_net(actor_net = casc_actors, q_net = casc_q)
+            self.top.replace_net(actor_net=casc_actors, q_net = casc_q)
         elif self.cfg.training_alg == "PPO":
             self.top = PPO(cfg=self.cfg.training_alg_cfg)
             casc_actors, casc_v = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][-1]
             self.top.replace_net(actor_net=casc_actors, value_net=casc_v)
         elif self.cfg.training_alg == "SAC":
-            raise NotImplementedError()
+            self.top = SAC(cfg=self.cfg.training_alg_cfg)
+            casc_actors, casc_q1, casc_q2 = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][-1], CascadeNet(self.critics[1]) if self.cfg.stack_critics else self.critics[1][-1]
+            self.top.replace_net(actor=casc_actors, q1=casc_q1, q2=casc_q2)
         else:
             raise NotImplementedError()
 
@@ -108,18 +111,17 @@ class Cascade(Agent):
         else:
             init_cycle = self.top is None
             while not tracker.is_done():
-                print("test")
+
                 #Setup top-net of Cascade
                 if init_cycle:
                     actor_conf = self.cfg.init_actor_cfg
                     critic_confs = self.cfg.init_critic_cfgs
                 else:
                     actor_conf = self.cfg.stacked_actor_cfg
-                    critic_confs = self.cfg.stacked_critic_cfgs
+                    critic_confs = self.cfg.stacked_critic_cfgs if self.cfg.stack_critics else self.cfg.init_critic_cfgs
                 self.actors.append(actor_conf.init_obj())
                 for i, conf in enumerate(critic_confs):
                     self.critics[i].append(conf.init_obj())
-
 
                 #Train current Cascade-net
                 self.train_current_cascade(tracker, synced_env_maker, norm_sync_env=norm_sync_env)

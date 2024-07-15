@@ -1,0 +1,27 @@
+#Baseline DDPG
+
+Cascade_Ant-v4
+6000000
+Ant-v4
+Cascade
+alg_name:DDPG
+
+Cascade_Walker2d-v4
+6000000
+Walker2d-v4
+Cascade
+
+Cascade_Humanoid-v4
+6000000
+Humanoid-v4
+Cascade
+
+Cascade_Hopper-v4
+6000000
+Hopper-v4
+Cascade
+
+Cascade_HalfCheetah-v4
+6000000
+HalfCheetah-v4
+Cascade

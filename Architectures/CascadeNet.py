@@ -75,6 +75,7 @@ class CascadeNet(nn.Module):
                 if k != "fallback":
                     net_out[k] = weights * last_net_out[k] + (1 - weights) * net_out[k]
             net_out.update({"weights": weights.squeeze(dim=-1)})
+            return net_out
         else:
             return net_out
 

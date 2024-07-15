@@ -23,13 +23,17 @@ class FFNet(nn.Module):
     """
 
     def __init__(self, input_size: int, output_size: int, hidden_sizes: tuple[int] = (64,64), activation_function: nn.Module = nn.Tanh(),
-                 activation_last_layer: bool = False, init_std: list[float] = None, init_bias_const: list[float] = None, preset_params: list[tuple[int,bool,int,float]] = []):
+                 ll_activation: nn.Module = None, ll_activation_range: tuple[int] = None, init_std: list[float] = None, init_bias_const: list[float] = None, preset_params: list[tuple[int,bool,int,float]] = []):
         super().__init__()
 
+        self.ll_activation, self.ll_activation_range = ll_activation, ll_activation_range
         self.hidden_sizes = hidden_sizes
         if hidden_sizes is not None:
 
             if init_std is not None:
+                if not isinstance(init_std, list) and not isinstance(init_std, tuple):
+                    init_std = [init_std] * (len(hidden_sizes) + 1)
+                    init_bias_const = [init_bias_const] * (len(hidden_sizes) + 1)
                 assert len(init_std) == len(hidden_sizes) + 1 and len(init_bias_const) == len(hidden_sizes) + 1
             else:
                 init_std = init_bias_const = [None for _ in range(len(hidden_sizes) + 1)]
@@ -40,8 +44,6 @@ class FFNet(nn.Module):
                 layers.append(activation_function)
                 input_size = hidden_size
             layers.append(layer_init(nn.Linear(input_size,output_size), init_std[-1], init_bias_const[-1]))
-            if activation_last_layer:
-                layers.append(activation_function)
             self.layers = nn.Sequential(*layers)
         else:
             self.output = nn.Parameter(torch.zeros(output_size))
@@ -54,13 +56,28 @@ class FFNet(nn.Module):
 
 
     def forward(self, x):
+        batch = len(x.shape) > 1
+
         if self.hidden_sizes is not None:
-            return {"y": self.layers(x)}
+            out = self.layers(x)
         else: #For the case the net is just an input-independent parameter
-            if len(x.shape) > 1:
-                return {"y": self.output.expand((x.shape[0],self.output.shape[0]))}
+            out = self.output.expand((x.shape[0],self.output.shape[0])) if batch else self.output
+
+        if self.ll_activation is not None:
+            if batch:
+                slice = out[:,self.ll_activation_range[0]:self.ll_activation_range[1]] if self.ll_activation_range is not None else out
+                if self.ll_activation_range is not None:
+                    out[:,self.ll_activation_range[0]:self.ll_activation_range[1]] = self.ll_activation(slice)
+                else:
+                    out = self.ll_activation(out)
             else:
-                return {"y": self.output}
+                slice = out[self.ll_activation_range[0]:self.ll_activation_range[1]] if self.ll_activation_range is not None else out
+                if self.ll_activation_range is not None:
+                    out[self.ll_activation_range[0]:self.ll_activation_range[1]] = self.ll_activation(slice)
+                else:
+                    out = self.ll_activation(out)
+
+        return {"y": out}
 
 #Average absolute distance between all parameters of net1 and net2
 def abs_difference(net1: nn.Module, net2: nn.Module):

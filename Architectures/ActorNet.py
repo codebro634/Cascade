@@ -13,7 +13,7 @@ class CascadeActor(nn.Module):
 
 
     def forward(self, x):
-        shared_out = self.shared(x) if self.shared is not None else x
+        shared_out = self.shared(x)["y"] if self.shared is not None else x
         mean_out = self.mean(shared_out)
         logstd_out = self.logstd(shared_out) if self.logstd is not None else {}
 
