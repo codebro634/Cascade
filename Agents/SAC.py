@@ -4,6 +4,7 @@ import random
 import time
 from copy import deepcopy
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Callable
 
 import gymnasium as gym
@@ -62,6 +63,9 @@ class SAC(Agent):
 
         # Check constraints
         self.cfg.validate()
+
+    def save_additionals(self, model_path: Path, absolute_path: Path):
+        pass
 
     def model_size(self):
         return sum(p.numel() for p in self.net.parameters())
