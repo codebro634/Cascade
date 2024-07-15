@@ -10,16 +10,16 @@ from Architectures.NetworkConfig import NetworkConfig
 from Environments import EnvSpaceDescription
 from Environments.Utils import wrap_env
 from copy import deepcopy
-from Analysis.Parser import parse_bool, parse_tuple
+from Analysis.Parser import parse_tuple
 
 """
     Standard DDPG configuration as in cleanRL. Used for Baseline experiments.
 """
 
-def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (256,256)):
+def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64), critic_sizes: tuple = (64,64)):
     obs_size, action_size = space_descr.flattened_input_size(), space_descr.flattened_act_size()
 
-    q1_conf = NetworkConfig(class_name="FFNet",args_dict={"input_size": obs_size + action_size, "output_size": 1, "hidden_sizes": (256, 256), "activation_function": nn.ReLU(),
+    q1_conf = NetworkConfig(class_name="FFNet",args_dict={"input_size": obs_size + action_size, "output_size": 1, "hidden_sizes": critic_sizes, "activation_function": nn.ReLU(),
                                                           "init_std": (np.sqrt(2), np.sqrt(2), 1.0),
                                                           "init_bias_const": (0.0, 0.0, 0.0)
                                                           })
@@ -32,14 +32,14 @@ def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (256,256
 
     return actor_conf, q1_conf, deepcopy(q1_conf)
 
-def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (256,256)):
+def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64)):
     actor_conf, q1_conf, q2_conf = net_cfg(space_descr, layer_sizes=layer_sizes)
 
     return SACConfig(
         buffer_size=int(1e6),
         tau=0.005,
         batch_size=256,
-        learning_starts=5e3,
+        learning_starts=int(5e3),
         policy_lr=3e-4,
         q_lr=1e-3,
         policy_frequency=2,
@@ -54,7 +54,7 @@ def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (256,2
 
 
 #continuation: Loads the Agent saved at continuation
-def agent(space_descr: EnvSpaceDescription, layer_sizes: Union[tuple[int],str] = (256,256), continuation: str = None):
+def agent(space_descr: EnvSpaceDescription, layer_sizes: Union[tuple[int],str] = (64,64), continuation: str = None):
     return (lambda: SAC(cfg = agent_cfg(space_descr, layer_sizes=parse_tuple(layer_sizes, lambda x: int(x))))) if continuation is None else lambda: Agent.load(Path(continuation))
 
 def env_wrapper(env: Callable):

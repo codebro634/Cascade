@@ -8,7 +8,12 @@ Cascade_Walker2d-v4_DDPG_test
 6000000
 Walker2d-v4;norm:False
 Cascade
-alg_name:SAC;base_steps:2000000
+alg_name:DDPG;base_steps:2000000
+
+Cascade_Ant-v4_PPO_test
+6000000
+Ant-v4
+Cascade
 
 PPO_Ant-v4_noanneal
 6000000

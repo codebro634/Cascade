@@ -1,16 +1,5 @@
 #Baseline Cascade
 
-SAC_Ant-v4_normed
-2000000
-Ant-v4
-VanillaSAC
-
-SAC_Ant-v4_small
-2000000
-Ant-v4;norm:False
-VanillaSAC
-layer_sizes:(64,64)
-
 SAC_Ant-v4
 2000000
 Ant-v4;norm:False
@@ -40,28 +29,28 @@ Cascade_Ant-v4
 6000000
 Ant-v4;norm:False
 Cascade
-alg_name:SAC
+alg_name:SAC;base_steps:500000
 
 Cascade_Walker2d-v4
 6000000
 Walker2d-v4;norm:False
 Cascade
-alg_name:SAC
+alg_name:SAC;base_steps:500000
 
 Cascade_Humanoid-v4
 6000000
 Humanoid-v4;norm:False
 Cascade
-alg_name:SAC
+alg_name:SAC;base_steps:500000
 
 Cascade_Hopper-v4
 6000000
 Hopper-v4;norm:False
 Cascade
-alg_name:SAC
+alg_name:SAC;base_steps:500000
 
 Cascade_HalfCheetah-v4
 6000000
 HalfCheetah-v4;norm:False
 Cascade
-alg_name:SAC
+alg_name:SAC;base_steps:500000

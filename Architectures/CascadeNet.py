@@ -71,7 +71,6 @@ class CascadeNet(nn.Module):
     def weighted_sum(self, net_out, last_net_out):
         if "fallback" in net_out:
             weights = self.sigm(net_out["fallback"]).unsqueeze(dim=-1)
-            print(weights)
             for k in net_out.keys():
                 if k != "fallback":
                     net_out[k] = weights * last_net_out[k] + (1 - weights) * net_out[k]

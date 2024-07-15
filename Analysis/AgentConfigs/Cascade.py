@@ -26,10 +26,11 @@ def net_cfg(space_description, init: bool, fallback_init: float, actor_hidden: t
 
     x,y = space_description.flattened_input_size(), space_description.flattened_act_size()
     fb_bias = math.log(fallback_init/(1-fallback_init)) #Set so that sigmoid(fb_bias) = fallback_init
+    critic_sizes = (16, 16) if critic_stack else (64, 64)
 
     if alg == "PPO":
         preset = [(2 * len(actor_hidden), True, y,fb_bias)] if not init else []  # When passed to FF-net sets the bias of the neuron responsible for fallback-action to fb_bias
-        actor_conf, critic_conf = VanillaPPO.net_cfg(space_description, actor_hidden)
+        actor_conf, critic_conf = VanillaPPO.net_cfg(space_description, actor_hidden, critic_sizes=critic_sizes)
         critic_conf = [critic_conf]
         actor_conf.args_dict["mean"].args_dict["preset_params"] = preset
         actor_conf.args_dict["mean"].args_dict["output_size"] += 0 if init else 1
@@ -42,7 +43,7 @@ def net_cfg(space_description, init: bool, fallback_init: float, actor_hidden: t
 
     elif alg == "DDPG":
         preset = [(2 * len(actor_hidden), True, y,fb_bias)] if not init else []  # When passed to FF-net sets the bias of the neuron responsible for fallback-action to fb_bias
-        actor_conf, critic_conf = VanillaDDPG.net_cfg(space_description, actor_hidden)
+        actor_conf, critic_conf = VanillaDDPG.net_cfg(space_description, actor_hidden, critic_sizes=critic_sizes)
         critic_conf = [critic_conf]
         actor_conf.args_dict["mean"].args_dict["ll_activation"] = nn.Tanh() if use_tanh else None
         actor_conf.args_dict["mean"].args_dict["ll_activation_range"] = [0, y] if use_tanh else None
@@ -56,7 +57,7 @@ def net_cfg(space_description, init: bool, fallback_init: float, actor_hidden: t
         return actor_conf, critic_conf
 
     elif alg == "SAC":
-        actor, q1, q2 = VanillaSAC.net_cfg(space_description, actor_hidden)
+        actor, q1, q2 = VanillaSAC.net_cfg(space_description, actor_hidden, critic_sizes=critic_sizes)
         preset = [(0, True, y,fb_bias)] if not init else []
         actor.args_dict["mean"].args_dict["preset_params"] = preset
         actor.args_dict["mean"].args_dict["output_size"] += 0 if init else 1
