@@ -2,26 +2,30 @@
 
 Cascade_Ant-v4
 6000000
-Ant-v4
+Ant-v4;norm:False
 Cascade
 alg_name:DDPG
 
 Cascade_Walker2d-v4
 6000000
-Walker2d-v4
+Walker2d-v4;norm:False
 Cascade
+alg_name:DDPG
 
 Cascade_Humanoid-v4
 6000000
-Humanoid-v4
+Humanoid-v4;norm:False
 Cascade
+alg_name:DDPG
 
 Cascade_Hopper-v4
 6000000
-Hopper-v4
+Hopper-v4;norm:False
 Cascade
+alg_name:DDPG
 
 Cascade_HalfCheetah-v4
 6000000
-HalfCheetah-v4
+HalfCheetah-v4;norm:False
 Cascade
+alg_name:DDPG

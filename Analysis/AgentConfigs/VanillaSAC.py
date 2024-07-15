@@ -54,7 +54,7 @@ def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (256,2
 
 
 #continuation: Loads the Agent saved at continuation
-def agent(space_descr: EnvSpaceDescription, layer_sizes: Union[tuple[int],str] = (64,64), continuation: str = None):
+def agent(space_descr: EnvSpaceDescription, layer_sizes: Union[tuple[int],str] = (256,256), continuation: str = None):
     return (lambda: SAC(cfg = agent_cfg(space_descr, layer_sizes=parse_tuple(layer_sizes, lambda x: int(x))))) if continuation is None else lambda: Agent.load(Path(continuation))
 
 def env_wrapper(env: Callable):

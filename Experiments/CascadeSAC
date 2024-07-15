@@ -1,27 +1,67 @@
-#Baseline DDPG
+#Baseline Cascade
+
+SAC_Ant-v4_normed
+2000000
+Ant-v4
+VanillaSAC
+
+SAC_Ant-v4_small
+2000000
+Ant-v4;norm:False
+VanillaSAC
+layer_sizes:(64,64)
+
+SAC_Ant-v4
+2000000
+Ant-v4;norm:False
+VanillaSAC
+
+SAC_Walker2d-v4
+2000000
+Walker2d-v4;norm:False
+VanillaSAC
+
+SAC_Hopper-v4
+2000000
+Hopper-v4;norm:False
+VanillaSAC
+
+SAC_Humanoid-v4
+2000000
+Humanoid-v4;norm:False
+VanillaSAC
+
+SAC_HalfCheetah-v4
+2000000
+HalfCheetah-v4;norm:False
+VanillaSAC
 
 Cascade_Ant-v4
 6000000
-Ant-v4
+Ant-v4;norm:False
 Cascade
-alg_name:DDPG
+alg_name:SAC
 
 Cascade_Walker2d-v4
 6000000
-Walker2d-v4
+Walker2d-v4;norm:False
 Cascade
+alg_name:SAC
 
 Cascade_Humanoid-v4
 6000000
-Humanoid-v4
+Humanoid-v4;norm:False
 Cascade
+alg_name:SAC
 
 Cascade_Hopper-v4
 6000000
-Hopper-v4
+Hopper-v4;norm:False
 Cascade
+alg_name:SAC
 
 Cascade_HalfCheetah-v4
 6000000
-HalfCheetah-v4
+HalfCheetah-v4;norm:False
 Cascade
+alg_name:SAC
