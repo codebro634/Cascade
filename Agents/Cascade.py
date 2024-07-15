@@ -8,8 +8,9 @@ from Agents.Agent import Agent, AgentConfig
 from Agents.PPO import PPO, PPOConfig
 from dataclasses import dataclass
 import gymnasium as gym
+
 from Analysis.RunTracker import RunTracker, TrackMetric, TrackConfig
-from Architectures.CascadeAC import ActorCriticCascade
+from Architectures.CascadeNet import CascadeNet
 
 from Environments.Utils import sync_normalization_state
 
@@ -21,13 +22,16 @@ class CascadeConfig(AgentConfig):
 
     training_alg: str = None  #The training algorithm used for training the Cascade-net
     training_alg_cfg: AgentConfig = None #The Agent config used for training the Cascade-net
-    init_net_cfg: "NetworkConfig" = None #Network config for the first base-net
-    stacked_net_cfg: "NetworkConfig" = None #Network config for all nets besides the first one. These must include the fallback-action
+
+    init_actor_cfg: "NetworkConfig" = None #Network config for the first base-net
+    stacked_actor_cfg: "NetworkConfig" = None #Network config for all nets besides the first one. These must include the fallback-action
+
+    init_critic_cfgs: list["NetworkConfig"] = None #Network config for the critic of all base-nets
+    stacked_critic_cfgs: list["NetworkConfig"] = None #Network config for the critic of all base-nets besides the first one
+    stack_critics: bool = False
 
     base_steps: int = 100000
 
-    propagate_action: bool = False
-    propagate_value: bool = False
     train_only_top_net: bool = False #If set, only the last added base-net is trained.
     sequential: bool = True #If set, base-nets are sequentially added. If False, a Cascade-net with 'stacks' many base-nets is directly trained.
     stacks: int = 0 #Only used when not training sequentially
@@ -48,70 +52,44 @@ class Cascade(Agent):
 
     def __init__(self, cfg: CascadeConfig):
         super().__init__(cfg)
-        self.top= None #An Agent with an 'ActorCriticCascade'-network built from 'self.acs'
-        self.acs = [] #List of Actor Critics that make up the Cascade
+        self.top = None
+        self.critics, self.actors = [[] for _ in range(len(self.cfg.init_critic_cfgs))], []
         self.cfg.validate()
 
     def model_size(self):
-        actors = sum( sum([p.numel() for p in ac.actor.parameters()]) for ac in self.acs)
-        critic = sum(p.numel() for p in self.acs[-1].critic.parameters())
-        return actors+critic
+        actors = sum( sum([p.numel() for p in ac.actor.parameters()]) for ac in self.actors)
+        critics = sum (sum( sum([p.numel() for p in ac.actor.parameters()]) for ac in self.critics[i]) for i in range(len(self.critics)))
+        return actors+critics
 
     def save_additionals(self, model_path: Path, absolute_path: Path):
-        for i,ac in enumerate(self.acs):
-            torch.save(ac.state_dict(), absolute_path.joinpath(f"ac{i+1}.nn"))
+        raise NotImplementedError()
 
     @staticmethod
     def load_with_no_checks(relative_path: Path, absolute_path: Path, cfg: AgentConfig) -> "Agent":
-        agent = Cascade(cfg=cfg)
-
-        #Determine out of how many base-nets the saved Cascade-net consists
-        stacks = 1
-        while exists(absolute_path.joinpath(f"ac{stacks}.nn")):
-            stacks += 1
-        stacks-=1
-
-        #Parse the base-nets into a Cascade-net
-        acs = []
-        for i in range(stacks):
-            conf = agent.cfg.stacked_net_cfg if i > 0 else agent.cfg.init_net_cfg
-            net = conf.init_obj()
-            if agent.cfg.train_only_top_net and i+1 < stacks:
-                for param in net.parameters():
-                    param.requires_grad = False
-
-            net.load_state_dict(torch.load(absolute_path.joinpath(f"ac{i+1}.nn")))
-            acs.append(net)
-        wrapped_net = ActorCriticCascade(acs, propagate_action=agent.cfg.propagate_action,propagate_value=agent.cfg.propagate_value)
-
-        #Create agent with the loaded Cascade-net
-        if agent.cfg.training_alg == "PPO":
-            top = PPO(cfg=agent.cfg.training_alg_cfg)
-        elif agent.cfg.training_alg == "DDPG":
-            raise NotImplementedError("DDPG Cascade load not implemented.")
-
-        top.replace_net(wrapped_net)
-
-        agent.top = top
-        agent.acs = acs
-        return agent
+        raise NotImplementedError()
 
     def get_action(self, obs, eval_mode: bool = False, deterministic: bool = False):
         return self.top.get_action(obs, eval_mode=eval_mode, deterministic=deterministic)
 
     #Trains the current Cascade-net represented by 'self.acs' for 'self.cfg.base_steps' steps.
     def train_current_cascade(self, tracker: RunTracker, env_maker: Callable, norm_sync_env: gym.Env = None):
-        wrapped_net = ActorCriticCascade(self.acs, propagate_action=self.cfg.propagate_action,propagate_value=self.cfg.propagate_value)
+
         if self.cfg.training_alg == "DDPG":
             rb = self.top.rb if self.top is not None else None
             self.top = DDPG(cfg=self.cfg.training_alg_cfg)
             if not self.cfg.reset_rb:
                 self.top.rb = rb
+            casc_actors, casc_q = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][-1]
+            self.top.replace_net(actor_net = casc_actors, q_net = casc_q)
         elif self.cfg.training_alg == "PPO":
             self.top = PPO(cfg=self.cfg.training_alg_cfg)
+            casc_actors, casc_v = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][-1]
+            self.top.replace_net(actor_net=casc_actors, value_net=casc_v)
+        elif self.cfg.training_alg == "SAC":
+            raise NotImplementedError()
         else:
             raise NotImplementedError()
-        self.top.replace_net(wrapped_net)
+
         rt = RunTracker(cfg=TrackConfig(metric=TrackMetric.STEPS, total=self.cfg.base_steps, eval_interval=0),eval_func=None, show_progress=False, nested=tracker, nested_progress=not self.cfg.cyclical_lr)
         self.top.train(env_maker, rt, norm_sync_env=norm_sync_env)
 
@@ -130,16 +108,25 @@ class Cascade(Agent):
         else:
             init_cycle = self.top is None
             while not tracker.is_done():
+                print("test")
                 #Setup top-net of Cascade
-                conf = self.cfg.init_net_cfg if init_cycle else self.cfg.stacked_net_cfg
-                self.acs.append(conf.init_obj())
+                if init_cycle:
+                    actor_conf = self.cfg.init_actor_cfg
+                    critic_confs = self.cfg.init_critic_cfgs
+                else:
+                    actor_conf = self.cfg.stacked_actor_cfg
+                    critic_confs = self.cfg.stacked_critic_cfgs
+                self.actors.append(actor_conf.init_obj())
+                for i, conf in enumerate(critic_confs):
+                    self.critics[i].append(conf.init_obj())
+
 
                 #Train current Cascade-net
                 self.train_current_cascade(tracker, synced_env_maker, norm_sync_env=norm_sync_env)
 
                 #Freeze parameters of old-nets
                 if self.cfg.train_only_top_net:
-                    for param in self.top.net.parameters():
+                    for param in self.top.actor_net.parameters():
                         param.requires_grad = False
 
                 init_cycle = False

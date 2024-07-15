@@ -37,13 +37,14 @@ class PPOConfig(AgentConfig):
     clip_vloss: bool = True #Toggles whether to use a clipped loss for the value function, as per the paper.
     anneal_lr: bool = False #Toggle learning rate annealing for policy and value networks
     cuda: bool = False #if toggled, cuda will be enabled by default
-    net_conf: NetworkConfig =None #Configuration for the used network
+    actor_net_conf: NetworkConfig =None #Configuration for the used network
+    value_net_conf: NetworkConfig = None #Configuration for the used value network
 
     #These parameters are only used when using the Cascade-Architecture
     fallback_coef: float = 0 #coefficient for fallback-weights. 0 if no Minimization
 
     def validate(self):
-        assert self.net_conf is not None
+        assert self.actor_net_conf is not None and self.value_net_conf is not None, "Actor and Value Network Configurations must be set."
 
 class PPO(Agent):
 
@@ -55,22 +56,23 @@ class PPO(Agent):
         self.batch_size = int(self.cfg.num_envs * self.cfg.num_steps)
         self.minibatch_size = int(self.batch_size // self.cfg.num_minibatches)
 
-        self.net = None
+        self.actor_net, self.v_net = None, None
         self.optimizer = None
-        self.replace_net(self.cfg.net_conf.init_obj().to(self.device))
+        self.replace_net(self.cfg.actor_net_conf.init_obj().to(self.device), self.cfg.value_net_conf.init_obj().to(self.device))
 
         #Check constraints
         self.cfg.validate()
 
     def model_size(self):
-        return sum(p.numel() for p in self.net.parameters())
+        return sum(p.numel() for p in self.actor_net.parameters() + self.v_net.parameters())
 
     """
         Replaces the current network. This updates the optimizer's parameters as well.
     """
-    def replace_net(self, net: nn.Module):
-        self.net = net
-        self.optimizer = optim.Adam(self.net.parameters(), lr=self.cfg.learning_rate, eps=1e-5)
+    def replace_net(self, actor_net: nn.Module, value_net: nn.Module):
+        self.actor_net = actor_net
+        self.v_net = value_net
+        self.optimizer = optim.Adam(list(self.actor_net.parameters()) + list(self.v_net.parameters()), lr=self.cfg.learning_rate, eps=1e-5)
 
 
     """
@@ -87,17 +89,14 @@ class PPO(Agent):
     def get_action_and_value_net(self, obs, action = None, get_value: bool = True
                              ,action_entropy: bool = False, action_logprob: bool = False, deterministic: bool = False):
         #Pass obs through net
-        output = self.net.get_action_and_value(obs) if get_value else self.net.get_action(obs)
-
-        x = output["action"] if get_value else output
+        x = self.actor_net(obs)
 
         discrete, mul_disc = self.cfg.space_description.is_discrete_action(), self.cfg.space_description.is_multi_discrete()
         #Continuous case
         if not discrete:
             assert "logstd" in x
             action_std = torch.exp(x["logstd"])
-            if x["mean"].shape != action_std.shape:
-                self.net.get_action_and_value(obs)
+            assert x["mean"].shape == action_std.shape
 
             probs = Normal(x["mean"], action_std)
             if action is None:
@@ -131,31 +130,27 @@ class PPO(Agent):
 
         x["action"] = action
         if get_value:
-            x.update({"value": output["value"]})
+            x.update({"value": self.v_net(obs)["y"]})
 
         return x
 
 
     @staticmethod
     def load_with_no_checks(relative_path: Path, absolute_path: Path, cfg: AgentConfig) -> "Agent":
-        agent = PPO(cfg = cfg)
-        checkpoint = torch.load(absolute_path.joinpath("ac.nn"))
-        agent.net.load_state_dict(checkpoint)
-        return agent
+        raise NotImplementedError()
 
     def save_additionals(self, model_path: Path, absolute_path: Path):
-        torch.save(self.net.state_dict(), absolute_path.joinpath("ac.nn"))
-        torch.save(self.net.actor.state_dict(), absolute_path.joinpath("actor.nn")) #Only needed for Analysis
+        raise NotImplementedError()
 
     def get_action_and_value(self, obs, deterministic: bool = False):
         obs = torch.Tensor(obs, device=self.device).unsqueeze(0)
-        y = self.get_action_and_value_net(obs, deterministic=deterministic)
+        y = self.get_action_and_value_net(obs, get_value=True, deterministic=deterministic)
         return {"action": y["action"].detach().squeeze(0).numpy(), "value": y["value"].detach().squeeze(0).numpy().item()}
 
     def get_value(self, obs):
         assert not isinstance(obs,torch.Tensor)
-        obs = torch.Tensor(obs, device = self.device).unsqueeze(0)
-        return self.net.get_value(obs)[0].detach().numpy()
+        obs = torch.Tensor(obs, device=self.device).unsqueeze(0)
+        return self.v_net(obs)["y"][0].detach().numpy()
 
     def get_action(self, obs, eval_mode: bool = False, deterministic: bool = False):
         obs = torch.Tensor(obs, device=self.device).unsqueeze(0)
@@ -219,7 +214,7 @@ class PPO(Agent):
 
             # bootstrap value if not done
             with torch.no_grad():
-                next_value = self.net.get_value(next_obs).reshape(1, -1)
+                next_value = self.v_net(next_obs)["y"].reshape(1, -1)
                 advantages = torch.zeros_like(rewards).to(self.device)
                 lastgaelam = 0
                 for t in reversed(range(self.cfg.num_steps)):
@@ -296,7 +291,7 @@ class PPO(Agent):
                     #Perform gradient descent
                     self.optimizer.zero_grad()
                     loss.backward()
-                    nn.utils.clip_grad_norm_(self.net.parameters(), self.cfg.max_grad_norm)
+                    nn.utils.clip_grad_norm_(list(self.actor_net.parameters()) + list(self.v_net.parameters()), self.cfg.max_grad_norm)
                     self.optimizer.step()
 
 

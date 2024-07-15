@@ -15,7 +15,7 @@ from numpy import prod
 
 from Agents.PPO import PPO
 from Analysis.ExperimentSetup import experiment_final_eval_func
-from Architectures.CascadeAC import ActorCriticCascade
+from Architectures.CascadeNet import CascadeNet
 from Environments import EnvSpaceDescription
 from Environments.Utils import get_wrapper, load_env, get_normalization_state, \
     load_normalization_state
@@ -23,8 +23,8 @@ from Environments.Utils import get_wrapper, load_env, get_normalization_state, \
 from Analysis.PlotMaker import make_plot
 
 
-def evaluate_agent(agent: Agent,env: gym.core.Env, num_runs:int = 10, horizon_length:int = None, measure_return: bool = False, track_action_freqs: bool = False,
-                   measure_fallback_stats: bool = False, cascade_net:ActorCriticCascade = None, measure_expected_state: bool = False, get_fallback_distr: bool = False,
+def evaluate_agent(agent: Agent, env: gym.core.Env, num_runs:int = 10, horizon_length:int = None, measure_return: bool = False, track_action_freqs: bool = False,
+                   measure_fallback_stats: bool = False, cascade_net:CascadeNet = None, measure_expected_state: bool = False, get_fallback_distr: bool = False,
                    verbose: bool = False):
     """
     :param agent:  Agent to be evaluted
@@ -186,10 +186,10 @@ def measure_base_nets(agent: Agent, env: gym.core.Env, num_runs: int = 10) -> di
 
     is_casc = isinstance(agent,Agents.Cascade.Cascade)
 
-    n_base = len(agent.top.net.cascade)
+    n_base = len(agent.top.actor_net.cascade)
     current_return = np.zeros(shape=(n_base,))
     for i in range(n_base):
-        agent.top.net.regress_to_one_base(i)
+        agent.top.actor_net.regress_to_one_base(i)
         current_return[i] = evaluate_agent(agent, env, num_runs=num_runs, measure_return=True)["average return"]
 
     return {"average base returns": current_return.sum() / len(current_return), "max base return": current_return.max()}
@@ -209,7 +209,7 @@ def load_and_evaluate_agent_from_file(path: Path, num_runs=10):
 #Measures the average fallback weight of each base-net and the average product of all fallback weights for all models in run_group (This assumes that the models in run_group are Cascade models)
 def measure_fallback_stats(run_group: Path, num_runs:int= 10):
     print(f"Fallback probabilities of group: {run_group}")
-    args_dict = lambda agent: {"measure_fallback_stats": True, "measure_return": True, "cascade_net": agent.top.net}
+    args_dict = lambda agent: {"measure_fallback_stats": True, "measure_return": True, "cascade_net": agent.top.actor_net}
     evaluate_run_group(run_group,args_dict,num_runs=num_runs,verbose=True)
 
 #Measures the average performance (in terms of average return) of all models in run_group

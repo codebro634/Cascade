@@ -36,10 +36,11 @@ class DDPGConfig(AgentConfig):
     policy_frequency: int = 2 #the frequency of training policy (delayed)
     anneal_lr: bool = False #if toggled, the learning rate will be annealed linearly to 0 during training
     noise_clip: float = 0.5 #noise clip parameter of the Target Policy Smoothing Regularization
-    net_conf: NetworkConfig = None #Configuration for Actor Critic network
+    actor_net_conf: NetworkConfig = None #Configuration for Actor Critic network
+    critic_net_conf: NetworkConfig = None
 
     def validate(self):
-        assert self.net_conf is not None
+        assert self.actor_net_conf is not None and self.critic_net_conf is not None, "actor_net_conf and critic_net_conf must be set"
 
 class DDPG(Agent):
 
@@ -48,9 +49,10 @@ class DDPG(Agent):
 
         self.device = torch.device("cuda" if torch.cuda.is_available() and self.cfg.cuda else "cpu")
 
-        self.net, self.target = None, None
+        self.actor_net, self.target_actor = None, None
+        self.q_net, self.target_q = None, None
         self.q_optim, self.actor_optim = None, None
-        self.replace_net(self.cfg.net_conf.init_obj().to(self.device))
+        self.replace_net(self.cfg.actor_net_conf.init_obj().to(self.device), self.cfg.critic_net_conf.init_obj().to(self.device))
         self.rb = None
 
         self.action_scale = torch.tensor((self.cfg.space_description.action_space.high - self.cfg.space_description.action_space.low) / 2, dtype=torch.float32)
@@ -60,30 +62,27 @@ class DDPG(Agent):
         self.cfg.validate()
 
     def model_size(self):
-        return sum(p.numel() for p in self.net.parameters())
+        return sum(p.numel() for p in self.actor_net.parameters() + self.q_net.parameters())
 
-    def replace_net(self, net: nn.Module):
-        self.net = net
-        self.q_optim = optim.Adam(self.net.critic_params(), lr=self.cfg.learning_rate, eps=1e-5)
-        self.actor_optim = optim.Adam(self.net.actor_params(), lr=self.cfg.learning_rate, eps=1e-5)
+    def replace_net(self, actor_net, q_net):
+        self.actor_net = actor_net
+        self.q_net = q_net
+        self.q_optim = optim.Adam(self.q_net.parameters(), lr=self.cfg.learning_rate, eps=1e-5)
+        self.actor_optim = optim.Adam(self.actor_net.parameters(), lr=self.cfg.learning_rate, eps=1e-5)
 
     @staticmethod
     def load_with_no_checks(relative_path: Path, absolute_path: Path, cfg: AgentConfig) -> "Agent":
-        agent = DDPG(cfg=cfg)
-        agent.net.load_state_dict(torch.load(absolute_path.joinpath("net.nn")))
-        agent.target.load_state_dict(torch.load(absolute_path.joinpath("target.nn")))
-        return agent
+        raise NotImplementedError()
 
     def save_additionals(self, model_path: Path, absolute_path: Path):
-        torch.save(self.net.state_dict(), absolute_path.joinpath("net.nn"))
-        torch.save(self.target.state_dict(), absolute_path.joinpath("target.nn"))
+        raise NotImplementedError()
 
     def get_action(self, obs, eval_mode: bool = False, deterministic: bool = False, target: bool = False):
         squeeze = len(obs.shape) == 1
         if squeeze:
             obs = torch.Tensor(obs, device=self.device).unsqueeze(0)
-        net = self.target if target else self.net
-        actions = net.get_action(torch.Tensor(obs).to(self.device))["mean"]
+        net = self.target_actor if target else self.actor_net
+        actions = net(torch.Tensor(obs).to(self.device))["mean"]
         actions = torch.tanh(actions) * self.action_scale + self.action_bias
 
         if not deterministic:
@@ -91,19 +90,19 @@ class DDPG(Agent):
         if eval_mode:
             actions = actions.cpu().detach().numpy().clip(self.cfg.space_description.action_space.low, self.cfg.space_description.action_space.high)
 
-        if squeeze:
-            return actions.squeeze(0)
-        else:
-            return actions
+        return actions.squeeze(0) if squeeze else actions
+
 
 
     def train(self, env_maker: Callable[[],gym.core.Env], tracker: RunTracker, norm_sync_env:gym.core.Env = None):
         envs = gym.vector.SyncVectorEnv([lambda: env_maker()])
         assert isinstance(envs.single_action_space, gym.spaces.Box), "only continuous action space is supported"
 
-        if self.target is None:
-            self.target = deepcopy(self.net)
-            self.target.load_state_dict(self.net.state_dict())
+        if self.target_actor is None:
+            self.target_actor = deepcopy(self.actor_net)
+            self.target_actor.load_state_dict(self.actor_net.state_dict())
+            self.target_q = deepcopy(self.q_net)
+            self.target_q.load_state_dict(self.q_net.state_dict())
 
         envs.single_observation_space.dtype = np.float32
 
@@ -173,11 +172,11 @@ class DDPG(Agent):
 
                 with torch.no_grad():
                     next_state_actions = self.get_action(data_next_observations, target=True, deterministic=True)
-                    qf1_next_target = self.target.q_value(data_next_observations, next_state_actions)
+                    qf1_next_target = self.target_q(torch.concat((data_next_observations,next_state_actions),dim=1))["y"]
                     next_q_value = data_rewards.flatten() + (1 - data.dones.flatten()) * self.cfg.gamma * (qf1_next_target).view(-1)
 
 
-                qf1_a_values = self.net.q_value(data_observations, data.actions).view(-1)
+                qf1_a_values = self.q_net(torch.concat((data_observations, data.actions), dim=1) )["y"].view(-1)
                 qf1_loss = F.mse_loss(qf1_a_values, next_q_value)
 
                 # optimize the model
@@ -186,15 +185,15 @@ class DDPG(Agent):
                 self.q_optim.step()
 
                 if global_step % self.cfg.policy_frequency == 0:
-                    actor_loss = -self.net.q_value(data_observations, self.get_action(data_observations,target=False, deterministic=True)).mean()
+                    actor_loss = -self.q_net(torch.concat((data_observations, self.get_action(data_observations, target=False, deterministic=True)),dim=1))["y"].mean()
                     self.actor_optim.zero_grad()
                     actor_loss.backward()
                     self.actor_optim.step()
 
                     # update the target network
-                    for param, target_param in zip(self.net.actor_params(), self.target.actor_params()):
+                    for param, target_param in zip(self.actor_net.parameters(), self.target_actor.parameters()):
                         target_param.data.copy_(self.cfg.tau * param.data + (1 - self.cfg.tau) * target_param.data)
-                    for param, target_param in zip(self.net.critic_params(), self.target.critic_params()):
+                    for param, target_param in zip(self.q_net.parameters(), self.target_q.parameters()):
                         target_param.data.copy_(self.cfg.tau * param.data + (1 - self.cfg.tau) * target_param.data)
 
                 abort_training = abort_training or tracker.add_unit(tm.SAMPLES, self.cfg.batch_size)

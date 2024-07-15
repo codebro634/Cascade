@@ -7,13 +7,12 @@ import gymnasium as gym
 from gymnasium.wrappers import RecordEpisodeStatistics
 
 import Agents.Cascade
-import Agents.CascadeNaive
 from Agents.Agent import Agent
 from Agents.PPO import PPO
 from Analysis.AgentConfigs.General import gamma, obs_clip, rew_clip
 from Analysis.Experiment import Experiment
-from Analysis.AgentConfigs import VanillaPPO, CascadeNaive,Cascade, VanillaDDPG
-from Architectures.ActorCritic import ActorCritic
+from Analysis.AgentConfigs import VanillaPPO, Cascade, VanillaDDPG
+from Architectures.ActorNet import CascadeActor
 from Architectures.Elementary import abs_difference
 from Environments import EnvSpaceDescription
 from Environments.DiscreteWrapper import DiscretizeWrapper, DiscretizeMultiWrapper
@@ -140,8 +139,8 @@ def experiment_eval_func(initial_agent: Agent, agent: Agent, env: gym.core.Env) 
     eval_results = {}
 
     #Track weight differences to initial agent in L1 norm
-    if isinstance(agent,PPO) and isinstance(agent.net,ActorCritic):
-        eval_results.update({"actor weights diff":abs_difference(agent.net.actor,initial_agent.net.actor)})
+    if isinstance(agent, PPO) and isinstance(agent.actor_net, CascadeActor):
+        eval_results.update({"actor weights diff":abs_difference(agent.actor_net, initial_agent.actor_net)})
 
     #If normalizing, always add normalization stats
     if get_normalization_state(env):
@@ -164,11 +163,8 @@ def experiment_eval_func(initial_agent: Agent, agent: Agent, env: gym.core.Env) 
             ignore.append("distribution")
 
     if isinstance(agent,Agents.Cascade.Cascade):
-        if not agent.top.net.prop_action and not agent.top.net.prop_val:
-            eval_args.update({"measure_fallback_stats":True, "cascade_net":agent.top.net})
+        eval_args.update({"measure_fallback_stats":True, "cascade_net": agent.top.actor_net})
 
-    if isinstance(agent,Agents.CascadeNaive.CascadeNaive):
-        pass
 
     from Analysis.Evaluation import evaluate_agent #Avoid circular import
     eval_results.update(evaluate_agent(agent,env, **eval_args))
@@ -183,9 +179,9 @@ def experiment_final_eval_func(initial_agent: Agent, agent: Agent, eval_env: gym
     evals = {}
 
     #Measure individual base nets' performances
-    if  (isinstance(agent,Agents.Cascade.Cascade) and (not agent.top.net.prop_action) and (not agent.top.net.prop_val)):
+    if isinstance(agent,Agents.Cascade.Cascade):
         from Analysis.Evaluation import measure_base_nets
-        evals.update(measure_base_nets(agent,eval_env,num_runs=num_runs))
+        evals.update(measure_base_nets(agent, eval_env, num_runs=num_runs))
 
     return evals
 

@@ -1,7 +1,7 @@
 PPO_Ant-v4_noanneal
 6000000
-Ant-v4
-VanillaPPO
+Ant-v4;norm:False
+VanillaDDPG
 anneal_lr:False
 
 Cascade_Ant-v4_noanneal
@@ -20,7 +20,7 @@ Cascade_Walker2d-v4_DDPG_095
 6000000
 Walker2d-v4;norm:False
 Cascade
-alg_name:DDPG;reset_rb:False;fb_init:0.95
+alg_name:DDPG;reset_rb:False;fb_init:0.95;base_steps:5000
 
 Cascade_Walker2d-v4_DDPG_09
 6000000

@@ -28,14 +28,12 @@ def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64),
 
     log_conf = NetworkConfig(class_name="FFNet",args_dict={"input_size": None, "output_size": output_size, "hidden_sizes": None})
 
-    actor_conf = NetworkConfig(class_name="ActorHead",args_dict={"mean": mean_conf, "logstd": log_conf if continuous else None})
+    actor_conf = NetworkConfig(class_name="CascadeActor",args_dict={"mean": mean_conf, "logstd": log_conf if continuous else None, "shared": None})
 
-    net_conf = NetworkConfig(class_name="ActorCritic",
-                             args_dict={"shared": None, "actor": actor_conf, "critic": critic_conf})
-    return net_conf
+    return actor_conf, critic_conf
 
 def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64), continuous:bool = True, anneal_lr: bool= True):
-    net_conf = net_cfg(space_descr, layer_sizes = layer_sizes, continuous = continuous)
+    actor_net_conf, value_net_conf = net_cfg(space_descr, layer_sizes = layer_sizes, continuous = continuous)
 
     if continuous:
         return PPOConfig(
@@ -54,7 +52,8 @@ def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64
             anneal_lr = anneal_lr,
             cuda = False,
             fallback_coef=0,
-            net_conf = net_conf,
+            actor_net_conf= actor_net_conf,
+            value_net_conf = value_net_conf,
             gamma = gamma,
         space_description = space_descr,
         name="PPO_Vanilla")
@@ -75,7 +74,8 @@ def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64
             anneal_lr=anneal_lr,
             cuda=False,
             fallback_coef=0,
-            net_conf=net_conf,
+            actor_net_conf=actor_net_conf,
+            value_net_conf=value_net_conf,
             gamma=gamma,
             space_description=space_descr,
             name="PPO_Vanilla")

@@ -28,14 +28,12 @@ def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64))
 
     log_conf = NetworkConfig(class_name="FFNet",args_dict={"input_size": None, "output_size": action_size, "hidden_sizes": None})
 
-    actor_conf = NetworkConfig(class_name="ActorHead",args_dict={"mean": mean_conf, "logstd": log_conf})
+    actor_conf = NetworkConfig(class_name="CascadeActor",args_dict={"mean": mean_conf, "logstd": log_conf, "shared": None})
 
-    net_conf = NetworkConfig(class_name="ActorCritic",
-                             args_dict={"shared": None, "actor": actor_conf, "critic": critic_conf})
-    return net_conf
+    return actor_conf, critic_conf
 
 def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64), continuous:bool = True, anneal_lr: bool= True):
-    net_conf = net_cfg(space_descr, layer_sizes = layer_sizes)
+    actor_net_conf, critic_net_conf = net_cfg(space_descr, layer_sizes = layer_sizes)
 
     return DDPGConfig(
         learning_rate = 0.0003,
@@ -48,7 +46,8 @@ def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64
         noise_clip = 0.5,
         cuda=False,
         anneal_lr = anneal_lr,
-        net_conf = net_conf,
+        actor_net_conf = actor_net_conf,
+        critic_net_conf = critic_net_conf,
         gamma = gamma,
     space_description = space_descr,
     name="DDPG_Vanilla")
