@@ -1,30 +1,30 @@
 #Baseline DDPG
 
-Cascade_Ant-v4
+Cascade_Ant-v4_DDPG
 6000000
 Ant-v4;norm:False
 Cascade
 alg_name:DDPG
 
-Cascade_Walker2d-v4
+Cascade_Walker2d-v4_DDPG
 6000000
 Walker2d-v4;norm:False
 Cascade
 alg_name:DDPG
 
-Cascade_Humanoid-v4
+Cascade_Humanoid-v4_DDPG
 6000000
 Humanoid-v4;norm:False
 Cascade
 alg_name:DDPG
 
-Cascade_Hopper-v4
+Cascade_Hopper-v4_DDPG
 6000000
 Hopper-v4;norm:False
 Cascade
 alg_name:DDPG
 
-Cascade_HalfCheetah-v4
+Cascade_HalfCheetah-v4_DDPG
 6000000
 HalfCheetah-v4;norm:False
 Cascade

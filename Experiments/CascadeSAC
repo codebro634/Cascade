@@ -25,31 +25,31 @@ SAC_HalfCheetah-v4
 HalfCheetah-v4;norm:False
 VanillaSAC
 
-Cascade_Ant-v4
+Cascade_Ant-v4_SAC
 6000000
 Ant-v4;norm:False
 Cascade
 alg_name:SAC;base_steps:500000
 
-Cascade_Walker2d-v4
+Cascade_Walker2d-v4_SAC
 6000000
 Walker2d-v4;norm:False
 Cascade
 alg_name:SAC;base_steps:500000
 
-Cascade_Humanoid-v4
+Cascade_Humanoid-v4_SAC
 6000000
 Humanoid-v4;norm:False
 Cascade
 alg_name:SAC;base_steps:500000
 
-Cascade_Hopper-v4
+Cascade_Hopper-v4_SAC
 6000000
 Hopper-v4;norm:False
 Cascade
 alg_name:SAC;base_steps:500000
 
-Cascade_HalfCheetah-v4
+Cascade_HalfCheetah-v4_SAC
 6000000
 HalfCheetah-v4;norm:False
 Cascade

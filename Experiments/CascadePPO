@@ -4,27 +4,27 @@
 
 #Baseline PPO
 
-Cascade_Ant-v4
+Cascade_Ant-v4_PPO
 6000000
 Ant-v4
 Cascade
 
-Cascade_Walker2d-v4
+Cascade_Walker2d-v4_PPO
 6000000
 Walker2d-v4
 Cascade
 
-Cascade_Humanoid-v4
+Cascade_Humanoid-v4_PPO
 6000000
 Humanoid-v4
 Cascade
 
-Cascade_Hopper-v4
+Cascade_Hopper-v4_PPO
 6000000
 Hopper-v4
 Cascade
 
-Cascade_HalfCheetah-v4
+Cascade_HalfCheetah-v4_PPO
 6000000
 HalfCheetah-v4
 Cascade
