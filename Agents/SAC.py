@@ -19,7 +19,7 @@ from Agents.DDPG import DDPGConfig
 from Analysis.RunTracker import TrackMetric as tm, RunTracker
 
 from Environments.Utils import get_normalization_state, reverse_observation_normalization, reverse_reward_normalization, \
-    apply_observation_normalization, apply_reward_normalization
+    apply_observation_normalization, apply_reward_normalization, sync_normalization_state
 
 
 @dataclass
@@ -174,6 +174,9 @@ class SAC(Agent):
                             actions, reverse_reward_normalization(rewards, norm_state["rew var"]), terminations, [])
             else:
                 self.rb.add(obs, real_next_obs, actions, rewards, terminations, [])
+
+            if norm_sync_env:
+                sync_normalization_state(envs.envs[0], norm_sync_env)
 
             obs = next_obs
 

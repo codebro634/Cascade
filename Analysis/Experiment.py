@@ -12,7 +12,7 @@ import Analysis
 from Agents.Agent import Agent
 from Analysis.RunTracker import RunTracker, TrackConfig
 from Environments.Utils import save_normalization_state
-
+from Environments.Utils import get_normalization_state
 
 class Experiment:
 
