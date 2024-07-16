@@ -2,21 +2,16 @@
 # docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/ppo/#ppopy
 
 from dataclasses import dataclass
-
 import gymnasium as gym
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from gymnasium.spaces import Discrete
 from torch.distributions import Normal, Categorical
-
 from Analysis.RunTracker import TrackMetric as tm, RunTracker
 from pathlib import Path
 from Agents.Agent import Agent, AgentConfig
 from typing import Callable
-
-from Architectures.Elementary import abs_difference
 from Architectures.NetworkConfig import NetworkConfig
 from Environments.Utils import sync_normalization_state
 

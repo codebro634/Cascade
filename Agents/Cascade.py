@@ -16,7 +16,6 @@ from Analysis.RunTracker import RunTracker, TrackMetric, TrackConfig
 from Architectures.CascadeNet import CascadeNet
 
 from Environments.Utils import sync_normalization_state
-
 from Agents.DDPG import DDPG
 
 
@@ -32,6 +31,7 @@ class CascadeConfig(AgentConfig):
     init_critic_cfgs: list["NetworkConfig"] = None #Network config for the critic of all base-nets
     stacked_critic_cfgs: list["NetworkConfig"] = None #Network config for the critic of all base-nets besides the first one
     stack_critics: bool = False
+    keep_critic: bool = False
 
     base_steps: int = 100000
 
@@ -76,37 +76,38 @@ class Cascade(Agent):
 
     #Trains the current Cascade-net represented by 'self.acs' for 'self.cfg.base_steps' steps.
     def train_current_cascade(self, tracker: RunTracker, env_maker: Callable, norm_sync_env: gym.Env = None):
+        critic_idx = 0 if self.cfg.keep_critic else -1
 
         if self.cfg.training_alg == "DDPG":
             rb = self.top.rb if self.top is not None else None
             self.top = DDPG(cfg=self.cfg.training_alg_cfg)
             if not self.cfg.reset_rb:
                 self.top.rb = rb
-            casc_actors, casc_q = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][-1]
-            self.top.replace_net(actor_net=casc_actors, q_net = casc_q)
+            casc_actors, casc_q = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][critic_idx]
+            self.top.replace_net(actor_net=casc_actors, q_net=casc_q)
         elif self.cfg.training_alg == "PPO":
             self.top = PPO(cfg=self.cfg.training_alg_cfg)
-            casc_actors, casc_v = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][-1]
+            casc_actors, casc_v = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][critic_idx]
             self.top.replace_net(actor_net=casc_actors, value_net=casc_v)
 
             #TODO: remove
-            actor_init = lambda: deepcopy(casc_actors)
-            target_init = lambda: deepcopy(CascadeNet([x.init_obj() for x in self.actor_cfg_sequence]))
-            batch_size = self.top.batch_size
-            lr = self.top.cfg.learning_rate
-            plast_casc = Evaluation.measure_actor_plasticity(agent=self, actor_network_initialiser=actor_init, target_network_initialiser=target_init, env=norm_sync_env,batch_size=batch_size, lr=lr)
-
-            plast_indi = "N/A"
-            if len(self.actors) > 1:
-                actor_init = lambda: deepcopy(CascadeNet(self.actors[:-1]))
-                target_init = lambda: deepcopy(CascadeNet([x.init_obj() for x in self.actor_cfg_sequence[:-1]]))
-                plast_indi = Evaluation.measure_actor_plasticity(agent=self, actor_network_initialiser=actor_init, target_network_initialiser=target_init, env=norm_sync_env,batch_size=batch_size, lr=lr)
-
-            print(f"Plasticity new Cascade: {plast_casc}, Plasticity of old Cascade: {plast_indi}")
+            # actor_init = lambda: deepcopy(casc_actors)
+            # target_init = lambda: deepcopy(CascadeNet([x.init_obj() for x in self.actor_cfg_sequence]))
+            # batch_size = self.top.batch_size
+            # lr = self.top.cfg.learning_rate
+            # plast_casc = Evaluation.measure_actor_plasticity(agent=self, actor_network_initialiser=actor_init, target_network_initialiser=target_init, env=norm_sync_env,batch_size=batch_size, lr=lr)
+            #
+            # plast_indi = "N/A"
+            # if len(self.actors) > 1:
+            #     actor_init = lambda: deepcopy(CascadeNet(self.actors[:-1]))
+            #     target_init = lambda: deepcopy(CascadeNet([x.init_obj() for x in self.actor_cfg_sequence[:-1]]))
+            #     plast_indi = Evaluation.measure_actor_plasticity(agent=self, actor_network_initialiser=actor_init, target_network_initialiser=target_init, env=norm_sync_env,batch_size=batch_size, lr=lr)
+            #
+            # print(f"Plasticity new Cascade: {plast_casc}, Plasticity of old Cascade: {plast_indi}")
 
         elif self.cfg.training_alg == "SAC":
             self.top = SAC(cfg=self.cfg.training_alg_cfg)
-            casc_actors, casc_q1, casc_q2 = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][-1], CascadeNet(self.critics[1]) if self.cfg.stack_critics else self.critics[1][-1]
+            casc_actors, casc_q1, casc_q2 = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][critic_idx], CascadeNet(self.critics[1]) if self.cfg.stack_critics else self.critics[1][critic_idx]
             self.top.replace_net(actor=casc_actors, q1=casc_q1, q2=casc_q2)
         else:
             raise NotImplementedError()

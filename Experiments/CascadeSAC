@@ -1,5 +1,37 @@
 #Baseline Cascade
 
+Cascade_HalfCheetah-v4_SAC_keepval
+2000000
+HalfCheetah-v4;norm:False
+Cascade
+alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(64,64)
+
+Cascade_Humanoid-v4_SAC_keepval
+2000000
+Humanoid-v4;norm:False
+Cascade
+alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(64,64)
+
+Cascade_Hopper-v4_SAC_keepval
+2000000
+Hopper-v4;norm:False
+Cascade
+alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(64,64)
+
+Cascade_Ant-v4_SAC_keepval
+2000000
+Ant-v4;norm:False
+Cascade
+alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(64,64)
+
+Cascade_Walker2d-v4_SAC_keepval
+2000000
+Walker2d-v4;norm:False
+Cascade
+alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(64,64)
+
+
+
 Cascade_HalfCheetah-v4_SAC_normed
 2000000
 HalfCheetah-v4
@@ -74,31 +106,31 @@ HalfCheetah-v4;norm:False
 VanillaSAC
 
 Cascade_Ant-v4_SAC
-6000000
+2000000
 Ant-v4;norm:False
 Cascade
 alg_name:SAC;base_steps:500000
 
 Cascade_Walker2d-v4_SAC
-6000000
+2000000
 Walker2d-v4;norm:False
 Cascade
 alg_name:SAC;base_steps:500000
 
 Cascade_Humanoid-v4_SAC
-6000000
+2000000
 Humanoid-v4;norm:False
 Cascade
 alg_name:SAC;base_steps:500000
 
 Cascade_Hopper-v4_SAC
-6000000
+2000000
 Hopper-v4;norm:False
 Cascade
 alg_name:SAC;base_steps:500000
 
 Cascade_HalfCheetah-v4_SAC
-6000000
+2000000
 HalfCheetah-v4;norm:False
 Cascade
 alg_name:SAC;base_steps:500000

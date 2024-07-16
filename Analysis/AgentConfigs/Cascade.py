@@ -74,7 +74,7 @@ def net_cfg(space_description, init: bool, fallback_init: float, actor_hidden: t
 
 
 def agent_cfg(space_descr: EnvSpaceDescription, base_steps: int, fallback_coef: float, train_only_top: bool,
-              fb_init: float, sequential: bool, stacks: int, actor_hidden: tuple[int], cyclical_lr: bool, anneal_lr: bool, tanh_in_net: bool = False, reset_rb:bool = False, stack_critic: bool = False, continuous: bool = True, alg_name: str = "PPO") -> CascadeConfig:
+              fb_init: float, sequential: bool, stacks: int, actor_hidden: tuple[int], cyclical_lr: bool, anneal_lr: bool, tanh_in_net: bool = False, reset_rb:bool = False, stack_critic: bool = False, keep_critic: bool = False, continuous: bool = True, alg_name: str = "PPO") -> CascadeConfig:
 
     if alg_name == "PPO":
         training_alg_config = VanillaPPO.agent_cfg(space_descr, anneal_lr=anneal_lr, continuous=continuous)
@@ -95,6 +95,7 @@ def agent_cfg(space_descr: EnvSpaceDescription, base_steps: int, fallback_coef: 
                         train_only_top_net=train_only_top,
                         training_alg_cfg=training_alg_config,
                         stack_critics=stack_critic,
+                        keep_critic=keep_critic,
                         stacked_actor_cfg=stacked_actor_net_conf, init_actor_cfg=init_actor_net_conf,
                         stacked_critic_cfgs=stacked_critic_net_conf, init_critic_cfgs=init_critic_net_conf,
                         sequential = sequential, stacks=stacks, cyclical_lr=cyclical_lr,
@@ -105,9 +106,9 @@ def agent_cfg(space_descr: EnvSpaceDescription, base_steps: int, fallback_coef: 
 #continuation: Loads the Agent saved at continuation
 def agent(space_descr: EnvSpaceDescription,base_steps: Union[int,str] =1000000, fallback_coef: Union[float,str] = 0.0,
           train_only_top: Union[bool,str] = False, fb_init: Union[float,str] = 0.5, sequential: Union[bool,str] = True, stacks: Union[int,str] = -1,
-          actor_hidden: Union[tuple[int],str] = (16, 16), tanh_in_net: Union[bool,str] = False, cyclical_lr: Union[bool,str] = True, anneal_lr: Union[bool,str] = True, reset_rb: Union[bool,str] = False, stack_critic: Union[bool,str] = False, continuous: bool = True, continuation: str = None, alg_name: str = "PPO"):
+          actor_hidden: Union[tuple[int],str] = (16, 16), tanh_in_net: Union[bool,str] = False, cyclical_lr: Union[bool,str] = True, anneal_lr: Union[bool,str] = True, reset_rb: Union[bool,str] = False, stack_critic: Union[bool,str] = False, keep_critic: bool = False, continuous: bool = True, continuation: str = None, alg_name: str = "PPO"):
     return (lambda: Cascade(cfg=agent_cfg(space_descr, base_steps=int(base_steps),
-                                            fallback_coef=float(fallback_coef), train_only_top=parse_bool(train_only_top), fb_init=float(fb_init),
+                                            fallback_coef=float(fallback_coef), train_only_top=parse_bool(train_only_top), fb_init=float(fb_init), keep_critic=parse_bool(keep_critic),
                                             sequential=parse_bool(sequential), stacks=int(stacks), actor_hidden=parse_tuple(actor_hidden, lambda x: int(x)),cyclical_lr=parse_bool(cyclical_lr), anneal_lr=parse_bool(anneal_lr),
                                             reset_rb=parse_bool(reset_rb), stack_critic=parse_bool(stack_critic), tanh_in_net=parse_bool(tanh_in_net),
                                             continuous=parse_bool(continuous),alg_name=alg_name))) if continuation is None else lambda: Agent.load(Path(continuation))
