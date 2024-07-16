@@ -6,6 +6,8 @@ from typing import Callable
 import numpy as np
 import torch
 from gymnasium.wrappers import RecordEpisodeStatistics
+from stable_baselines3.common.buffers import ReplayBuffer
+from torch import nn, optim
 from torch.distributions import Categorical
 
 import Agents
@@ -14,7 +16,6 @@ import gymnasium as gym
 from numpy import prod
 
 from Agents.PPO import PPO
-from Analysis.ExperimentSetup import experiment_final_eval_func
 from Architectures.CascadeNet import CascadeNet
 from Environments import EnvSpaceDescription
 from Environments.Utils import get_wrapper, load_env, get_normalization_state, \
@@ -24,7 +25,7 @@ from Analysis.PlotMaker import make_plot
 
 
 def evaluate_agent(agent: Agent, env: gym.core.Env, num_runs:int = 10, horizon_length:int = None, measure_return: bool = False, track_action_freqs: bool = False,
-                   measure_fallback_stats: bool = False, cascade_net:CascadeNet = None, measure_expected_state: bool = False, get_fallback_distr: bool = False,
+                   measure_fallback_stats: bool = False, cascade_net:CascadeNet = None, measure_expected_state: bool = False, get_fallback_distr: bool = False, measure_plasticity: bool = False,
                    verbose: bool = False):
     """
     :param agent:  Agent to be evaluted
@@ -124,6 +125,64 @@ def evaluate_agent(agent: Agent, env: gym.core.Env, num_runs:int = 10, horizon_l
 
     return measurements
 
+
+#buffer : Keine baseline: deshalb nur differenz interessant!
+def measure_actor_plasticity(agent: Agent, actor_network_initialiser: Callable, target_network_initialiser: Callable, env: gym.core.Env, batch_size: int, lr: float, optim_steps: int = 10000, num_networks: int = 10, num_samples: int = 1000):
+    #Get observation samples from current distribution
+    distr_samples = num_samples * 100
+    rb = torch.zeros(size=(distr_samples,) + env.observation_space.shape)
+    original_norm_state = get_normalization_state(env)
+    steps = 0
+    while steps < distr_samples:
+        obs, _ = env.reset()
+        rb[steps] = torch.tensor(obs)
+        steps += 1
+        if original_norm_state:
+            load_normalization_state(env, deepcopy(original_norm_state))
+
+        done = False
+        while not done and steps < num_samples:
+            action = agent.get_action(obs, eval_mode=True)
+            obs, _, term, trunc,_ = env.step(action)
+            rb[steps] = torch.tensor(obs)
+            done = term or trunc
+            steps += 1
+
+    rb = rb[np.random.choice(distr_samples, num_samples, replace=True)]
+
+    if original_norm_state:
+        load_normalization_state(env, original_norm_state)
+
+    #Calculate networks output mean
+    with torch.no_grad():
+        actor_network = actor_network_initialiser()
+        out_mean = actor_network(rb)["mean"].mean()
+
+    #Test plasticity
+    plasticity_sum = 0
+    for i in range(num_networks):
+        actor_network = actor_network_initialiser()
+        optimizer = optim.Adam(actor_network.parameters(), lr=lr)
+        target_net = target_network_initialiser()
+        for update in range(optim_steps):
+            indices = np.random.choice(num_samples, batch_size, replace=True)
+            obs = rb[indices]
+            target = out_mean + torch.sin((10**5) * target_net(obs)["mean"].mean(dim=1)).detach()
+            loss = torch.nn.functional.mse_loss(actor_network(obs)["mean"].mean(dim=1), target)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            if update % 1000 == 0 and i == 0:
+                print(f"Update {update} of network {i} with loss {loss.item()}")
+
+        with torch.no_grad():
+            final_loss = torch.nn.functional.mse_loss(actor_network(rb)["mean"].mean(dim=1), out_mean + torch.sin(10**5 * target_net(rb)["mean"].mean(dim=1)))
+            plasticity_sum += final_loss.item()
+
+    plasticity = plasticity_sum / num_networks
+
+    return plasticity
 
 
 # All paths in the following are relative to the directory where the project's agent-models are saved.
