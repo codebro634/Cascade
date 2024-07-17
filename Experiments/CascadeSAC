@@ -4,7 +4,7 @@ SAC_Humanoid-v4_bignet
 2000000
 Humanoid-v4;norm:False
 VanillaSAC
-layer_sizes:(256,256);critic_hidden:(256,256)
+layer_sizes:(128,128);critic_hidden:(128,128)
 
 Cascade_HalfCheetah-v4_SAC_stackcritic_rbr
 2000000
