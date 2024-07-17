@@ -102,6 +102,7 @@ class Cascade(Agent):
                     plast_indi = Evaluation.measure_actor_plasticity(agent=self, actor_network_initialiser=actor_init, target_network_initialiser=target_init, env=norm_sync_env,batch_size=batch_size, lr=lr)
 
                 print(f"Plasticity new Cascade: {plast_casc}, Plasticity of old Cascade: {plast_indi}")
+                exit(0)
 
         elif self.cfg.training_alg == "SAC":
             self.top = SAC(cfg=self.cfg.training_alg_cfg)
