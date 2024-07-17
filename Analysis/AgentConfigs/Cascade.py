@@ -26,7 +26,7 @@ def net_cfg(space_description, init: bool, fallback_init: float, actor_hidden: t
 
     x,y = space_description.flattened_input_size(), space_description.flattened_act_size()
     fb_bias = math.log(fallback_init/(1-fallback_init)) #Set so that sigmoid(fb_bias) = fallback_init
-    critic_sizes = (16, 16) if critic_stack else (64, 64)
+    critic_sizes = (64, 64) #(16, 16) if critic_stack else (64, 64)
 
     if alg == "PPO":
         preset = [(2 * len(actor_hidden), True, y,fb_bias)] if not init else []  # When passed to FF-net sets the bias of the neuron responsible for fallback-action to fb_bias

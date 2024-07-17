@@ -6,22 +6,17 @@ from typing import Callable
 import numpy as np
 import torch
 from gymnasium.wrappers import RecordEpisodeStatistics
-from stable_baselines3.common.buffers import ReplayBuffer
-from torch import nn, optim
-from torch.distributions import Categorical
+from torch import optim
 
 import Agents
 from Agents.Agent import Agent
 import gymnasium as gym
 from numpy import prod
 
-from Agents.PPO import PPO
 from Architectures.CascadeNet import CascadeNet
 from Environments import EnvSpaceDescription
 from Environments.Utils import get_wrapper, load_env, get_normalization_state, \
     load_normalization_state
-
-from Analysis.PlotMaker import make_plot
 
 
 def evaluate_agent(agent: Agent, env: gym.core.Env, num_runs:int = 10, horizon_length:int = None, measure_return: bool = False, track_action_freqs: bool = False,
@@ -159,7 +154,8 @@ def measure_actor_plasticity(agent: Agent, actor_network_initialiser: Callable, 
         out_mean = actor_network(rb)["mean"].mean()
 
     #Test plasticity
-    plasticity_sum = 0
+    loss_sum = 0
+    baseline_sum = 0
     for i in range(num_networks):
         actor_network = actor_network_initialiser()
         optimizer = optim.Adam(actor_network.parameters(), lr=lr)
@@ -178,10 +174,14 @@ def measure_actor_plasticity(agent: Agent, actor_network_initialiser: Callable, 
 
         with torch.no_grad():
             final_loss = torch.nn.functional.mse_loss(actor_network(rb)["mean"].mean(dim=1), out_mean + torch.sin(10**5 * target_net(rb)["mean"].mean(dim=1)))
-            plasticity_sum += final_loss.item()
+            loss_sum += final_loss.item()
+            baseline_sum += torch.pow(torch.sin(10**5 * target_net(rb)["mean"].mean(dim=1)), 2).mean().item()
 
-    plasticity = plasticity_sum / num_networks
+    loss = loss_sum / num_networks
+    baseline = baseline_sum / num_networks
 
+    print("Baseline: ", baseline)
+    plasticity = baseline - loss
     return plasticity
 
 
