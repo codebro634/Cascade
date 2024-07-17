@@ -31,8 +31,8 @@ def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64),
 
     return actor_conf, critic_conf
 
-def agent_cfg(space_descr: EnvSpaceDescription, learning_starts: int = 25e3, layer_sizes: tuple[int] = (64,64), continuous:bool = True, anneal_lr: bool= True):
-    actor_net_conf, critic_net_conf = net_cfg(space_descr, layer_sizes = layer_sizes)
+def agent_cfg(space_descr: EnvSpaceDescription, learning_starts: int = 25e3, layer_sizes: tuple[int] = (64,64), critic_hidden:tuple[int] =(64,64), continuous:bool = True, anneal_lr: bool= True):
+    actor_net_conf, critic_net_conf = net_cfg(space_descr, layer_sizes = layer_sizes, critic_sizes=critic_hidden)
 
     return DDPGConfig(
         learning_rate = 0.0003,
@@ -54,8 +54,8 @@ def agent_cfg(space_descr: EnvSpaceDescription, learning_starts: int = 25e3, lay
 
 
 #continuation: Loads the Agent saved at continuation
-def agent(space_descr: EnvSpaceDescription, learning_starts: Union[int,str] = 25e3, layer_sizes: Union[tuple[int],str] = (64,64), anneal_lr: str|bool = True, continuation: str = None):
-    return (lambda: DDPG(cfg = agent_cfg(space_descr, learning_starts=int(learning_starts), layer_sizes = parse_tuple(layer_sizes, lambda x: int(x)), anneal_lr=parse_bool(anneal_lr)))) if continuation is None else lambda: Agent.load(Path(continuation))
+def agent(space_descr: EnvSpaceDescription, learning_starts: Union[int,str] = 25e3, layer_sizes: Union[tuple[int],str] = (64,64), critic_hidden: Union[tuple[int],str] = (64,64), anneal_lr: str|bool = True, continuation: str = None):
+    return (lambda: DDPG(cfg = agent_cfg(space_descr, learning_starts=int(learning_starts), critic_hidden = parse_tuple(critic_hidden, lambda x: int(x)), layer_sizes = parse_tuple(layer_sizes, lambda x: int(x)), anneal_lr=parse_bool(anneal_lr)))) if continuation is None else lambda: Agent.load(Path(continuation))
 
 def env_wrapper(env: Callable):
 

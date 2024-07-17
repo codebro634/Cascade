@@ -32,8 +32,8 @@ def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64),
 
     return actor_conf, q1_conf, deepcopy(q1_conf)
 
-def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64)):
-    actor_conf, q1_conf, q2_conf = net_cfg(space_descr, layer_sizes=layer_sizes)
+def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64), critic_hidden:tuple[int] = (64,64)):
+    actor_conf, q1_conf, q2_conf = net_cfg(space_descr, layer_sizes=layer_sizes, critic_sizes=critic_hidden)
 
     return SACConfig(
         buffer_size=int(1e6),
@@ -54,8 +54,8 @@ def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64
 
 
 #continuation: Loads the Agent saved at continuation
-def agent(space_descr: EnvSpaceDescription, layer_sizes: Union[tuple[int],str] = (64,64), continuation: str = None):
-    return (lambda: SAC(cfg = agent_cfg(space_descr, layer_sizes=parse_tuple(layer_sizes, lambda x: int(x))))) if continuation is None else lambda: Agent.load(Path(continuation))
+def agent(space_descr: EnvSpaceDescription, layer_sizes: Union[tuple[int],str] = (64,64), critic_hidden: Union[tuple[int],str] = (64,64), continuation: str = None):
+    return (lambda: SAC(cfg = agent_cfg(space_descr, critic_hidden= parse_tuple(critic_hidden, lambda x: int(x)), layer_sizes=parse_tuple(layer_sizes, lambda x: int(x))))) if continuation is None else lambda: Agent.load(Path(continuation))
 
 def env_wrapper(env: Callable):
 

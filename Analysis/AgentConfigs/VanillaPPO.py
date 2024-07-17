@@ -31,8 +31,8 @@ def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64),
 
     return actor_conf, critic_conf
 
-def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64), continuous:bool = True, anneal_lr: bool= True):
-    actor_net_conf, value_net_conf = net_cfg(space_descr, layer_sizes = layer_sizes, continuous = continuous)
+def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64), critic_hidden: tuple[int] = (64,64), continuous:bool = True, anneal_lr: bool= True):
+    actor_net_conf, value_net_conf = net_cfg(space_descr, layer_sizes = layer_sizes, continuous = continuous, critic_sizes=critic_hidden)
 
     if continuous:
         return PPOConfig(
@@ -81,8 +81,8 @@ def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64
 
 
 #continuation: Loads the Agent saved at continuation
-def agent(space_descr: EnvSpaceDescription, layer_sizes: Union[tuple[int],str] = (64,64), anneal_lr: str|bool = True, continuation: str = None, continuous: bool = True):
-    return (lambda: PPO(cfg = agent_cfg(space_descr, layer_sizes=parse_tuple(layer_sizes, lambda x: int(x)), continuous = parse_bool(continuous), anneal_lr=parse_bool(anneal_lr)))) if continuation is None else lambda: Agent.load(Path(continuation))
+def agent(space_descr: EnvSpaceDescription, critic_hidden: Union[tuple[int],str], layer_sizes: Union[tuple[int],str] = (64,64), anneal_lr: str|bool = True, continuation: str = None, continuous: bool = True):
+    return (lambda: PPO(cfg = agent_cfg(space_descr, critic_hidden = parse_tuple(critic_hidden, lambda x: int(x)), layer_sizes=parse_tuple(layer_sizes, lambda x: int(x)), continuous = parse_bool(continuous), anneal_lr=parse_bool(anneal_lr)))) if continuation is None else lambda: Agent.load(Path(continuation))
 
 def env_wrapper(env: Callable):
 
