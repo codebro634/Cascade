@@ -18,7 +18,7 @@ python mainExperiment.py --exp_group <experiment_group> --exp_name <experiment_n
 - `experiment_name`: Specify the name of the experiment.
 - `total_number_of_env_steps`: Specify the total number of environment steps.
 - `agent_configuration`: Selects the agent for the experiment. Must be one of the classes in Analysis/AgentConfigs.
-- `environment_description`: Specify the environment to run the experiment on. The syntax for the description is `env_name;parameter1:value1;parameter2:value2;...`. If any parameter requires another `environment_description`, use `,` and `=` as delimiters. All environments share the following parameters: `norm` (True or False), `clip` (True or False), and `agent_config` (Agent configuration from Analysis/AgentConfigs, which wraps the environment in the `agent_config`'s wrapper before the potential normalization wrapper). If the suffix `discrete` is added to the `env_name` (i.e. discreteAnt-v4), then the action space is discretized if it was continuous. 
+- `environment_description`: Specify the environment to run the experiment on. The syntax for the description is `env_name;parameter1:value1;parameter2:value2;...`. If any parameter requires another `environment_description`, use `,` and `=` as delimiters. All environments share the following parameters: `norm` (True or False, default is True), `clip` (True or False, default is True), and `agent_config` (Agent configuration from Analysis/AgentConfigs, which wraps the environment in the `agent_config`'s wrapper before the potential normalization wrapper). If the prefix `discrete` is added to the `env_name` (i.e. discreteAnt-v4), then the action space is discretized if it was continuous.  
 
 - `agent_params` (optional): Use this parameter to override the default parameters used in `agent_config`. The syntax is `parameter1:value1;parameter2:value2;...`.
 
@@ -80,14 +80,14 @@ python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  
 Used in Fig. 2 and 9
 
 ``` 
-python mainExperiment.py --wandb_logging --exp_group Baseline --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr <env_name>
+python mainExperiment.py --wandb_logging --exp_group BaselinePPO --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr <env_name>
 ```
 
 ## Cascade single base agent with cylical learning rate
 
 Used in Fig. 3
 ```
-python mainExperiment.py --wandb_logging --exp_group Baseline --exp_name <name>  --steps <steps>  --agent_config Cascade --agent_params sequential:False;stacks:1;base_steps:<base_steps> --env_descr <env_name>
+python mainExperiment.py --wandb_logging --exp_group BaselinePPO --exp_name <name>  --steps <steps>  --agent_config Cascade --agent_params sequential:False;stacks:1;base_steps:<base_steps> --env_descr <env_name>
 ```
 
 ## Keeping base nets frozen
@@ -145,7 +145,7 @@ Used in Fig. 13
 
 Discrete PPO:
 ``` 
-python mainExperiment.py --wandb_logging --exp_group Baseline --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr discrete<env_name> --agent_params continuous:False
+python mainExperiment.py --wandb_logging --exp_group BaselinePPO --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr discrete<env_name> --agent_params continuous:False
 ```
 
 Discrete Cascade:
@@ -157,6 +157,13 @@ python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  
 Described in Method section where a surrogate environment is used.
 ```
 python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config CascadeNaive --env_descr <env_name> 
-``` 
-        
+```
+
+## Cascade with different base training algorithms
+Used in Fig. X and Fig. Y
+
+Cascade using SAC or DDPG:
+```
+python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config Cascade --env_descr <env_name>;norm:False --agent_params reset_rb:True;critic_hidden:(16,16);stack_critic:True;low_critic_std:True;alg_name:<DDPG or SAC>
+```
 
