@@ -80,14 +80,14 @@ python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  
 Used in Fig. 2 and 9
 
 ``` 
-python mainExperiment.py --wandb_logging --exp_group Baseline --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr <env_name>
+python mainExperiment.py --wandb_logging --exp_group BaselinePPO --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr <env_name>
 ```
 
 ## Cascade single base agent with cylical learning rate
 
 Used in Fig. 3
 ```
-python mainExperiment.py --wandb_logging --exp_group Baseline --exp_name <name>  --steps <steps>  --agent_config Cascade --agent_params sequential:False;stacks:1;base_steps:<base_steps> --env_descr <env_name>
+python mainExperiment.py --wandb_logging --exp_group BaselinePPO --exp_name <name>  --steps <steps>  --agent_config Cascade --agent_params sequential:False;stacks:1;base_steps:<base_steps> --env_descr <env_name>
 ```
 
 ## Keeping base nets frozen
@@ -145,7 +145,7 @@ Used in Fig. 13
 
 Discrete PPO:
 ``` 
-python mainExperiment.py --wandb_logging --exp_group Baseline --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr discrete<env_name> --agent_params continuous:False
+python mainExperiment.py --wandb_logging --exp_group BaselinePPO --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr discrete<env_name> --agent_params continuous:False
 ```
 
 Discrete Cascade:
