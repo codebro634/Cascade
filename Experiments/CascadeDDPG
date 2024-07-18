@@ -1,34 +1,34 @@
-#Baseline DDPG
+#Cascade with DDPG
 
 Cascade_HalfCheetah-v4_DDPG_stackcritic_rbr
 6000000
 HalfCheetah-v4;norm:False
 Cascade
-alg_name:DDPG;stack_critic:True;reset_rb:True;actor_hidden:(64,64);base_steps:2000000
+alg_name:DDPG;reset_rb:True;actor_hidden:(64,64);base_steps:2000000
 
 Cascade_Humanoid-v4_DDPG_stackcritic_rbr
 6000000
 Humanoid-v4;norm:False
 Cascade
-alg_name:DDPG;keep_critic:True;stack_critic:True;reset_rb:True;actor_hidden:(64,64);base_steps:2000000
+alg_name:DDPG;stack_critic:True;reset_rb:True;actor_hidden:(64,64);base_steps:2000000
 
 Cascade_Hopper-v4_DDPG_stackcritic_rbr
 6000000
 Hopper-v4;norm:False
 Cascade
-alg_name:DDPG;keep_critic:True;stack_critic:True;reset_rb:True;actor_hidden:(64,64);base_steps:2000000
+alg_name:DDPG;stack_critic:True;reset_rb:True;actor_hidden:(64,64);base_steps:2000000
 
 Cascade_Ant-v4_DDPG_stackcritic_rbr
 6000000
 Ant-v4;norm:False
 Cascade
-alg_name:DDPG;keep_critic:True;stack_critic:True;reset_rb:True;actor_hidden:(64,64);base_steps:2000000
+alg_name:DDPG;stack_critic:True;reset_rb:True;actor_hidden:(64,64);base_steps:2000000
 
 Cascade_Walker2d-v4_DDPG_stackcritic_rbr
 6000000
 Walker2d-v4;norm:False
 Cascade
-alg_name:DDPG;keep_critic:True;stack_critic:True;reset_rb:True;actor_hidden:(64,64);base_steps:2000000
+alg_name:DDPG;stack_critic:True;reset_rb:True;actor_hidden:(64,64);base_steps:2000000
 
 
 

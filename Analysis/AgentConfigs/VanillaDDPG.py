@@ -11,10 +11,10 @@ from Environments.Utils import wrap_env
 from Analysis.Parser import parse_bool, parse_tuple
 
 """
-    Standard DDPG configuration as in cleanRL. Used for Baseline experiments.
+    Standard DDPG configuration as in cleanRL. Used for BaselineDDPG experiments.
 """
 
-def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64), critic_sizes: tuple = (64,64)):
+def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64), critic_sizes: tuple = (64,64), low_critic_std: bool = False):
     obs_size, action_size =  space_descr.flattened_input_size(), space_descr.flattened_act_size()
 
     mean_conf = NetworkConfig(class_name="FFNet", args_dict={"input_size": obs_size, "output_size": action_size, "hidden_sizes": layer_sizes,
@@ -22,7 +22,7 @@ def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64),
 
     critic_conf = NetworkConfig(class_name="FFNet",
                                 args_dict={"input_size": obs_size + action_size, "output_size": 1, "hidden_sizes": critic_sizes,
-                                           "init_std": (np.sqrt(2), np.sqrt(2), 1.0),
+                                           "init_std": (np.sqrt(2), np.sqrt(2), 0.1 if low_critic_std else 1.0),
                                            "init_bias_const": (0.0, 0.0, 0.0)})
 
     log_conf = NetworkConfig(class_name="FFNet",args_dict={"input_size": None, "output_size": action_size, "hidden_sizes": None})

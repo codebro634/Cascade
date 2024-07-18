@@ -20,18 +20,12 @@ class EnvSpaceDescription:
 
     def flattened_act_size(self):
         if self.is_discrete_action():
-            if self.is_multi_discrete():
-                return self.action_space.shape[0]
-            else:
-                return self.action_space.n
+            return self.action_space.n
         else:
             return np.array(self.action_space.shape).prod()
 
     def is_discrete_action(self):
-        return isinstance(self.action_space, Discrete) or isinstance(self.action_space,MultiDiscrete)
-
-    def is_multi_discrete(self):
-        return isinstance(self.action_space,MultiDiscrete)
+        return isinstance(self.action_space, Discrete)
 
 
 

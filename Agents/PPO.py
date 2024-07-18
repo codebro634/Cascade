@@ -86,7 +86,7 @@ class PPO(Agent):
         #Pass obs through net
         x = self.actor_net(obs)
 
-        discrete, mul_disc = self.cfg.space_description.is_discrete_action(), self.cfg.space_description.is_multi_discrete()
+        discrete = self.cfg.space_description.is_discrete_action()
         #Continuous case
         if not discrete:
             assert "logstd" in x
@@ -102,26 +102,14 @@ class PPO(Agent):
             if action_entropy:
                 x["action_entropy"] = probs.entropy().sum(1)
         else:
-            #Differentiate between multi discrete and 1-dim discrete
-            if mul_disc:
-                if action is None:
-                    probs = torch.sigmoid(x["mean"])
-                    action = torch.where(probs < 0.5, torch.tensor(0), torch.tensor(1)) if deterministic else torch.bernoulli(probs)
+            probs = Categorical(logits=x["mean"])
+            if action is None:
+                action = x["mean"].argmax(dim=-1) if deterministic else probs.sample()
 
-                assert not action_entropy, "Action entropy penalty not implemented yet for MultiDiscrete Action spaces."
-                if action_logprob:
-                    #Exploit that log(p1 * ... * pn) = log(p1) + ... + log(pn)
-                    x["action_logprob"] = torch.sum(-torch.nn.functional.binary_cross_entropy_with_logits(x["mean"], action.float(), reduction='none'),dim=1)
-
-            else:
-                probs = Categorical(logits=x["mean"])
-                if action is None:
-                    action = x["mean"].argmax(dim=-1) if deterministic else probs.sample()
-
-                if action_entropy:
-                    x["action_entropy"] = probs.entropy()
-                if action_logprob:
-                    x["action_logprob"] = probs.log_prob(action)
+            if action_entropy:
+                x["action_entropy"] = probs.entropy()
+            if action_logprob:
+                x["action_logprob"] = probs.log_prob(action)
 
         x["action"] = action
         if get_value:

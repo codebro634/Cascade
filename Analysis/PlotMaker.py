@@ -197,39 +197,39 @@ def redo_entire_plot_directory(plot_dir: Path):
 #for i in range(5):
 #    make_plot(experiments=[([x[i] for x in y],"Ant", "blue")],title="Fallbacks for one Episode", ylabel="Fallback value", show=True)
 
-ant_2mil_baseline = ["Baseline","PPO_Ant-v4","2m",'red']
-walker_2mil_baseline = ["Baseline","PPO_Walker2d-v4","2m",'red']
-humanoid_2mil_baseline = ["Baseline","PPO_Humanoid-v4","2m",'red']
-hopper_2mil_baseline = ["Baseline","PPO_Hopper-v4","2m",'red']
-cheetah_2mil_baseline = ["Baseline","PPO_HalfCheetah-v4","2m",'red']
+ant_2mil_baseline = ["BaselinePPO","PPO_Ant-v4","2m",'red']
+walker_2mil_baseline = ["BaselinePPO","PPO_Walker2d-v4","2m",'red']
+humanoid_2mil_baseline = ["BaselinePPO","PPO_Humanoid-v4","2m",'red']
+hopper_2mil_baseline = ["BaselinePPO","PPO_Hopper-v4","2m",'red']
+cheetah_2mil_baseline = ["BaselinePPO","PPO_HalfCheetah-v4","2m",'red']
 
-ant_3mil_baseline = ("Baseline","PPO_Ant-v4_3mil","3m",'blue')
-walker_3mil_baseline = ("Baseline","PPO_Walker2d-v4_3mil","3m",'blue')
-humanoid_3mil_baseline = ("Baseline","PPO_Humanoid-v4_3mil","3m",'blue')
-hopper_3mil_baseline = ("Baseline","PPO_Hopper-v4_3mil","3m",'blue')
-cheetah_3mil_baseline = ("Baseline","PPO_HalfCheetah-v4_3mil","3m",'blue')
+ant_3mil_baseline = ("BaselinePPO","PPO_Ant-v4_3mil","3m",'blue')
+walker_3mil_baseline = ("BaselinePPO","PPO_Walker2d-v4_3mil","3m",'blue')
+humanoid_3mil_baseline = ("BaselinePPO","PPO_Humanoid-v4_3mil","3m",'blue')
+hopper_3mil_baseline = ("BaselinePPO","PPO_Hopper-v4_3mil","3m",'blue')
+cheetah_3mil_baseline = ("BaselinePPO","PPO_HalfCheetah-v4_3mil","3m",'blue')
 
-ant_4mil_baseline = ("Baseline","PPO_Ant-v4_4mil","4m",'green')
-walker_4mil_baseline = ("Baseline","PPO_Walker2d-v4_4mil","4m",'green')
-humanoid_4mil_baseline = ("Baseline","PPO_Humanoid-v4_4mil","4m",'green')
-hopper_4mil_baseline = ("Baseline","PPO_Hopper-v4_4mil","4m",'green')
-cheetah_4mil_baseline = ("Baseline","PPO_HalfCheetah-v4_4mil","4m",'green')
+ant_4mil_baseline = ("BaselinePPO","PPO_Ant-v4_4mil","4m",'green')
+walker_4mil_baseline = ("BaselinePPO","PPO_Walker2d-v4_4mil","4m",'green')
+humanoid_4mil_baseline = ("BaselinePPO","PPO_Humanoid-v4_4mil","4m",'green')
+hopper_4mil_baseline = ("BaselinePPO","PPO_Hopper-v4_4mil","4m",'green')
+cheetah_4mil_baseline = ("BaselinePPO","PPO_HalfCheetah-v4_4mil","4m",'green')
 
-ant_5mil_baseline = ("Baseline","PPO_Ant-v4_5mil","5m",'yellow')
-walker_5mil_baseline = ("Baseline","PPO_Walker2d-v4_5mil","5m",'yellow')
-humanoid_5mil_baseline = ("Baseline","PPO_Humanoid-v4_5mil","5m",'yellow')
-hopper_5mil_baseline = ("Baseline","PPO_Hopper-v4_5mil","5m",'yellow')
-cheetah_5mil_baseline = ("Baseline","PPO_HalfCheetah-v4_5mil","5m",'yellow')
+ant_5mil_baseline = ("BaselinePPO","PPO_Ant-v4_5mil","5m",'yellow')
+walker_5mil_baseline = ("BaselinePPO","PPO_Walker2d-v4_5mil","5m",'yellow')
+humanoid_5mil_baseline = ("BaselinePPO","PPO_Humanoid-v4_5mil","5m",'yellow')
+hopper_5mil_baseline = ("BaselinePPO","PPO_Hopper-v4_5mil","5m",'yellow')
+cheetah_5mil_baseline = ("BaselinePPO","PPO_HalfCheetah-v4_5mil","5m",'yellow')
 
-ant_6mil_baseline = ["Baseline","PPO_Ant-v4_6mil","6m",'pink']
-walker_6mil_baseline = ["Baseline","PPO_Walker2d-v4_6mil","6m",'pink']
-humanoid_6mil_baseline = ["Baseline","PPO_Humanoid-v4_6mil","6m",'pink']
-hopper_6mil_baseline = ["Baseline","PPO_Hopper-v4_6mil","6m",'pink']
-cheetah_6mil_baseline = ["Baseline","PPO_HalfCheetah-v4_6mil","6m",'pink']
+ant_6mil_baseline = ["BaselinePPO","PPO_Ant-v4_6mil","6m",'pink']
+walker_6mil_baseline = ["BaselinePPO","PPO_Walker2d-v4_6mil","6m",'pink']
+humanoid_6mil_baseline = ["BaselinePPO","PPO_Humanoid-v4_6mil","6m",'pink']
+hopper_6mil_baseline = ["BaselinePPO","PPO_Hopper-v4_6mil","6m",'pink']
+cheetah_6mil_baseline = ["BaselinePPO","PPO_HalfCheetah-v4_6mil","6m",'pink']
 
 
 """
-    Baseline plots
+    BaselinePPO plots
 """
 
 # make_plot(experiments=[ant_2mil_baseline,ant_3mil_baseline,ant_4mil_baseline,ant_5mil_baseline,ant_6mil_baseline], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ant_baseline"), show=True)

@@ -88,21 +88,21 @@ class Cascade(Agent):
             self.top.replace_net(actor_net=casc_actors, value_net=casc_v)
 
             #TODO: remove
-            if len(self.actors) > 1:
-                actor_init = lambda: deepcopy(casc_actors)
-                target_init = lambda: deepcopy(CascadeNet([x.init_obj() for x in self.actor_cfg_sequence]))
-                batch_size = self.top.batch_size
-                lr = self.top.cfg.learning_rate
-                plast_casc = Evaluation.measure_actor_plasticity(agent=self, actor_network_initialiser=actor_init, target_network_initialiser=target_init, env=norm_sync_env,batch_size=batch_size, lr=lr)
-
-                plast_indi = "N/A"
-                if len(self.actors) > 1:
-                    actor_init = lambda: deepcopy(CascadeNet(self.actors[:-1]))
-                    target_init = lambda: deepcopy(CascadeNet([x.init_obj() for x in self.actor_cfg_sequence[:-1]]))
-                    plast_indi = Evaluation.measure_actor_plasticity(agent=self, actor_network_initialiser=actor_init, target_network_initialiser=target_init, env=norm_sync_env,batch_size=batch_size, lr=lr)
-
-                print(f"Plasticity new Cascade: {plast_casc}, Plasticity of old Cascade: {plast_indi}")
-                exit(0)
+            #if len(self.actors) > 1:
+            # actor_init = lambda: deepcopy(casc_actors)
+            # target_init = lambda: deepcopy(CascadeNet([x.init_obj() for x in self.actor_cfg_sequence]))
+            # batch_size = self.top.batch_size
+            # lr = self.top.cfg.learning_rate
+            # plast_casc = Evaluation.measure_actor_plasticity(agent=self, actor_network_initialiser=actor_init, target_network_initialiser=target_init, env=norm_sync_env,batch_size=batch_size, lr=lr)
+            #
+            # plast_indi = "N/A"
+            # if len(self.actors) > 1:
+            #     actor_init = lambda: deepcopy(CascadeNet(self.actors[:-1]))
+            #     target_init = lambda: deepcopy(CascadeNet([x.init_obj() for x in self.actor_cfg_sequence[:-1]]))
+            #     plast_indi = Evaluation.measure_actor_plasticity(agent=self, actor_network_initialiser=actor_init, target_network_initialiser=target_init, env=norm_sync_env,batch_size=batch_size, lr=lr)
+            #
+            # print(f"Plasticity new Cascade: {plast_casc}, Plasticity of old Cascade: {plast_indi}")
+            # exit(0)
 
         elif self.cfg.training_alg == "SAC":
             self.top = SAC(cfg=self.cfg.training_alg_cfg)

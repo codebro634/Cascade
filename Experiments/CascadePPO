@@ -81,7 +81,7 @@ discreteHalfCheetah-v4
 Cascade
 continuous:False;actor_hidden:(64,64)
 
-#Discrecte with entropy
+#Discrete with entropy
 Cascade_discrete_hopper
 6000000
 discreteHopper-v4
@@ -136,32 +136,6 @@ Cascade_Walker2d-v4_no_cyclical_lr
 Walker2d-v4
 Cascade
 cyclical_lr:False
-
-#propagates
-
-Cascade_Walker2d-v4_action_propagate
-6000000
-Walker2d-v4
-Cascade
-propagate_action:True
-
-Cascade_Walker2d-v4_vf_propagate
-6000000
-Walker2d-v4
-Cascade
-propagate_value:True
-
-Cascade_Ant-v4_action_propagate
-6000000
-Ant-v4
-Cascade
-propagate_action:True
-
-Cascade_Ant-v4_vf_propagate
-6000000
-Ant-v4
-Cascade
-propagate_value:True
 
 #Not sequential (Full architecture from the start)
 
@@ -363,3 +337,47 @@ CascadeNaive_Ant-v4_no_norm
 Ant-v4; norm:False
 CascadeNaive
 
+
+#--------------------
+#Tiny Cascade experiments:
+#--------------------
+
+#Ant
+
+CascadeTiny_Ant-v4_1mil
+16000000
+Ant-v4
+Cascade
+actor_hidden:(1,); base_steps:1000000
+
+CascadeTiny_Ant-v4_0.5mil
+8000000
+Ant-v4
+Cascade
+actor_hidden:(1,); base_steps:500000
+
+CascadeTiny_Ant-v4_2mil
+16000000
+Ant-v4
+Cascade
+actor_hidden:(1,); base_steps:2000000
+
+#Walker2d
+
+CascadeTiny_Walker2d-v4_1mil
+16000000
+Walker2d-v4
+Cascade
+actor_hidden:(1,); base_steps:1000000
+
+CascadeTiny_Walker2d-v4_0.5mil
+8000000
+Walker2d-v4
+Cascade
+actor_hidden:(1,); base_steps:500000
+
+CascadeTiny_Walker2d-v4_2mil
+16000000
+Walker2d-v4
+Cascade
+actor_hidden:(1,); base_steps:2000000

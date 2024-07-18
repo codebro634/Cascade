@@ -36,9 +36,9 @@ class DDPGConfig(AgentConfig):
     policy_frequency: int = 2 #the frequency of training policy (delayed)
     anneal_lr: bool = False #if toggled, the learning rate will be annealed linearly to 0 during training
     noise_clip: float = 0.5 #noise clip parameter of the Target Policy Smoothing Regularization
-    actor_net_conf: NetworkConfig = None #Configuration for Actor Critic network
-    critic_net_conf: NetworkConfig = None
-    tanh_in_net: bool = False
+    actor_net_conf: NetworkConfig = None #Configuration for Actor network
+    critic_net_conf: NetworkConfig = None #Configuration for Critic network
+    tanh_in_net: bool = False #If toggled, get_action does not apply tanh to the output of the actor network
 
     def validate(self):
         assert self.actor_net_conf is not None and self.critic_net_conf is not None, "actor_net_conf and critic_net_conf must be set"

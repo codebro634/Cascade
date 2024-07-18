@@ -12,7 +12,7 @@ from Analysis.AgentConfigs import VanillaPPO, Cascade, VanillaDDPG, VanillaSAC
 from Architectures.ActorNet import CascadeActor
 from Architectures.Elementary import abs_difference
 from Environments import EnvSpaceDescription
-from Environments.DiscreteWrapper import DiscretizeWrapper, DiscretizeMultiWrapper
+from Environments.DiscreteWrapper import DiscretizeWrapper
 from Environments.Utils import wrap_env, get_normalization_state
 from Analysis.Parser import parse_bool
 
@@ -48,9 +48,7 @@ def setup_env(env_param: str, recursive_call = False) -> Callable:
     params_dict = {entry.split(delim)[0].strip(): entry.split(delim)[1].strip() for entry in env_params}
 
     #Assuming env can be created with gym.make if name is none of these special cases
-    if env_name.startswith("multidiscrete"):
-        env_maker = lambda: DiscretizeMultiWrapper(gym.make(env_name[len("multidiscrete"):]))
-    elif env_name.startswith("discrete"):
+    if env_name.startswith("discrete"):
         env_maker = lambda: DiscretizeWrapper(gym.make(env_name[len("discrete"):]))
     else:
         env_maker = lambda: gym.make(env_name)

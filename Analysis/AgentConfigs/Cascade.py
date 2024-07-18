@@ -22,14 +22,14 @@ from Analysis.AgentConfigs import VanillaDDPG
 """
 
 
-def net_cfg(space_description, init: bool, fallback_init: float, actor_hidden: tuple, alg: str, use_tanh: bool, critic_stack: bool, critic_sizes=(64, 64)):
+def net_cfg(space_description, init: bool, fallback_init: float, actor_hidden: tuple, alg: str, use_tanh: bool, critic_stack: bool, critic_sizes=(64, 64), low_critic_std: bool = False):
 
     x,y = space_description.flattened_input_size(), space_description.flattened_act_size()
     fb_bias = math.log(fallback_init/(1-fallback_init)) #Set so that sigmoid(fb_bias) = fallback_init
 
     if alg == "PPO":
         preset = [(2 * len(actor_hidden), True, y,fb_bias)] if not init else []  # When passed to FF-net sets the bias of the neuron responsible for fallback-action to fb_bias
-        actor_conf, critic_conf = VanillaPPO.net_cfg(space_description, actor_hidden, critic_sizes=critic_sizes)
+        actor_conf, critic_conf = VanillaPPO.net_cfg(space_description, actor_hidden, critic_sizes=critic_sizes, low_std_critic=low_critic_std)
         critic_conf = [critic_conf]
         actor_conf.args_dict["mean"].args_dict["preset_params"] = preset
         actor_conf.args_dict["mean"].args_dict["output_size"] += 0 if init else 1
@@ -42,7 +42,7 @@ def net_cfg(space_description, init: bool, fallback_init: float, actor_hidden: t
 
     elif alg == "DDPG":
         preset = [(2 * len(actor_hidden), True, y,fb_bias)] if not init else []  # When passed to FF-net sets the bias of the neuron responsible for fallback-action to fb_bias
-        actor_conf, critic_conf = VanillaDDPG.net_cfg(space_description, actor_hidden, critic_sizes=critic_sizes)
+        actor_conf, critic_conf = VanillaDDPG.net_cfg(space_description, actor_hidden, critic_sizes=critic_sizes, low_critic_std=low_critic_std)
         critic_conf = [critic_conf]
         actor_conf.args_dict["mean"].args_dict["ll_activation"] = nn.Tanh() if use_tanh else None
         actor_conf.args_dict["mean"].args_dict["ll_activation_range"] = [0, y] if use_tanh else None
@@ -56,7 +56,7 @@ def net_cfg(space_description, init: bool, fallback_init: float, actor_hidden: t
         return actor_conf, critic_conf
 
     elif alg == "SAC":
-        actor, q1, q2 = VanillaSAC.net_cfg(space_description, actor_hidden, critic_sizes=critic_sizes)
+        actor, q1, q2 = VanillaSAC.net_cfg(space_description, actor_hidden, critic_sizes=critic_sizes, low_std_critic=low_critic_std)
         preset = [(0, True, y,fb_bias)] if not init else []
         actor.args_dict["mean"].args_dict["preset_params"] = preset
         actor.args_dict["mean"].args_dict["output_size"] += 0 if init else 1
@@ -73,7 +73,9 @@ def net_cfg(space_description, init: bool, fallback_init: float, actor_hidden: t
 
 
 def agent_cfg(space_descr: EnvSpaceDescription, base_steps: int, fallback_coef: float, train_only_top: bool,
-              fb_init: float, sequential: bool, stacks: int, actor_hidden: tuple[int], critic_hidden: tuple[int], cyclical_lr: bool, anneal_lr: bool, tanh_in_net: bool = False, reset_rb:bool = False, stack_critic: bool = False, keep_critic: bool = False, continuous: bool = True, alg_name: str = "PPO") -> CascadeConfig:
+              fb_init: float, sequential: bool, stacks: int, actor_hidden: tuple[int], critic_hidden: tuple[int],
+              cyclical_lr: bool, anneal_lr: bool, tanh_in_net: bool = False, reset_rb:bool = False, stack_critic: bool = False,
+              keep_critic: bool = False, continuous: bool = True, alg_name: str = "PPO", low_critic_std: bool = False) -> CascadeConfig:
 
     if alg_name == "PPO":
         training_alg_config = VanillaPPO.agent_cfg(space_descr, anneal_lr=anneal_lr, continuous=continuous)
@@ -87,8 +89,8 @@ def agent_cfg(space_descr: EnvSpaceDescription, base_steps: int, fallback_coef: 
         raise ValueError(f"Unknown algorithm {alg_name}")
 
     training_alg_config.fallback_coef = fallback_coef
-    init_actor_net_conf, init_critic_net_conf = net_cfg(space_descr,True, fallback_init=fb_init, actor_hidden=actor_hidden, critic_sizes=critic_hidden, alg = alg_name, use_tanh=tanh_in_net, critic_stack=stack_critic)
-    stacked_actor_net_conf, stacked_critic_net_conf = net_cfg(space_descr, False, fallback_init=fb_init, actor_hidden=actor_hidden, critic_sizes=critic_hidden, alg = alg_name, use_tanh=tanh_in_net, critic_stack=stack_critic)
+    init_actor_net_conf, init_critic_net_conf = net_cfg(space_descr,True, fallback_init=fb_init, actor_hidden=actor_hidden, critic_sizes=critic_hidden, alg = alg_name, use_tanh=tanh_in_net, critic_stack=stack_critic, low_critic_std=low_critic_std)
+    stacked_actor_net_conf, stacked_critic_net_conf = net_cfg(space_descr, False, fallback_init=fb_init, actor_hidden=actor_hidden, critic_sizes=critic_hidden, alg = alg_name, use_tanh=tanh_in_net, critic_stack=stack_critic, low_critic_std=low_critic_std)
 
     cfg = CascadeConfig(space_description=space_descr, base_steps=base_steps,
                         train_only_top_net=train_only_top,
@@ -104,9 +106,9 @@ def agent_cfg(space_descr: EnvSpaceDescription, base_steps: int, fallback_coef: 
 
 #continuation: Loads the Agent saved at continuation
 def agent(space_descr: EnvSpaceDescription,base_steps: Union[int,str] =1000000, fallback_coef: Union[float,str] = 0.0,
-          train_only_top: Union[bool,str] = False, fb_init: Union[float,str] = 0.5, sequential: Union[bool,str] = True, stacks: Union[int,str] = -1,
+          train_only_top: Union[bool,str] = False, fb_init: Union[float,str] = 0.5, low_critic_std: Union[bool,str] = False, sequential: Union[bool,str] = True, stacks: Union[int,str] = -1,
           actor_hidden: Union[tuple[int],str] = (16, 16), critic_hidden: Union[tuple[int],str] = (64, 64), tanh_in_net: Union[bool,str] = False, cyclical_lr: Union[bool,str] = True, anneal_lr: Union[bool,str] = True, reset_rb: Union[bool,str] = False, stack_critic: Union[bool,str] = False, keep_critic: bool = False, continuous: bool = True, continuation: str = None, alg_name: str = "PPO"):
-    return (lambda: Cascade(cfg=agent_cfg(space_descr, base_steps=int(base_steps),
+    return (lambda: Cascade(cfg=agent_cfg(space_descr, base_steps=int(base_steps), low_critic_std=parse_bool(low_critic_std),
                                             fallback_coef=float(fallback_coef), train_only_top=parse_bool(train_only_top), fb_init=float(fb_init), keep_critic=parse_bool(keep_critic),
                                             sequential=parse_bool(sequential), stacks=int(stacks), actor_hidden=parse_tuple(actor_hidden, lambda x: int(x)),cyclical_lr=parse_bool(cyclical_lr), anneal_lr=parse_bool(anneal_lr),
                                             reset_rb=parse_bool(reset_rb), critic_hidden=parse_tuple(critic_hidden, lambda x: int(x)), stack_critic=parse_bool(stack_critic), tanh_in_net=parse_bool(tanh_in_net),
