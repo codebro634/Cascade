@@ -157,6 +157,13 @@ python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  
 Described in Method section where a surrogate environment is used.
 ```
 python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config CascadeNaive --env_descr <env_name> 
-``` 
-        
+```
+
+## Cascade with different base training algorithms
+Used in Fig. X and Fig. Y
+
+Cascade using SAC or DDPG:
+```
+python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config Cascade --env_descr <env_name>;norm:False --agent_params reset_rb:True;critic_hidden:(16,16);stack_critic:True;low_critic_std:True;alg_name:<DDPG or SAC>
+```
 
