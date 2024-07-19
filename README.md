@@ -83,6 +83,8 @@ Used in Fig. 2 and 9
 python mainExperiment.py --wandb_logging --exp_group BaselinePPO --exp_name <name>  --steps <steps>  --agent_config VanillaPPO --env_descr <env_name>
 ```
 
+To run the baselines for SAC and DDPG, replace `BaselinePPO` and `VanillaPPO` with `BaselineSAC` and `VanillaSAC` or `BaselineDDPG` and `VanillaDDPG`
+
 ## Cascade single base agent with cylical learning rate
 
 Used in Fig. 3
@@ -122,7 +124,7 @@ Used in Fig. 10
 ```
 python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config Cascade --env_descr <env_name> --agent_params base_steps:<base_steps>
 ```
-    
+
 ## Different fallback initializations:
 
 Used in Fig. 11
@@ -164,6 +166,6 @@ Used in Fig. X and Fig. Y
 
 Cascade using SAC or DDPG:
 ```
-python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config Cascade --env_descr <env_name>;norm:False --agent_params reset_rb:True;critic_hidden:(16,16);stack_critic:True;low_critic_std:True;alg_name:<DDPG or SAC>
+python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config Cascade --env_descr <env_name>;norm:False --agent_params reset_rb:True;actor_hidden:(64,64);stack_critic:True;low_critic_std:True;alg_name:<DDPG or SAC>
 ```
 
