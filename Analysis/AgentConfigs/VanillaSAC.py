@@ -13,26 +13,28 @@ from copy import deepcopy
 from Analysis.Parser import parse_tuple
 
 """
-    Standard SACconfiguration as in CleanRL (which the exception of network architecture). Used for BaselineSAC experiments.
+    Standard SAC-Configuration as in CleanRL (which the exception of weight's initialization where orthogonal init is used). Used for BaselineSAC experiments.
 """
 
-def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64), critic_sizes: tuple = (64, 64), low_std_critic: bool = False):
+def net_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (256,256), critic_sizes: tuple = (256,256), low_std_critic: bool = False):
     obs_size, action_size = space_descr.flattened_input_size(), space_descr.flattened_act_size()
-    q1_conf = NetworkConfig(class_name="FFNet",args_dict={"input_size": obs_size + action_size, "output_size": 1, "hidden_sizes": critic_sizes, "activation_function": nn.Tanh(),
-                                                          "init_std": (np.sqrt(2), np.sqrt(2), 0.1 if low_std_critic else 1.0),
-                                                          "init_bias_const": (0.0, 0.0, 0.0)
-                                                          })
 
-    mean_conf = NetworkConfig(class_name="FFNet", args_dict={"input_size": obs_size, "output_size": action_size,"hidden_sizes": layer_sizes,"init_std": [np.sqrt(2) for _ in
-                                                                          range(len(layer_sizes))] + [0.01], "init_bias_const": [0.0 for _ in range(len(layer_sizes) + 1)]})
+    q1_conf = NetworkConfig(class_name="FFNet", args_dict={"input_size": obs_size + action_size, "output_size": 1,"hidden_sizes": critic_sizes,"activation_function": nn.ReLU(),
+                                                           "init_std": (np.sqrt(2), np.sqrt(2), 0.1 if low_std_critic else 1.0), "init_bias_const": (0.0, 0.0, 0.0)})
 
-    log_conf = NetworkConfig(class_name="FFNet",args_dict={"input_size": None, "output_size": action_size, "hidden_sizes": None})
+    shared_conf = NetworkConfig(class_name="FFNet", args_dict={"input_size": obs_size, "output_size": layer_sizes[-1], "hidden_sizes": layer_sizes[:-1],
+                                                               "activation_function": nn.ReLU(),"ll_activation": nn.ReLU(), "init_std": np.sqrt(2),"init_bias_const": 0})
 
-    actor_conf = NetworkConfig(class_name="CascadeActor", args_dict={"mean": mean_conf, "logstd": log_conf, "shared": None})
+    mean_conf = NetworkConfig(class_name="FFNet",args_dict={"input_size": layer_sizes[-1], "output_size": action_size, "hidden_sizes": [], "init_std": 0.01, "init_bias_const": 0})
+
+    log_conf = NetworkConfig(class_name="FFNet",args_dict={"input_size": layer_sizes[-1], "output_size": action_size, "hidden_sizes": []})
+
+    actor_conf = NetworkConfig(class_name="CascadeActor", args_dict={"mean": mean_conf, "logstd": log_conf, "shared": shared_conf})
+
 
     return actor_conf, q1_conf, deepcopy(q1_conf)
 
-def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64), critic_hidden:tuple[int] = (64,64)):
+def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (256,256), critic_hidden:tuple[int] = (256,256)):
     actor_conf, q1_conf, q2_conf = net_cfg(space_descr, layer_sizes=layer_sizes, critic_sizes=critic_hidden)
 
     return SACConfig(
@@ -54,7 +56,7 @@ def agent_cfg(space_descr: EnvSpaceDescription, layer_sizes: tuple[int] = (64,64
 
 
 #continuation: Loads the Agent saved at continuation
-def agent(space_descr: EnvSpaceDescription, layer_sizes: Union[tuple[int],str] = (64,64), critic_hidden: Union[tuple[int],str] = (64,64), continuation: str = None):
+def agent(space_descr: EnvSpaceDescription, layer_sizes: Union[tuple[int],str] = (256,256), critic_hidden: Union[tuple[int],str] = (256,256), continuation: str = None):
     return (lambda: SAC(cfg = agent_cfg(space_descr, critic_hidden= parse_tuple(critic_hidden, lambda x: int(x)), layer_sizes=parse_tuple(layer_sizes, lambda x: int(x))))) if continuation is None else lambda: Agent.load(Path(continuation))
 
 def env_wrapper(env: Callable):
