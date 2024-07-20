@@ -1,30 +1,30 @@
 #Cascade with DDPG
 
-Cascade_HalfCheetah-v4_DDPG
+Cascade_HalfCheetah-v4_DDPG_stack
 6000000
 HalfCheetah-v4;norm:False
 Cascade
 alg_name:DDPG;stack_critic:True;reset_rb:True;low_critic_std:True;critic_hidden:(16,16)
 
-Cascade_Humanoid-v4_DDPG
+Cascade_Humanoid-v4_DDPG_stack
 6000000
 Humanoid-v4;norm:False
 Cascade
 alg_name:DDPG;stack_critic:True;reset_rb:True;low_critic_std:True;critic_hidden:(16,16)
 
-Cascade_Hopper-v4_DDPG
+Cascade_Hopper-v4_DDPG_stack
 6000000
 Hopper-v4;norm:False
 Cascade
 alg_name:DDPG;stack_critic:True;reset_rb:True;low_critic_std:True;critic_hidden:(16,16)
 
-Cascade_Ant-v4_DDPG
+Cascade_Ant-v4_DDPG_stack
 6000000
 Ant-v4;norm:False
 Cascade
 alg_name:DDPG;stack_critic:True;reset_rb:True;low_critic_std:True;critic_hidden:(16,16)
 
-Cascade_Walker2d-v4_DDPG
+Cascade_Walker2d-v4_DDPG_stack
 6000000
 Walker2d-v4;norm:False
 Cascade
