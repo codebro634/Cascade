@@ -59,7 +59,7 @@ class PPO(Agent):
         self.cfg.validate()
 
     def model_size(self):
-        return sum(p.numel() for p in self.actor_net.parameters() + self.v_net.parameters())
+        return sum(p.numel() for p in ( list(self.actor_net.parameters()) + list(self.v_net.parameters())))
 
     """
         Replaces the current network. This updates the optimizer's parameters as well.

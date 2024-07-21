@@ -57,9 +57,7 @@ class Cascade(Agent):
         self.cfg.validate()
 
     def model_size(self):
-        actors = sum(sum([p.numel() for p in ac.actor_net.parameters()]) for ac in self.actors)
-        critics = sum (sum(sum([p.numel() for p in ac.actor_net.parameters()]) for ac in self.critics[i]) for i in range(len(self.critics)))
-        return actors+critics
+        return self.top.model_size()
 
     def save_additionals(self, model_path: Path, absolute_path: Path):
         pass
@@ -86,7 +84,7 @@ class Cascade(Agent):
             self.top = PPO(cfg=self.cfg.training_alg_cfg)
             casc_actors, casc_v = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][critic_idx]
             self.top.replace_net(actor_net=casc_actors, value_net=casc_v)
-
+            print(self.model_size())
             #TODO: remove
             #if len(self.actors) > 1:
             # actor_init = lambda: deepcopy(casc_actors)
