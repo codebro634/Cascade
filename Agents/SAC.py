@@ -68,7 +68,7 @@ class SAC(Agent):
         pass
 
     def model_size(self):
-        return sum(p.numel() for p in self.net.parameters())
+        return sum(p.numel() for p in (list(self.actor_net.parameters()) + list(self.q1.parameters()) + list(self.q2.parameters())))
 
     def replace_net(self, actor, q1, q2):
         self.actor_net = actor

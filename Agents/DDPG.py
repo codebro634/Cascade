@@ -63,7 +63,7 @@ class DDPG(Agent):
         self.cfg.validate()
 
     def model_size(self):
-        return sum(p.numel() for p in self.actor_net.parameters() + self.q_net.parameters())
+        return sum(p.numel() for p in ( list(self.actor_net.parameters()) + list(self.q_net.parameters())))
 
     def replace_net(self, actor_net, q_net):
         self.actor_net = actor_net
