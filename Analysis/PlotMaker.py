@@ -10,9 +10,9 @@ from scipy.stats import sem
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-#wandb_path = None # '<team>/<project>'
-#if wandb_path is None:
-#    raise ValueError("Please specify the path to wandb project.")
+wandb_path = 'besteteam/Master Thesis' #<team>/<project>'
+if wandb_path is None:
+    raise ValueError("Please specify the path to wandb project.")
 
 def wandb_runs_to_dict(group: str, name: str | set[str], metrics: list[str] = ["average return"], merge_metrics: dict[str,str] = {"average return0": "average return"}, verbose: bool = True) -> tuple[dict,dict]:
     """
@@ -197,43 +197,24 @@ def redo_entire_plot_directory(plot_dir: Path):
 #for i in range(5):
 #    make_plot(experiments=[([x[i] for x in y],"Ant", "blue")],title="Fallbacks for one Episode", ylabel="Fallback value", show=True)
 
-ant_2mil_baseline = ["BaselinePPO","PPO_Ant-v4","2m",'red']
-walker_2mil_baseline = ["BaselinePPO","PPO_Walker2d-v4","2m",'red']
-humanoid_2mil_baseline = ["BaselinePPO","PPO_Humanoid-v4","2m",'red']
-hopper_2mil_baseline = ["BaselinePPO","PPO_Hopper-v4","2m",'red']
-cheetah_2mil_baseline = ["BaselinePPO","PPO_HalfCheetah-v4","2m",'red']
+ant_2mil_baseline = ["BaselineSAC","SAC_Ant-v4","SAC",'red']
+walker_2mil_baseline = ["BaselineSAC","SAC_Walker2d-v4","SAC",'red']
+humanoid_2mil_baseline = ["BaselineSAC","SAC_Humanoid-v4","SAC",'red']
+hopper_2mil_baseline = ["BaselineSAC","SAC_Hopper-v4","SAC",'red']
+cheetah_2mil_baseline = ["BaselineSAC","SAC_HalfCheetah-v4","SAC",'red']
 
-ant_3mil_baseline = ("BaselinePPO","PPO_Ant-v4_3mil","3m",'blue')
-walker_3mil_baseline = ("BaselinePPO","PPO_Walker2d-v4_3mil","3m",'blue')
-humanoid_3mil_baseline = ("BaselinePPO","PPO_Humanoid-v4_3mil","3m",'blue')
-hopper_3mil_baseline = ("BaselinePPO","PPO_Hopper-v4_3mil","3m",'blue')
-cheetah_3mil_baseline = ("BaselinePPO","PPO_HalfCheetah-v4_3mil","3m",'blue')
-
-ant_4mil_baseline = ("BaselinePPO","PPO_Ant-v4_4mil","4m",'green')
-walker_4mil_baseline = ("BaselinePPO","PPO_Walker2d-v4_4mil","4m",'green')
-humanoid_4mil_baseline = ("BaselinePPO","PPO_Humanoid-v4_4mil","4m",'green')
-hopper_4mil_baseline = ("BaselinePPO","PPO_Hopper-v4_4mil","4m",'green')
-cheetah_4mil_baseline = ("BaselinePPO","PPO_HalfCheetah-v4_4mil","4m",'green')
-
-ant_5mil_baseline = ("BaselinePPO","PPO_Ant-v4_5mil","5m",'yellow')
-walker_5mil_baseline = ("BaselinePPO","PPO_Walker2d-v4_5mil","5m",'yellow')
-humanoid_5mil_baseline = ("BaselinePPO","PPO_Humanoid-v4_5mil","5m",'yellow')
-hopper_5mil_baseline = ("BaselinePPO","PPO_Hopper-v4_5mil","5m",'yellow')
-cheetah_5mil_baseline = ("BaselinePPO","PPO_HalfCheetah-v4_5mil","5m",'yellow')
-
-ant_6mil_baseline = ["BaselinePPO","PPO_Ant-v4_6mil","6m",'pink']
-walker_6mil_baseline = ["BaselinePPO","PPO_Walker2d-v4_6mil","6m",'pink']
-humanoid_6mil_baseline = ["BaselinePPO","PPO_Humanoid-v4_6mil","6m",'pink']
-hopper_6mil_baseline = ["BaselinePPO","PPO_Hopper-v4_6mil","6m",'pink']
-cheetah_6mil_baseline = ["BaselinePPO","PPO_HalfCheetah-v4_6mil","6m",'pink']
-
+huma_cascade = ["CascadeSAC","Cascade_Humanoid-v4_SAC_lowstd","Cascade",'blue']
+hop_cascade = ["CascadeSAC","Cascade_Hopper-v4_SAC_lowstd","Cascade",'blue']
+half_cascade = ["CascadeSAC","Cascade_HalfCheetah-v4_SAC_lowstd","Cascade",'blue']
+walk_cascade = ["CascadeSAC","Cascade_Walker2d-v4_SAC_lowstd","Cascade",'blue']
+ant_cascade = ["CascadeSAC","Cascade_Ant-v4_SAC_lowstd","Cascade",'blue']
 
 """
     BaselinePPO plots
 """
 
-# make_plot(experiments=[ant_2mil_baseline,ant_3mil_baseline,ant_4mil_baseline,ant_5mil_baseline,ant_6mil_baseline], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ant_baseline"), show=True)
-# make_plot(experiments=[walker_2mil_baseline,walker_3mil_baseline,walker_4mil_baseline,walker_5mil_baseline,walker_6mil_baseline], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/walker_baseline"), show=True)
-# make_plot(experiments=[humanoid_2mil_baseline,humanoid_3mil_baseline,humanoid_4mil_baseline,humanoid_5mil_baseline,humanoid_6mil_baseline], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/humanoid_baseline"), show=True)
-# make_plot(experiments=[hopper_2mil_baseline,hopper_3mil_baseline,hopper_4mil_baseline,hopper_5mil_baseline,hopper_6mil_baseline], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/hopper_baseline"), show=True)
-# make_plot(experiments=[cheetah_2mil_baseline,cheetah_3mil_baseline,cheetah_4mil_baseline,cheetah_5mil_baseline,cheetah_6mil_baseline], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/cheetah_baseline"), show=True)
+# make_plot(experiments=[ant_2mil_baseline,ant_cascade], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/sac_ant_cascade"), show=True)
+# make_plot(experiments=[walker_2mil_baseline,walk_cascade], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/sac_walker_cascade"), show=True)
+# make_plot(experiments=[humanoid_2mil_baseline,huma_cascade], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/sac_huma_cascade"), show=True)
+# make_plot(experiments=[hopper_2mil_baseline,hop_cascade], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/sac_hopper_cascade"), show=True)
+# make_plot(experiments=[cheetah_2mil_baseline,half_cascade], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/sac_cheetah_cascade"), show=True)
