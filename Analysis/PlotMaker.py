@@ -197,21 +197,53 @@ def redo_entire_plot_directory(plot_dir: Path):
 #for i in range(5):
 #    make_plot(experiments=[([x[i] for x in y],"Ant", "blue")],title="Fallbacks for one Episode", ylabel="Fallback value", show=True)
 
-ant_2mil_baseline = ["BaselineSAC","SAC_Ant-v4","SAC",'red']
-walker_2mil_baseline = ["BaselineSAC","SAC_Walker2d-v4","SAC",'red']
-humanoid_2mil_baseline = ["BaselineSAC","SAC_Humanoid-v4","SAC",'red']
-hopper_2mil_baseline = ["BaselineSAC","SAC_Hopper-v4","SAC",'red']
-cheetah_2mil_baseline = ["BaselineSAC","SAC_HalfCheetah-v4","SAC",'red']
 
-huma_cascade = ["CascadeSAC","Cascade_Humanoid-v4_SAC_lowstd","Cascade",'blue']
-hop_cascade = ["CascadeSAC","Cascade_Hopper-v4_SAC_lowstd","Cascade",'blue']
-half_cascade = ["CascadeSAC","Cascade_HalfCheetah-v4_SAC_lowstd","Cascade",'blue']
-walk_cascade = ["CascadeSAC","Cascade_Walker2d-v4_SAC_lowstd","Cascade",'blue']
-ant_cascade = ["CascadeSAC","Cascade_Ant-v4_SAC_lowstd","Cascade",'blue']
+ant_ddpg = ["Additional","DDPG_Ant-v4_6mil","DDPG",'red']
+walker_ddpg = ["Additional","DDPG_Walker2d-v4_6mil","DDPG",'red']
+humanoid_ddpg = ["Additional","DDPG_Humanoid-v4_6mil","DDPG",'red']
+hopper_ddpg = ["Additional","DDPG_Hopper-v4_6mil","DDPG",'red']
+cheetah_ddpg = ["Additional","DDPG_HalfCheetah-v4_6mil","DDPG",'red']
+
+# ddpg_casc_ant = ["CascadeDDPG","Cascade_Ant-v4_DDPG_stack","Cascade",'blue']
+# ddpg_casc_walk = ["CascadeDDPG","Cascade_Walker2d-v4_DDPG_stack","Cascade",'blue']
+# ddpg_casc_huma = ["CascadeDDPG","Cascade_Humanoid-v4_DDPG_stack","Cascade",'blue']
+# ddpg_casc_hop = ["CascadeDDPG","Cascade_Hopper-v4_DDPG_stack","Cascade",'blue']
+# ddpg_casc_cheet = ["CascadeDDPG","Cascade_HalfCheetah-v4_DDPG_stack","Cascade",'blue']
+
+ddpg_casc_ant = ["CascadeDDPG","Cascade_Ant-v4_DDPG_keep_critic","Cascade",'blue']
+ddpg_casc_walk = ["CascadeDDPG","Cascade_Walker2d-v4_DDPG_keep_critic","Cascade",'blue']
+ddpg_casc_huma = ["CascadeDDPG","Cascade_Humanoid-v4_DDPG_keep_critic","Cascade",'blue']
+ddpg_casc_hop = ["CascadeDDPG","Cascade_Hopper-v4_DDPG_keep_critic","Cascade",'blue']
+ddpg_casc_cheet = ["CascadeDDPG","Cascade_HalfCheetah-v4_DDPG_keep_critic","Cascade",'blue']
+
+# ddpg_casc_ant = ["CascadeDDPG","Cascade_Ant-v4_DDPG_nothing","Cascade",'blue']
+# ddpg_casc_walk = ["CascadeDDPG","Cascade_Walker2d-v4_DDPG_nothing","Cascade",'blue']
+# ddpg_casc_huma = ["CascadeDDPG","Cascade_Humanoid-v4_DDPG_nothing","Cascade",'blue']
+# ddpg_casc_hop = ["CascadeDDPG","Cascade_Hopper-v4_DDPG_nothing","Cascade",'blue']
+# ddpg_casc_cheet = ["CascadeDDPG","Cascade_HalfCheetah-v4_DDPG_nothing","Cascade",'blue']
+
+# make_plot(experiments=[ant_ddpg, ddpg_casc_ant], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ddpg_ant_cascade"), show=True)
+# make_plot(experiments=[walker_ddpg, ddpg_casc_walk], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ddpg_walker_cascade"), show=True)
+# make_plot(experiments=[humanoid_ddpg, ddpg_casc_huma], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ddpg_huma_cascade"), show=True)
+# make_plot(experiments=[hopper_ddpg, ddpg_casc_hop], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ddpg_hopper_cascade"), show=True)
+# make_plot(experiments=[cheetah_ddpg, ddpg_casc_cheet], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ddpg_cheetah_cascade"), show=True)
+
 
 """
-    BaselinePPO plots
+    BaselineSAC plots
 """
+
+# ant_2mil_baseline = ["BaselineSAC","SAC_Ant-v4","SAC",'red']
+# walker_2mil_baseline = ["BaselineSAC","SAC_Walker2d-v4","SAC",'red']
+# humanoid_2mil_baseline = ["BaselineSAC","SAC_Humanoid-v4","SAC",'red']
+# hopper_2mil_baseline = ["BaselineSAC","SAC_Hopper-v4","SAC",'red']
+# cheetah_2mil_baseline = ["BaselineSAC","SAC_HalfCheetah-v4","SAC",'red']
+#
+# huma_cascade = ["CascadeSAC","Cascade_Humanoid-v4_SAC_lowstd","Cascade",'blue']
+# hop_cascade = ["CascadeSAC","Cascade_Hopper-v4_SAC_lowstd","Cascade",'blue']
+# half_cascade = ["CascadeSAC","Cascade_HalfCheetah-v4_SAC_lowstd","Cascade",'blue']
+# walk_cascade = ["CascadeSAC","Cascade_Walker2d-v4_SAC_lowstd","Cascade",'blue']
+# ant_cascade = ["CascadeSAC","Cascade_Ant-v4_SAC_lowstd","Cascade",'blue']
 
 # make_plot(experiments=[ant_2mil_baseline,ant_cascade], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/sac_ant_cascade"), show=True)
 # make_plot(experiments=[walker_2mil_baseline,walk_cascade], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/sac_walker_cascade"), show=True)
