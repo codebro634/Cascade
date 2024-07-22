@@ -164,8 +164,12 @@ python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  
 ## Cascade with different base training algorithms
 Used in Fig. X and Fig. Y
 
-Cascade using SAC or DDPG:
+Cascade using SAC:
 ```
-python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config Cascade --env_descr <env_name>;norm:False --agent_params reset_rb:True;actor_hidden:(64,64);stack_critic:True;low_critic_std:True;alg_name:<DDPG or SAC>
+python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config Cascade --env_descr <env_name>;norm:False --agent_params reset_rb:True;alg_name:SAC;base_steps:500000;actor_hidden:(128,128);critic_hidden:(256,256)
 ```
 
+Cascade using DDPG:
+```
+python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config Cascade --env_descr <env_name>;norm:False --agent_params reset_rb:True;alg_name:DDPG
+```

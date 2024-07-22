@@ -4,60 +4,29 @@ Cascade_HalfCheetah-v4_SAC
 2000000
 HalfCheetah-v4;norm:False
 Cascade
-alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(128,128);critic_hidden:(256,256)
+alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(128,128);critic_hidden:(256,256);reset_rb:True
 
 Cascade_Humanoid-v4_SAC
 2000000
 Humanoid-v4;norm:False
 Cascade
-alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(128,128);critic_hidden:(256,256)
+alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(128,128);critic_hidden:(256,256);reset_rb:True
 
 Cascade_Hopper-v4_SAC
 2000000
 Hopper-v4;norm:False
 Cascade
-alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(128,128);critic_hidden:(256,256)
+alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(128,128);critic_hidden:(256,256);reset_rb:True
 
 Cascade_Ant-v4_SAC
 2000000
 Ant-v4;norm:False
 Cascade
-alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(128,128);critic_hidden:(256,256)
+alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(128,128);critic_hidden:(256,256);reset_rb:True
 
 Cascade_Walker2d-v4_SAC
 2000000
 Walker2d-v4;norm:False
 Cascade
-alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(128,128);critic_hidden:(256,256)
+alg_name:SAC;base_steps:500000;keep_critic:True;actor_hidden:(128,128);critic_hidden:(256,256);reset_rb:True
 
-
-
-Cascade_HalfCheetah-v4_SAC_nothing
-2000000
-HalfCheetah-v4;norm:False
-Cascade
-alg_name:SAC;base_steps:500000;actor_hidden:(128,128);critic_hidden:(256,256)
-
-Cascade_Humanoid-v4_SAC_nothing
-2000000
-Humanoid-v4;norm:False
-Cascade
-alg_name:SAC;base_steps:500000;actor_hidden:(128,128);critic_hidden:(256,256)
-
-Cascade_Hopper-v4_SAC_nothing
-2000000
-Hopper-v4;norm:False
-Cascade
-alg_name:SAC;base_steps:500000;actor_hidden:(128,128);critic_hidden:(256,256)
-
-Cascade_Ant-v4_SAC_nothing
-2000000
-Ant-v4;norm:False
-Cascade
-alg_name:SAC;base_steps:500000;actor_hidden:(128,128);critic_hidden:(256,256)
-
-Cascade_Walker2d-v4_SAC_nothing
-2000000
-Walker2d-v4;norm:False
-Cascade
-alg_name:SAC;base_steps:500000;actor_hidden:(128,128);critic_hidden:(256,256)

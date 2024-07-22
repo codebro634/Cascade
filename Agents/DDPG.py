@@ -76,7 +76,7 @@ class DDPG(Agent):
         raise NotImplementedError()
 
     def save_additionals(self, model_path: Path, absolute_path: Path):
-        raise NotImplementedError()
+        pass
 
     def get_action(self, obs, eval_mode: bool = False, deterministic: bool = False, target: bool = False):
         squeeze = len(obs.shape) == 1

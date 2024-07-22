@@ -102,7 +102,10 @@ class Cascade(Agent):
             # exit(0)
 
         elif self.cfg.training_alg == "SAC":
+            rb = self.top.rb if self.top is not None else None
             self.top = SAC(cfg=self.cfg.training_alg_cfg)
+            if not self.cfg.reset_rb:
+                self.top.rb = rb
             casc_actors, casc_q1, casc_q2 = CascadeNet(self.actors), CascadeNet(self.critics[0]) if self.cfg.stack_critics else self.critics[0][critic_idx], CascadeNet(self.critics[1]) if self.cfg.stack_critics else self.critics[1][critic_idx]
             self.top.replace_net(actor=casc_actors, q1=casc_q1, q2=casc_q2)
         else:
