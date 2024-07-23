@@ -143,7 +143,7 @@ python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  
 
 ## Cascade/PPO on discrete action spaces
 
-Used in Fig. 13
+Used in Fig. 16
 
 Discrete PPO:
 ``` 
@@ -156,13 +156,13 @@ python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  
 ```
 
 ## Comparison to naive approach
-Described in Method section where a surrogate environment is used.
+Described in the method section where a surrogate environment is used.
 ```
 python mainExperiment.py --wandb_logging --exp_group Cascade --exp_name <name>  --steps <steps>  --agent_config CascadeNaive --env_descr <env_name> 
 ```
 
 ## Cascade with different base training algorithms
-Used in Fig. X and Fig. Y
+Used in Fig. 14 and Fig. 15
 
 Cascade using SAC:
 ```
