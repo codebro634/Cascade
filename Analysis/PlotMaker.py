@@ -26,7 +26,9 @@ def wandb_runs_to_dict(group: str, name: str | set[str], metrics: list[str] = ["
     api = wandb.Api()
     runs_data = {metric: [] for metric in metrics} # Key: metric name, Value: list of lists. Each list contains the values of the metric at a certain timestep for all runs.
     num_runs = 0
-    for run in api.runs(path=wandb_path, filters={"group": group}):
+
+    runs = list(api.runs(path=wandb_path, filters={"group": group}))
+    for run in runs:
         if (isinstance(name,str) and run.name == name) or (isinstance(name,set) and run.name in name):
             num_runs += 1
             if verbose:
@@ -186,36 +188,6 @@ def redo_plot(plot_path: Path):
 def redo_entire_plot_directory(plot_dir: Path):
     for plot_path in plot_dir.iterdir():
         redo_plot(plot_path)
-
-
-# path = Path("Cascade/Cascade_Ant-v4/run1_latest_P7HCX")
-# agent = Agent.load(path)
-# env = load_env(path)
-# y = evaluate_agent(agent, env, get_fallback_distr=True, cascade_net=agent.top.net,num_runs=1)
-#
-# make_plot(experiments=[([x[0] for x in y],"Base net 2", "blue"),([x[4] for x in y],"Base net 6", "red")],save_dir=Path("../nobackup/Plots/ant_fb_distr"), legend_position='lower right', x_step_size=1, title="Fallbacks for one Episode", ylabel="Fallback Value", show=True)
-#for i in range(5):
-#    make_plot(experiments=[([x[i] for x in y],"Ant", "blue")],title="Fallbacks for one Episode", ylabel="Fallback value", show=True)
-
-
-# ant_ddpg = ["Additional","DDPG_Ant-v4_6mil","DDPG",'red']
-# walker_ddpg = ["Additional","DDPG_Walker2d-v4_6mil","DDPG",'red']
-# humanoid_ddpg = ["Additional","DDPG_Humanoid-v4_6mil","DDPG",'red']
-# hopper_ddpg = ["Additional","DDPG_Hopper-v4_6mil","DDPG",'red']
-# cheetah_ddpg = ["Additional","DDPG_HalfCheetah-v4_6mil","DDPG",'red']
-#
-# ddpg_casc_ant = ["CascadeDDPG","Cascade_Ant-v4_DDPG_keep_critic","Cascade",'blue']
-# ddpg_casc_walk = ["CascadeDDPG","Cascade_Walker2d-v4_DDPG_keep_critic","Cascade",'blue']
-# ddpg_casc_huma = ["CascadeDDPG","Cascade_Humanoid-v4_DDPG_keep_critic","Cascade",'blue']
-# ddpg_casc_hop = ["CascadeDDPG","Cascade_Hopper-v4_DDPG_keep_critic","Cascade",'blue']
-# ddpg_casc_cheet = ["CascadeDDPG","Cascade_HalfCheetah-v4_DDPG_keep_critic","Cascade",'blue']
-#
-# make_plot(experiments=[ant_ddpg, ddpg_casc_ant], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ddpg_ant_cascade"), show=True)
-# make_plot(experiments=[walker_ddpg, ddpg_casc_walk], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ddpg_walker_cascade"), show=True)
-# make_plot(experiments=[humanoid_ddpg, ddpg_casc_huma], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ddpg_huma_cascade"), show=True)
-# make_plot(experiments=[hopper_ddpg, ddpg_casc_hop], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ddpg_hopper_cascade"), show=True)
-# make_plot(experiments=[cheetah_ddpg, ddpg_casc_cheet], legend_position='lower right', metric="average return" , save_dir=Path("../nobackup/Plots/ddpg_cheetah_cascade"), show=True)
-
 
 """
     BaselineSAC plots
