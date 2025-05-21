@@ -2,6 +2,16 @@
 # Purpose
 Code for the Paper: Cascade - a Sequential Ensemble Method for Continuous Control Tasks
 
+# Citing the project
+@article{cascade,
+  author  = {Robin Schmöcker, Alexander Dockhorn},
+  title   = {Cascade - A sequential ensemble method for
+continuous control tasks},
+  journal = {Reinforcement Learning Journal},
+  year    = {2025},
+  note = {To be published.}
+}
+
 # Acknowledgements
 The code has been developed with the assistance of GitHub Copilot.
 
