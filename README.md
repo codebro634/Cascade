@@ -8,8 +8,7 @@ Code for the Paper: Cascade - a Sequential Ensemble Method for Continuous Contro
     author  = {Robin Schmöcker, Alexander Dockhorn},
     title   = {Cascade - A sequential ensemble method for continuous control tasks},
     journal = {Reinforcement Learning Journal},
-    year    = {2025},
-    note = {To be published.}
+    year    = {2025}
   }
 ```
 
