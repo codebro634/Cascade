@@ -1,6 +1,6 @@
 
 # Purpose
-Code for the Paper: Cascade - a Sequential Ensemble Method for Continuous Control Tasks
+Code for the Paper: "Cascade - a Sequential Ensemble Method for Continuous Control Tasks"
 
 # Citing the project
 ```
